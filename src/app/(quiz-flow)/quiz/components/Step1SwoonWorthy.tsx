@@ -7,7 +7,7 @@ import { quizData } from "@/lib/quiz-data";
 import type { ImageOption } from "@/types/quiz";
 import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button"; // Import Button
+import { Button } from "@/components/ui/button"; 
 
 export function Step1SwoonWorthy() {
   const { answers, updateAnswer, triggerNextStepFlow } = useQuiz(); 
@@ -21,12 +21,12 @@ export function Step1SwoonWorthy() {
   };
 
   const handleSkipStep1 = async () => {
-    await triggerNextStepFlow(); // Use the context's flow for advancing
+    await triggerNextStepFlow(); 
   };
 
   return (
     <div className="w-full">
-      <div className="overflow-y-auto md:max-h-[calc(100vh-18rem)] pr-1"> {/* Adjusted max-h */}
+      <div className="overflow-y-auto md:max-h-[calc(100vh-18rem)] pr-1">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {quizData.step1.options.map((option: ImageOption, index: number) => (
             <div
@@ -63,7 +63,7 @@ export function Step1SwoonWorthy() {
           <Button
             variant="ghost"
             onClick={handleSkipStep1}
-            className="text-sm text-muted-foreground hover:text-accent transition-colors"
+            className="bg-transparent hover:bg-transparent text-sm text-muted-foreground hover:text-accent transition-colors"
             aria-label="Skip this step"
           >
             I don&apos;t like these. Skip.
