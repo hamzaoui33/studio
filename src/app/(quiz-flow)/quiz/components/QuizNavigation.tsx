@@ -6,7 +6,8 @@ import { useQuiz } from "@/context/QuizContext";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import Link from 'next/link'; // Import Link for the logo
+import Link from 'next/link';
+import Image from 'next/image'; // Import next/image
 
 interface QuizNavigationProps {
   onNext?: () => boolean | Promise<boolean>;
@@ -61,13 +62,9 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
       {/* Left Part: Logo and potentially Total Rooms on Desktop */}
       <div className="flex items-center gap-2 md:gap-4">
         <Link href="/" aria-label="Go to homepage" className="block">
-          {/* ---- Logo Placeholder ---- */}
-          {/* Replace this div with your actual logo using next/image or an <img> tag. */}
-          {/* Example: <Image src="/logo.svg" alt="DecorWhisper" width={80} height={28} className="h-7 w-auto" /> */}
-          <div className="h-7 w-auto text-foreground font-bold text-2xl flex items-center tracking-tighter">
-            DW
-          </div>
-          {/* ---- End Logo Placeholder ---- */}
+          {/* ---- Logo Replaced ---- */}
+          <Image src="/my-logo.png" alt="DecorStyle Discovery Logo" width={80} height={28} className="h-7 w-auto" />
+          {/* ---- End Logo ---- */}
         </Link>
         {/* Total Rooms: Shown on desktop for step 3 */}
         {currentStep === 3 && totalSelectedRooms > 0 && (
