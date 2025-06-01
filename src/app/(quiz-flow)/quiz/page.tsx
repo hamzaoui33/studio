@@ -144,7 +144,7 @@ export default function QuizPage() {
     <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
       {stepDetails && (
         <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-          <div className="md:col-span-6 md:sticky md:top-32"> {/* Changed md:top-28 to md:top-32 */}
+          <div className="md:col-span-6 md:sticky md:top-32"> 
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
               <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && "mb-0" )}>
@@ -167,13 +167,13 @@ export default function QuizPage() {
           
           <div className={cn(
             "md:col-span-6 animate-fadeIn",
-            (currentStep === 5 || currentStep === 7)
-              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto flex flex-col items-center justify-center" // Panel styles with flex centering for all screens
-              : "flex flex-col justify-center items-center" // Default centering for other steps' content column
+            (currentStep === 5 || currentStep === 7) // Name or Email input panel
+              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto flex flex-col items-center justify-center"
+              : "flex flex-col justify-start items-center md:max-h-[calc(100vh-theme(spacing.32))] md:overflow-y-auto md:pr-4" // Scrollable content for steps 1,2,3,4
           )}>
             <div className={cn(
               "w-full",
-              (currentStep === 5 || currentStep === 7) && "flex h-full flex-col justify-center items-center" // This inner div ensures vertical centering for all screens for these steps
+              (currentStep === 5 || currentStep === 7) && "flex h-full flex-col justify-center items-center" 
             )}>
               {renderStepContent()}
             </div>

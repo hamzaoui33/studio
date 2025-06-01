@@ -9,7 +9,7 @@ import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Step1SwoonWorthy() {
-  const { answers, updateAnswer } = useQuiz(); // Removed nextStep as it's handled by global nav
+  const { answers, updateAnswer } = useQuiz(); 
 
   const handleSelectImage = (optionId: string) => {
     const currentSelection = answers.swoonWorthyRooms;
@@ -20,8 +20,8 @@ export function Step1SwoonWorthy() {
   };
 
   return (
-    <div className="md:max-h-[calc(100vh-8.5rem)]">
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
+    <div> {/* Removed overflow-y-auto and md:max-h, pr-2 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {quizData.step1.options.map((option: ImageOption, index: number) => (
           <div
             key={option.id}
@@ -51,7 +51,6 @@ export function Step1SwoonWorthy() {
           </div>
         ))}
       </div>
-      {/* Skip button removed from here */}
     </div>
   );
 }
