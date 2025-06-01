@@ -131,8 +131,8 @@ export const quizData: AllQuizData = {
   step4: {
     id: 4,
     title: "Room Focus",
-    question: "Great! Which room should we focus on first?",
-    instruction: "This will be the primary room for your personalized style guide.",
+    question: "Awesome! Which room should we tackle first?",
+    instruction: "This will be the main space we’ll use to create your personalized style guide.",
   },
   step5: {
     id: 5,
@@ -197,3 +197,4 @@ export const iconMap: { [key: string]: LucideIcon } = {
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {
   return quizData[stepKey];
 }
+
