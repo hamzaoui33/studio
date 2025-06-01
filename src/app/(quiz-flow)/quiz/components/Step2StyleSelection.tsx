@@ -49,7 +49,7 @@ export function Step2StyleSelection() {
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectStyle(option.id); }}
           >
             {option.imageUrl && (
-              <div className="relative w-2/5 sm:w-1/3 shrink-0 aspect-[16/10]">
+              <div className="relative w-2/5 sm:w-1/3 shrink-0 aspect-square">
                 <Image
                   src={option.imageUrl}
                   alt={option.name}
