@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
 interface QuizNavigationProps {
-  onNext?: () => boolean | Promise<boolean>; 
+  onNext?: () => boolean | Promise<boolean>;
   isNextDisabled?: boolean;
 }
 
@@ -24,7 +24,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     }
     if (canProceed) {
       nextStep();
-      window.scrollTo(0, 0); 
+      window.scrollTo(0, 0);
     }
   };
 
@@ -37,7 +37,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
       });
       return;
     }
-    
+
     const styleGuide = await handleQuizSubmit();
     if (styleGuide) {
       toast({
@@ -53,21 +53,35 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
       });
     }
   };
-  
+
+  const handleSkipStep1 = () => {
+    nextStep();
+    window.scrollTo(0, 0);
+  }
+
   const totalSelectedRooms = currentStep === 3 && answers.roomImprovementSelections
     ? Object.values(answers.roomImprovementSelections).reduce((sum, count) => sum + count, 0)
     : 0;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center gap-4"> 
-      <div className="w-full sm:w-auto sm:flex-grow text-center sm:text-left"> {/* Container for room counter */}
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="w-full sm:w-auto sm:flex-grow text-center sm:text-left">
         {currentStep === 3 && totalSelectedRooms > 0 && (
           <span className="text-sm font-medium text-muted-foreground">
             Total Rooms: {totalSelectedRooms}
           </span>
         )}
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"> {/* Container for buttons */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        {currentStep === 1 && answers.swoonWorthyRooms.length === 0 && !isLastStep && (
+          <button
+            onClick={handleSkipStep1}
+            className="text-sm text-muted-foreground hover:text-accent transition-colors order-last sm:order-first sm:mr-4" // order-last for mobile stacking, order-first for row, mr-4 for spacing
+            aria-label="Skip this step"
+          >
+            I don&apos;t like these. Skip.
+          </button>
+        )}
         {!isLastStep && (
           <Button
             onClick={handleNextClick}
@@ -98,4 +112,3 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     </div>
   );
 }
-
