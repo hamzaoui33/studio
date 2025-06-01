@@ -20,9 +20,8 @@ export function Step5Name() {
       placeholder={stepData.placeholder || "Type your name here"}
       value={answers.userName}
       onChange={handleNameChange}
-      className="text-3xl md:text-4xl text-center p-4 h-auto w-full max-w-md bg-transparent border-none shadow-none focus-visible:ring-offset-0 focus-visible:ring-1"
+      className="text-3xl md:text-4xl text-center p-4 h-auto w-full max-w-md bg-transparent border-none shadow-none focus-visible:ring-offset-0 focus-visible:ring-0"
       autoFocus
     />
   );
 }
-
