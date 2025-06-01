@@ -6,15 +6,15 @@ import { useQuiz } from "@/context/QuizContext";
 import { Hand } from "lucide-react";
 
 export function Step6Greeting() {
-  const { answers, nextStep } = useQuiz();
+  const { answers, internalNextStep } = useQuiz(); // Use internalNextStep
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      nextStep();
-    }, 2000); // 2 seconds
+      internalNextStep(); // Call internalNextStep
+    }, 1500); // Updated to 1500ms
 
     return () => clearTimeout(timer); // Cleanup timer on component unmount
-  }, [nextStep]);
+  }, [internalNextStep]); // Depend on internalNextStep
 
   return (
     <div className="flex flex-col items-center justify-center text-center animate-fadeIn py-10"> {/* Removed h-full, added py-10 for some spacing */}

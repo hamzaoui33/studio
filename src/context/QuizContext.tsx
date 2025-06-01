@@ -35,6 +35,7 @@ interface QuizContextType {
   getRoomOptionsForFocusStep: () => Array<{ id: string; name: string; icon?: any }>;
   triggerNextStepFlow: () => Promise<boolean>; 
   isNextActionDisabled: () => boolean;
+  internalNextStep: () => void; // Added for direct advancement
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -222,8 +223,9 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   
   useEffect(() => {
     const handleMessageFromParent = (event: MessageEvent) => {
-      // if (event.origin !== PARENT_WORDPRESS_ORIGIN && PARENT_WORDPRESS_ORIGIN !== '*') {
-      //   console.warn('QuizContext: Message received from untrusted origin:', event.origin);
+      // IMPORTANT: For security, ensure PARENT_WORDPRESS_ORIGIN is set to your WordPress domain.
+      // if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
+      //   // console.warn('QuizContext: Message received from untrusted origin:', event.origin);
       //   return;
       // }
 
@@ -244,10 +246,11 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {
       const isDisabled = isNextActionDisabled();
+      // IMPORTANT: For security, ensure PARENT_WORDPRESS_ORIGIN is set to your WordPress domain.
       window.parent.postMessage({ type: 'quizButtonStateUpdate', isDisabled: isDisabled }, PARENT_WORDPRESS_ORIGIN);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStep, answers, isLoading]); // Re-evaluate whenever isNextActionDisabled might change
+  }, [currentStep, answers, isLoading]); // Re-evaluate whenever isNextActionDisabled might change. Added answers and isLoading.
 
   return (
     <QuizContext.Provider
@@ -264,6 +267,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         getRoomOptionsForFocusStep,
         triggerNextStepFlow,
         isNextActionDisabled,
+        internalNextStep, // Expose internalNextStep
       }}
     >
       {children}
