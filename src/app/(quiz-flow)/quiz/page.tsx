@@ -123,8 +123,8 @@ export default function QuizPage() {
       <>
         <div 
           id={mainWrapperId} 
-          className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12"> {/* Adjusted padding, removed min-h */}
-          <div className="animate-fadeIn flex flex-col justify-center items-center"> {/* Removed min-h */}
+          className="w-full max-w-7xl mx-auto px-[15px] pt-28 md:pt-32 pb-8 md:pb-12">
+          <div className="animate-fadeIn flex flex-col justify-center items-center">
             {renderStepContent()}
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function QuizPage() {
       <>
         <div 
           id={mainWrapperId}
-          className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12 text-center">
+          className="w-full max-w-7xl mx-auto px-[15px] pt-28 md:pt-32 pb-8 md:pb-12 text-center">
             <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
             <p>Please try resetting the quiz or contact support.</p>
         </div>
@@ -152,7 +152,7 @@ export default function QuizPage() {
     <>
       <div 
         id={mainWrapperId}
-        className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12"
+        className="w-full max-w-7xl mx-auto px-[15px] pt-28 md:pt-32 pb-8 md:pb-12"
       >
         {stepDetails && (
           <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
@@ -180,12 +180,12 @@ export default function QuizPage() {
             <div className={cn(
               "md:col-span-6 animate-fadeIn",
               (currentStep === 5 || currentStep === 7) 
-                ? "bg-input-panel-bg rounded-lg p-6 md:p-12 w-full max-w-xl mx-auto flex flex-col items-center justify-center" // Removed min-h for input panels
-                : "flex flex-col justify-start items-center" // Removed md:max-h, md:overflow-y-auto, md:pr-4
+                ? "bg-input-panel-bg rounded-lg p-6 md:p-12 w-full max-w-xl mx-auto flex flex-col items-center justify-center"
+                : "flex flex-col justify-start items-center md:max-h-[calc(100vh-8rem-7rem)] md:overflow-y-auto md:pr-4" 
             )}>
               <div className={cn(
                 "w-full",
-                 (currentStep === 5 || currentStep === 7) && "flex flex-col justify-center items-center" // Removed h-full
+                 (currentStep === 5 || currentStep === 7) && "flex flex-col justify-center items-center"
               )}>
                 {renderStepContent()}
               </div>
@@ -197,5 +197,3 @@ export default function QuizPage() {
     </>
   );
 }
-
-    

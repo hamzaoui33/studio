@@ -7,7 +7,7 @@ import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import Link from 'next/link';
-import Image from 'next/image'; // Import next/image
+import Image from 'next/image';
 
 interface QuizNavigationProps {
   onNext?: () => boolean | Promise<boolean>;
@@ -58,11 +58,12 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[55] bg-background border-b border-border p-4 flex items-center justify-between">
+    <div className="fixed top-0 left-0 right-0 z-[55] bg-background border-b border-border p-[15px] flex items-center justify-between">
       {/* Left Part: Logo and potentially Total Rooms on Desktop */}
       <div className="flex items-center gap-2 md:gap-4">
         <Link href="/" aria-label="Go to homepage" className="block">
           {/* ---- Logo Replaced ---- */}
+          {/* Make sure my-logo.png is in the /public folder */}
           <Image src="/my-logo.png" alt="DecorStyle Discovery Logo" width={80} height={28} className="h-7 w-auto" />
           {/* ---- End Logo ---- */}
         </Link>
@@ -74,8 +75,8 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
         )}
       </div>
 
-      {/* Middle Part (mainly for Skip on Step 1) */}
-      <div className="flex-grow flex justify-center px-2">
+      {/* Right Part: Skip Button (conditional) and Next/Submit Button */}
+      <div className="flex items-center gap-2">
         {currentStep === 1 && answers.swoonWorthyRooms.length === 0 && !isLastStep && (
           <button
             onClick={handleSkipStep1}
@@ -85,10 +86,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             I don&apos;t like these. Skip.
           </button>
         )}
-      </div>
 
-      {/* Right Part: Next/Submit Button */}
-      <div className="flex-shrink-0">
         {!isLastStep && (
           <Button
             onClick={handleNextClick}
