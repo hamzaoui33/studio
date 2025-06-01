@@ -9,7 +9,7 @@ import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Step1SwoonWorthy() {
-  const { answers, updateAnswer } = useQuiz();
+  const { answers, updateAnswer, nextStep } = useQuiz();
 
   const handleSelectImage = (optionId: string) => {
     const currentSelection = answers.swoonWorthyRooms;
@@ -18,6 +18,15 @@ export function Step1SwoonWorthy() {
       : [...currentSelection, optionId];
     updateAnswer("swoonWorthyRooms", newSelection);
   };
+
+  const handleSkip = () => {
+    // Ensure swoonWorthyRooms is empty if skipping
+    if (answers.swoonWorthyRooms.length > 0) {
+        updateAnswer("swoonWorthyRooms", []);
+    }
+    nextStep();
+    window.scrollTo(0,0);
+  }
 
   return (
     <div className="overflow-y-auto md:max-h-[calc(100vh-8.5rem)] pr-2">
@@ -51,6 +60,17 @@ export function Step1SwoonWorthy() {
           </div>
         ))}
       </div>
+      {answers.swoonWorthyRooms.length === 0 && (
+        <div className="mt-6 text-center">
+          <button
+            onClick={handleSkip}
+            className="text-sm text-muted-foreground hover:text-accent transition-colors underline"
+            aria-label="Skip this step"
+          >
+            I don't like these. Skip.
+          </button>
+        </div>
+      )}
     </div>
   );
 }
