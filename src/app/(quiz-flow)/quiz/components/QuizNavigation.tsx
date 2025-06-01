@@ -6,7 +6,7 @@ import { useQuiz } from "@/context/QuizContext";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import Link from 'next/link';
+// Link import is removed as it's no longer used for the logo
 import Image from 'next/image';
 
 interface QuizNavigationProps {
@@ -57,12 +57,30 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     return null;
   }
 
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault(); // Prevent default <a> tag navigation
+    const targetUrl = 'https://decorwhisper.com';
+    if (window.parent !== window) { // Ensure it's in an iframe
+      // IMPORTANT: For production, replace '*' with your WordPress site's specific origin for security.
+      window.parent.postMessage({ type: 'navigateToParentUrl', url: targetUrl }, '*');
+    } else {
+      // Fallback if not in an iframe (though unlikely for this component's typical use)
+      window.top.location.href = targetUrl;
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 right-0 z-[55] bg-background border-b border-border p-[15px] flex items-center justify-between">
       {/* Left Part: Logo and potentially Total Rooms on Desktop */}
       <div className="flex items-center gap-2 md:gap-4">
-        <Link href="/" aria-label="Go to homepage" className="block">
-          {/* ---- Logo Replaced ---- */}
+        <a
+          href="https://decorwhisper.com"
+          onClick={handleLogoClick}
+          target="_top" // Fallback for direct click/open in new tab & no JS
+          aria-label="Go to DecorWhisper homepage"
+          className="block"
+        >
+          {/* ---- Logo ---- */}
           <Image 
             src="https://decorwhisper.com/wp-content/uploads/2025/06/my-logo.png" 
             alt="DecorStyle Discovery Logo" 
@@ -70,7 +88,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             height={28} 
             className="h-7 w-auto" />
           {/* ---- End Logo ---- */}
-        </Link>
+        </a>
         {/* Total Rooms: Shown on desktop for step 3 */}
         {currentStep === 3 && totalSelectedRooms > 0 && (
           <span className="hidden md:block text-sm font-medium text-muted-foreground">
