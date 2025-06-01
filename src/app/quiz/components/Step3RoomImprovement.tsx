@@ -32,8 +32,8 @@ export function Step3RoomImprovement() {
   };
 
   return (
-    <div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10"> {/* Adjusted md:grid-cols for new column layout */}
+    <div className="flex flex-col items-center">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10">
         {quizData.step3.options.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = !!answers.roomImprovementSelections[option.id];
@@ -44,7 +44,7 @@ export function Step3RoomImprovement() {
               <div
                 onClick={() => handleSelectRoom(option.id)}
                 className={cn(
-                  "circular-option group relative", // Simplified classes
+                  "circular-option group relative",
                   isSelected && "circular-option-selected"
                 )}
                 role="checkbox"
@@ -54,7 +54,7 @@ export function Step3RoomImprovement() {
               >
                 {IconComponent && (
                   <div className="circular-option-icon mb-1.5">
-                    <IconComponent className="h-8 w-8 md:h-10 md:w-10" /> {/* Standardized icon size */}
+                    <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
                   </div>
                 )}
                 <span className="circular-option-text">{option.name}</span>
@@ -77,7 +77,6 @@ export function Step3RoomImprovement() {
                   <span className="text-sm font-medium text-foreground w-4 text-center tabular-nums">{quantity}</span>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleQuantityChange(option.id, quantity + 1); }}
-                    // Example: disabled={quantity >= 10} for a max limit
                     className="p-1.5 bg-card border border-border rounded-full hover:bg-muted transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
                     aria-label={`Increase quantity for ${option.name}`}
                   >

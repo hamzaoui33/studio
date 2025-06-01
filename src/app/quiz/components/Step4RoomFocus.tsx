@@ -20,7 +20,7 @@ export function Step4RoomFocus() {
 
   if (focusRoomOptions.length === 0) {
     return (
-      <div>
+      <div className="flex flex-col items-center">
         <Alert variant="default" className="bg-card border-border">
           <Target className="h-4 w-4 text-accent" />
           <AlertTitle className="text-foreground">No Rooms Selected</AlertTitle>
@@ -34,8 +34,8 @@ export function Step4RoomFocus() {
   }
 
   return (
-    <div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"> {/* Adjusted md:grid-cols for new column layout */}
+    <div className="flex flex-col items-center">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10">
         {focusRoomOptions.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = answers.roomFocusSelection === option.id;
@@ -45,7 +45,7 @@ export function Step4RoomFocus() {
               key={option.id}
               onClick={() => handleSelectFocusRoom(option.id)}
               className={cn(
-                "circular-option group relative", // Simplified classes
+                "circular-option group relative",
                 isSelected && "circular-option-selected"
               )}
               role="radio"
@@ -55,7 +55,7 @@ export function Step4RoomFocus() {
             >
               {IconComponent && (
                 <div className="circular-option-icon mb-1.5">
-                  <IconComponent className="h-8 w-8 md:h-10 md:w-10" /> {/* Standardized icon size */}
+                  <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
                 </div>
               )}
               <span className="circular-option-text">{option.name}</span>

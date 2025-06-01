@@ -15,8 +15,8 @@ export function Step5HomeOwnership() {
   };
 
   return (
-    <div>
-      <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-sm mx-auto md:max-w-none md:mx-0"> {/* Adjusted max-width for new column layout */}
+    <div className="flex flex-col items-center">
+      <div className="grid grid-cols-2 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10 max-w-sm">
         {quizData.step5.options.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = answers.homeOwnershipStatus === option.id;
@@ -26,7 +26,7 @@ export function Step5HomeOwnership() {
               key={option.id}
               onClick={() => handleSelectOwnership(option.id)}
               className={cn(
-                "circular-option group relative", // Simplified classes
+                "circular-option group relative",
                 isSelected && "circular-option-selected"
               )}
               role="radio"
@@ -36,10 +36,10 @@ export function Step5HomeOwnership() {
             >
               {IconComponent && (
                 <div className="circular-option-icon mb-2">
-                  <IconComponent className="h-8 w-8 md:h-10 md:w-10" /> {/* Standardized icon size */}
+                  <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
                 </div>
               )}
-              <span className="circular-option-text">{option.name}</span> {/* Removed explicit text sizing */}
+              <span className="circular-option-text">{option.name}</span>
             </div>
           );
         })}
