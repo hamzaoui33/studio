@@ -1,42 +1,37 @@
 
 "use client";
 
+import { useState } from 'react';
 import { useQuiz } from "@/context/QuizContext";
 import { quizData, iconMap } from "@/lib/quiz-data";
 import type { IconTextOption } from "@/types/quiz";
 import { cn } from "@/lib/utils";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Target } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import type { LucideIcon } from 'lucide-react';
-
 
 export function Step4RoomFocus() {
   const { answers, updateAnswer, getRoomOptionsForFocusStep } = useQuiz();
-  const focusRoomOptions = getRoomOptionsForFocusStep();
+  
+  const allStep3Options = quizData.step3.options;
+  const initiallySelectedOptions = getRoomOptionsForFocusStep();
+
+  // If no rooms were selected in Step 3, default to showing all. Otherwise, start with showing only selected.
+  const [showAllRooms, setShowAllRooms] = useState(initiallySelectedOptions.length === 0);
 
   const handleSelectFocusRoom = (optionId: string) => {
     updateAnswer("roomFocusSelection", optionId);
   };
 
-  if (focusRoomOptions.length === 0) {
-    return (
-      <div className="flex flex-col items-center">
-        <Alert variant="default" className="bg-card border-border">
-          <Target className="h-4 w-4 text-accent" />
-          <AlertTitle className="text-foreground">No Rooms Selected</AlertTitle>
-          <AlertDescription className="text-muted-foreground">
-            Please go back to Step 3 and select at least one room you'd like to improve.
-            This will help us determine which room to focus on.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
+  // Determine which options to display based on the toggle state
+  const optionsToDisplay = showAllRooms ? allStep3Options : initiallySelectedOptions;
+
+  // Show toggle button only if there's a distinction between initially selected and all options
+  const showToggleButton = initiallySelectedOptions.length > 0 && initiallySelectedOptions.length < allStep3Options.length;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10">
-        {focusRoomOptions.map((option: IconTextOption) => {
+        {optionsToDisplay.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = answers.roomFocusSelection === option.id;
           
@@ -63,6 +58,18 @@ export function Step4RoomFocus() {
           );
         })}
       </div>
+
+      {showToggleButton && (
+        <button
+          onClick={() => setShowAllRooms(!showAllRooms)}
+          className="flex items-center justify-center gap-1 px-4 py-2 my-6 text-sm font-medium rounded-md text-accent hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+          aria-expanded={showAllRooms}
+        >
+          {showAllRooms ? "Show less" : "View all options"}
+          {showAllRooms ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+      )}
     </div>
   );
 }
+
