@@ -2,10 +2,10 @@
 import type { AllQuizData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 8;
+export const TOTAL_QUIZ_STEPS = 9; // Updated from 8 to 9
 
 export const quizData: AllQuizData = {
   step1: {
@@ -74,18 +74,24 @@ export const quizData: AllQuizData = {
     instruction: "Type your name below. If you're an existing member, you can Log in (feature coming soon!).",
     placeholder: "Type your name here",
   },
-  step6: {
+  step6: { // New Greeting Step
     id: 6,
+    title: "Greeting",
+    question: "", // Content handled by Step6Greeting component
+    instruction: "", // Content handled by Step6Greeting component
+  },
+  step7: { // Was Step 6
+    id: 7,
     title: "Home Ownership",
-    question: "Let's get to know each other. Do you rent or own your place?",
+    question: "Do you rent or own your place?",
     instruction: "This helps us know what kind of changes you'd be able to make.",
     options: [
       { id: "rent", name: "Rent", icon: Key },
       { id: "own", name: "Own", icon: Home },
     ],
   },
-  step7: {
-    id: 7,
+  step8: { // Was Step 7
+    id: 8,
     title: "Home Type",
     question: "What kind of home do you live in?",
     instruction: "Understanding your home type helps tailor advice.",
@@ -95,8 +101,8 @@ export const quizData: AllQuizData = {
       { id: "apartment_condo", name: "Apartment/Condo", icon: Building2 },
     ],
   },
-  step8: {
-    id: 8,
+  step9: { // Was Step 8
+    id: 9,
     title: "Budget & Contact",
     question: "You're almost there! What's your budget and email?",
     instruction: "Select a budget for your focused room and provide your email for the style guide.",
@@ -120,7 +126,8 @@ export const iconMap: { [key: string]: LucideIcon } = {
   home_office: Briefcase,
   outdoor_patio: Trees,
   entryway: Home,
-  name: User, // Added for new step
+  name: User,
+  greeting: Hand, // Added for new step
   rent: Key,
   own: Home,
   house: Home,

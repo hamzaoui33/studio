@@ -7,10 +7,11 @@ import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
 import { Step3RoomImprovement } from "./components/Step3RoomImprovement";
 import { Step4RoomFocus } from "./components/Step4RoomFocus";
-import { Step5Name } from "./components/Step5Name"; // New Step
-import { Step5HomeOwnership } from "./components/Step5HomeOwnership"; // Renamed to Step6HomeOwnership for component file, logic will point to step 6
-import { Step6HomeType } from "./components/Step6HomeType"; // Renamed to Step7HomeType
-import { Step7BudgetEmail } from "./components/Step7BudgetEmail"; // Renamed to Step8BudgetEmail
+import { Step5Name } from "./components/Step5Name";
+import { Step6Greeting } from "./components/Step6Greeting"; // New Greeting Step
+import { Step5HomeOwnership } from "./components/Step5HomeOwnership"; // Component for original step 5 (now quizData.step7)
+import { Step6HomeType } from "./components/Step6HomeType"; // Component for original step 6 (now quizData.step8)
+import { Step7BudgetEmail } from "./components/Step7BudgetEmail"; // Component for original step 7 (now quizData.step9)
 import { quizData } from "@/lib/quiz-data"; 
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
@@ -45,25 +46,27 @@ export default function QuizPage() {
           return false;
         }
         break;
-      case 5: // New Name Step
+      case 5: // Name Step
         if (!answers.userName.trim()) {
           toast({ title: "Name Required", description: "Please enter your name.", variant: "default" });
           return false;
         }
         break;
-      case 6: // Was Step 5 (Home Ownership)
+      case 6: // Greeting Step - auto advances, no validation needed from user
+        return true;
+      case 7: // Was Step 6 (Home Ownership)
         if (!answers.homeOwnershipStatus) {
           toast({ title: "Selection Required", description: "Please select your home ownership status.", variant: "default" });
           return false;
         }
         break;
-      case 7: // Was Step 6 (Home Type)
+      case 8: // Was Step 7 (Home Type)
         if (!answers.homeTypeSelection) {
           toast({ title: "Selection Required", description: "Please select your home type.", variant: "default" });
           return false;
         }
         break;
-      case 8: // Was Step 7 (Budget & Email)
+      case 9: // Was Step 8 (Budget & Email)
         if (!answers.budgetRangeSelection) {
            toast({ title: "Selection Required", description: "Please select a budget range.", variant: "default" });
           return false;
@@ -92,10 +95,11 @@ export default function QuizPage() {
       case 4: 
         const focusOptions = getRoomOptionsForFocusStep();
         return focusOptions.length > 0 && !answers.roomFocusSelection;
-      case 5: return !answers.userName.trim(); // New Name Step
-      case 6: return !answers.homeOwnershipStatus; // Was Step 5
-      case 7: return !answers.homeTypeSelection; // Was Step 6
-      case 8: return !answers.budgetRangeSelection || !answers.email; // Was Step 7
+      case 5: return !answers.userName.trim();
+      case 6: return true; // Greeting step auto-advances, disable Next button
+      case 7: return !answers.homeOwnershipStatus; // Was Step 6
+      case 8: return !answers.homeTypeSelection; // Was Step 7
+      case 9: return !answers.budgetRangeSelection || !answers.email; // Was Step 8
       default: return false;
     }
   };
@@ -106,34 +110,43 @@ export default function QuizPage() {
       case 2: return <Step2StyleSelection />;
       case 3: return <Step3RoomImprovement />;
       case 4: return <Step4RoomFocus />;
-      case 5: return <Step5Name />; // New Step
-      case 6: return <Step5HomeOwnership />; // Component for original step 5
-      case 7: return <Step6HomeType />; // Component for original step 6
-      case 8: return <Step7BudgetEmail />; // Component for original step 7
+      case 5: return <Step5Name />;
+      case 6: return <Step6Greeting />; // New Greeting Step
+      case 7: return <Step5HomeOwnership />; // Component for quizData.step7 (original step 5)
+      case 8: return <Step6HomeType />; // Component for quizData.step8 (original step 6)
+      case 9: return <Step7BudgetEmail />; // Component for quizData.step9 (original step 7)
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
 
   const getCurrentStepDetails = () => {
-    // Adjust step key mapping due to new step insertion
     const stepKey = `step${currentStep}` as keyof AllQuizData;
     return quizData[stepKey];
   }
   
   const stepDetails = getCurrentStepDetails();
 
+  // For step 6 (Greeting), we don't want to show the standard question/instruction from quizData.
+  const showStepDetails = currentStep !== 6 && stepDetails;
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
-      <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-        <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
-          {stepDetails && (
-            <>
-              <h1 className="quiz-question-title">{stepDetails.question}</h1>
-              <p className="quiz-instruction-text">{stepDetails.instruction}</p>
-            </>
+      <div className={cn(
+          "grid md:grid-cols-12 gap-8 md:gap-12 items-start",
+          currentStep === 6 && "md:grid-cols-1" // Full width for greeting step
+        )}
+      >
+        {showStepDetails && (
+          <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
+            <h1 className="quiz-question-title">{stepDetails.question}</h1>
+            <p className="quiz-instruction-text">{stepDetails.instruction}</p>
+          </div>
+        )}
+        <div className={cn(
+            "md:col-span-6 animate-fadeIn flex flex-col justify-center items-center",
+            currentStep === 6 && "md:col-span-12 h-[calc(100vh-200px)]" // Full width and take more height for greeting
           )}
-        </div>
-        <div className="md:col-span-6 animate-fadeIn flex flex-col justify-center items-center">
+        >
           {renderStepContent()}
         </div>
       </div>

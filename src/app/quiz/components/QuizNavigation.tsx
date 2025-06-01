@@ -29,6 +29,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
   };
 
   const handleSubmitClick = async () => {
+    // For the last step (now step 9), check email
     if (isLastStep && !answers.email) {
       toast({
         title: "Email Required",
@@ -63,6 +64,11 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     ? Object.values(answers.roomImprovementSelections).reduce((sum, count) => sum + count, 0)
     : 0;
 
+  // Hide navigation for step 6 (Greeting step)
+  if (currentStep === 6) {
+    return null;
+  }
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
       <div className="w-full sm:w-auto sm:flex-grow text-center sm:text-left">
@@ -76,7 +82,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
         {currentStep === 1 && answers.swoonWorthyRooms.length === 0 && !isLastStep && (
           <button
             onClick={handleSkipStep1}
-            className="text-sm text-muted-foreground hover:text-accent transition-colors order-last sm:order-first sm:mr-4" // order-last for mobile stacking, order-first for row, mr-4 for spacing
+            className="text-sm text-muted-foreground hover:text-accent transition-colors order-last sm:order-first sm:mr-4"
             aria-label="Skip this step"
           >
             I don&apos;t like these. Skip.
@@ -96,7 +102,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
         {isLastStep && (
           <Button
             onClick={handleSubmitClick}
-            disabled={isLoading || !answers.email}
+            disabled={isLoading || !answers.email} // Ensure email is checked for the actual last step
             className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
             aria-label="Submit Quiz"
           >
