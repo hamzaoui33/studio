@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -10,6 +11,7 @@ import { useQuiz } from '@/context/QuizContext'; // Import useQuiz to reset
 export default function ResultsPage() {
   const [styleGuide, setStyleGuide] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentYear, setCurrentYear] = useState<number | null>(null); // State for current year
   const router = useRouter();
   const { resetQuiz } = useQuiz(); // Get resetQuiz from context
 
@@ -18,6 +20,7 @@ export default function ResultsPage() {
     if (storedGuide) {
       setStyleGuide(storedGuide);
     }
+    setCurrentYear(new Date().getFullYear()); // Set year on client-side
     setIsLoading(false);
   }, []);
 
@@ -107,7 +110,8 @@ export default function ResultsPage() {
         </Card>
          <footer className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} DecorStyle Discovery.
+            {currentYear && <>© {currentYear} DecorStyle Discovery.</>}
+            {!currentYear && <>© DecorStyle Discovery.</>} {/* Fallback or placeholder if year not yet loaded */}
           </p>
       </footer>
       </div>
