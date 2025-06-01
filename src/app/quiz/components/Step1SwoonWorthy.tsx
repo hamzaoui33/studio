@@ -21,7 +21,7 @@ export function Step1SwoonWorthy() {
 
   return (
     <div className="overflow-y-auto md:max-h-[calc(100vh-8.5rem)] pr-2">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[15px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {quizData.step1.options.map((option: ImageOption, index: number) => (
           <div
             key={option.id}
