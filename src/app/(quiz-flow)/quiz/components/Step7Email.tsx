@@ -20,7 +20,7 @@ export function Step7Email() {
       placeholder={stepData.placeholder || "Type your email here"}
       value={answers.email}
       onChange={handleEmailChange}
-      className="text-3xl md:text-4xl text-center p-4 h-auto w-full max-w-md"
+      className="text-3xl md:text-4xl text-center p-4 h-auto w-full max-w-md bg-transparent border-none shadow-none focus-visible:ring-offset-0 focus-visible:ring-1"
       autoFocus
     />
   );
