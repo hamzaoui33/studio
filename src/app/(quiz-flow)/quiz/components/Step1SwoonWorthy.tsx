@@ -20,7 +20,7 @@ export function Step1SwoonWorthy() {
   };
 
   return (
-    <div> {/* Removed overflow-y-auto and md:max-h, pr-2 */}
+    <div className="w-full overflow-y-auto md:max-h-[calc(100vh-18rem)] pr-2"> {/* Adjusted max-h, added w-full */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {quizData.step1.options.map((option: ImageOption, index: number) => (
           <div
@@ -54,3 +54,5 @@ export function Step1SwoonWorthy() {
     </div>
   );
 }
+
+    

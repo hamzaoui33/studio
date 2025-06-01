@@ -22,7 +22,7 @@ export default function QuizPage() {
   const { currentStep, answers, getRoomOptionsForFocusStep } = useQuiz();
   const { toast } = useToast();
 
-  useIframeResizer([currentStep, answers]);
+  useIframeResizer([currentStep, answers]); // Dependencies trigger re-calculation
 
   const validateStep = (): boolean => {
     switch (currentStep) {
@@ -117,14 +117,14 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
   const mainWrapperId = "quiz-page-content-area"; 
 
-  // Full-screen steps (Greeting, Loading) - Removed min-h for better iframe shrinking
+  // Full-screen steps (Greeting, Loading)
   if ((currentStep === 6 || currentStep === 8) && stepDetails) { 
     return (
       <>
         <div 
           id={mainWrapperId} 
-          className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
-          <div className="animate-fadeIn flex flex-col justify-center items-center"> {/* Removed min-h-[calc(100vh-200px)] */}
+          className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12"> {/* Adjusted padding, removed min-h */}
+          <div className="animate-fadeIn flex flex-col justify-center items-center"> {/* Removed min-h */}
             {renderStepContent()}
           </div>
         </div>
@@ -180,12 +180,12 @@ export default function QuizPage() {
             <div className={cn(
               "md:col-span-6 animate-fadeIn",
               (currentStep === 5 || currentStep === 7) 
-                ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto flex flex-col items-center justify-center" // min-h might still be relevant here for consistent input panel size
-                : "flex flex-col justify-start items-center md:max-h-[calc(100vh-theme(spacing.32))] md:overflow-y-auto md:pr-4" 
+                ? "bg-input-panel-bg rounded-lg p-6 md:p-12 w-full max-w-xl mx-auto flex flex-col items-center justify-center" // Removed min-h for input panels
+                : "flex flex-col justify-start items-center" // Removed md:max-h, md:overflow-y-auto, md:pr-4
             )}>
               <div className={cn(
                 "w-full",
-                (currentStep === 5 || currentStep === 7) && "flex h-full flex-col justify-center items-center" 
+                 (currentStep === 5 || currentStep === 7) && "flex flex-col justify-center items-center" // Removed h-full
               )}>
                 {renderStepContent()}
               </div>
@@ -197,3 +197,5 @@ export default function QuizPage() {
     </>
   );
 }
+
+    

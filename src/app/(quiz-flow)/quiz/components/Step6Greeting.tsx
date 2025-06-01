@@ -17,7 +17,7 @@ export function Step6Greeting() {
   }, [nextStep]);
 
   return (
-    <div className="flex flex-col items-center justify-center text-center h-full animate-fadeIn">
+    <div className="flex flex-col items-center justify-center text-center animate-fadeIn py-10"> {/* Removed h-full, added py-10 for some spacing */}
       <h1 className="font-headline text-4xl md:text-5xl font-semibold text-foreground mb-8">
         Nice to meet
         <br />
@@ -28,3 +28,4 @@ export function Step6Greeting() {
   );
 }
 
+    

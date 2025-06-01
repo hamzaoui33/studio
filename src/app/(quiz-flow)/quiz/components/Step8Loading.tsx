@@ -62,7 +62,7 @@ export function Step8Loading() {
   const currentFact = didYouKnowFacts[currentFactIndex];
 
   return (
-    <div className="flex flex-col items-center justify-center text-center h-full animate-fadeIn space-y-12 md:space-y-20 py-10">
+    <div className="flex flex-col items-center justify-center text-center animate-fadeIn space-y-12 md:space-y-20 py-10"> {/* Removed h-full */}
       <div className="flex flex-col items-center space-y-3.5">
         <p className="text-base text-muted-foreground tracking-wide">
           Calculating your results...
@@ -92,3 +92,5 @@ export function Step8Loading() {
     </div>
   );
 }
+
+    
