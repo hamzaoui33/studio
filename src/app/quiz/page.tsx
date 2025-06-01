@@ -10,7 +10,7 @@ import { Step4RoomFocus } from "./components/Step4RoomFocus";
 import { Step5HomeOwnership } from "./components/Step5HomeOwnership";
 import { Step6HomeType } from "./components/Step6HomeType";
 import { Step7BudgetEmail } from "./components/Step7BudgetEmail";
-import { quizData, TOTAL_QUIZ_STEPS } from "@/lib/quiz-data"; // Ensure TOTAL_QUIZ_STEPS is exported or defined here
+import { quizData } from "@/lib/quiz-data"; 
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
 
@@ -114,13 +114,14 @@ export default function QuizPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12">
-      {/* Magenta divider bar appears *before* the new step content */}
-      {currentStep > 1 && <div className="quiz-step-divider mb-10 md:mb-16"></div>}
+      {/* Magenta divider bar removed */}
+      {/* {currentStep > 1 && <div className="quiz-step-divider mb-10 md:mb-16"></div>} */}
 
       <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
         {/* Left Column: Step Info & Question (spans 4 out of 12 columns on md+) */}
         <div className="md:col-span-4 lg:col-span-3 md:sticky md:top-10">
-          <span className="quiz-step-indicator-text">Step {currentStep}</span>
+          {/* Step indicator text removed */}
+          {/* <span className="quiz-step-indicator-text">Step {currentStep}</span> */}
           {stepDetails && (
             <>
               <h1 className="quiz-question-title">{stepDetails.question}</h1>
