@@ -33,7 +33,7 @@ export function Step2StyleSelection() {
   };
 
   return (
-    <div className="overflow-y-auto md:max-h-[calc(100vh-8.5rem)] pr-2">
+    <div className="md:max-h-[calc(100vh-8.5rem)]">
       <div className="flex flex-col gap-4 md:gap-6">
         {stepData.options.map((option: StyleOption) => (
           <div
