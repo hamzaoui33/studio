@@ -6,52 +6,21 @@ import { useQuiz } from "@/context/QuizContext";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 
-const GuaranteeBadge = () => (
-  <div className="relative w-36 h-36 md:w-44 md:h-44 border-2 border-muted rounded-full flex items-center justify-center text-center p-2 bg-card shadow-md">
-    <div className="absolute inset-0 flex items-center justify-center">
-      <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
-        <defs>
-          <path
-            id="circlePathBadge"
-            d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"
-            fill="none"
-          />
-        </defs>
-        <text dy="4" className="text-[7px] md:text-[7.5px] font-medium tracking-tighter fill-foreground/70">
-          <textPath href="#circlePathBadge" startOffset="0%" >
-            A DESIGN YOU LOVE • OR YOUR MONEY BACK • A DESIGN YOU LOVE • OR YOUR MONEY BACK •
-          </textPath>
-        </text>
-      </svg>
-    </div>
-  </div>
-);
+// GuaranteeBadge component is removed as per request
 
 const didYouKnowFacts = [
   {
-    title: "Havenly Happiness Guarantee",
-    description: "Love it or it's free.",
+    title: "Small Changes, Big Impact",
+    description: "Even a few simple tweaks can completely transform a room’s vibe.",
   },
   {
-    title: "Curated by Experts",
-    description: "Our AI sifts through thousands of styles for you.",
+    title: "Mixing Styles Works",
+    description: "Combining different design styles can create a unique and personal space.",
   },
   {
-    title: "Your Vision, Realized",
-    description: "Unlock a home that perfectly reflects your personality.",
+    title: "Lighting Sets the Mood",
+    description: "The right lighting can change how your whole room feels and looks.",
   },
-  {
-    title: "Style on a Budget",
-    description: "Great design doesn't have to break the bank. We'll show you how."
-  },
-  {
-    title: "Trends vs. Timeless",
-    description: "Discover styles that last, beyond fleeting fads."
-  },
-  {
-    title: "Small Space, Big Impact",
-    description: "Learn tricks to maximize style in any room size."
-  }
 ];
 
 export function Step8Loading() {
@@ -106,8 +75,8 @@ export function Step8Loading() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-        <div className="text-center md:text-left max-w-xs">
+      <div className="flex flex-col items-center justify-center gap-6 md:gap-12"> {/* Removed md:flex-row to stack items */}
+        <div className="text-center max-w-md"> {/* Changed md:text-left to text-center and increased max-w */}
           <p className="text-xs font-semibold uppercase text-muted-foreground mb-1.5 tracking-wider">
             DID YOU KNOW?
           </p>
@@ -118,7 +87,7 @@ export function Step8Loading() {
             {currentFact.description}
           </p>
         </div>
-        <GuaranteeBadge />
+        {/* GuaranteeBadge component removed here */}
       </div>
     </div>
   );
