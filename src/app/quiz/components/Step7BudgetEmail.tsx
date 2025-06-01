@@ -11,7 +11,7 @@ import type { LucideIcon } from 'lucide-react';
 
 export function Step7BudgetEmail() {
   const { answers, updateAnswer } = useQuiz();
-  const stepData = quizData.step7;
+  const stepData = quizData.step9; // Updated from step7 to step9
 
   const handleSelectBudget = (optionId: string) => {
     updateAnswer("budgetRangeSelection", optionId);

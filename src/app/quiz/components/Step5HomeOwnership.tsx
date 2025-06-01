@@ -9,6 +9,7 @@ import type { LucideIcon } from 'lucide-react';
 
 export function Step5HomeOwnership() {
   const { answers, updateAnswer } = useQuiz();
+  const stepData = quizData.step7; // Updated from step5 to step7
 
   const handleSelectOwnership = (optionId: string) => {
     updateAnswer("homeOwnershipStatus", optionId);
@@ -17,7 +18,7 @@ export function Step5HomeOwnership() {
   return (
     <div className="flex flex-col items-center">
       <div className="grid grid-cols-2 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10 max-w-sm">
-        {quizData.step5.options.map((option: IconTextOption) => {
+        {stepData.options.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = answers.homeOwnershipStatus === option.id;
           
