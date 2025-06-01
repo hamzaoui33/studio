@@ -1,27 +1,31 @@
 
 import type { AllQuizData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
-import { 
-  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2 
+import {
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 7; // Moved here for QuizPage import
+export const TOTAL_QUIZ_STEPS = 7;
 
 export const quizData: AllQuizData = {
   step1: {
     id: 1,
-    title: "Swoon-Worthy Rooms", // Used by QuizPage if needed, but question/instruction are primary
+    title: "Swoon-Worthy Rooms",
     question: "Select the rooms that make you swoon.",
     instruction: "Decisions are hard. Pick as many as you want. These images help us understand your initial vibe.",
     options: [
-      { id: "room1", imageUrl: "https://placehold.co/600x400.png", alt: "Modern minimalist living room", hint: "modern living room" },
-      { id: "room2", imageUrl: "https://placehold.co/600x400.png", alt: "Cozy bohemian bedroom", hint: "bohemian bedroom" },
-      { id: "room3", imageUrl: "https://placehold.co/600x400.png", alt: "Elegant classic dining room", hint: "classic dining" },
-      { id: "room4", imageUrl: "https://placehold.co/600x400.png", alt: "Rustic farmhouse kitchen", hint: "farmhouse kitchen" },
-      { id: "room5", imageUrl: "https://placehold.co/600x400.png", alt: "Scandinavian style office", hint: "scandinavian office" },
-      { id: "room6", imageUrl: "https://placehold.co/600x400.png", alt: "Industrial loft apartment", hint: "industrial loft" },
-      { id: "room7", imageUrl: "https://placehold.co/600x400.png", alt: "Coastal chic bathroom", hint: "coastal bathroom" },
-      { id: "room8", imageUrl: "https://placehold.co/600x400.png", alt: "Mid-century modern lounge", hint: "midcentury lounge" },
+      { id: "room1", imageUrl: "https://placehold.co/600x800.png", alt: "Modern minimalist living room", hint: "modern living room" },
+      { id: "room2", imageUrl: "https://placehold.co/600x800.png", alt: "Cozy bohemian bedroom", hint: "bohemian bedroom" },
+      { id: "room3", imageUrl: "https://placehold.co/600x800.png", alt: "Elegant classic dining room", hint: "classic dining" },
+      { id: "room4", imageUrl: "https://placehold.co/600x800.png", alt: "Rustic farmhouse kitchen", hint: "farmhouse kitchen" },
+      { id: "room5", imageUrl: "https://placehold.co/600x800.png", alt: "Scandinavian style office", hint: "scandinavian office" },
+      { id: "room6", imageUrl: "https://placehold.co/600x800.png", alt: "Industrial loft apartment", hint: "industrial loft" },
+      { id: "room7", imageUrl: "https://placehold.co/600x800.png", alt: "Coastal chic bathroom", hint: "coastal bathroom" },
+      { id: "room8", imageUrl: "https://placehold.co/600x800.png", alt: "Mid-century modern lounge", hint: "midcentury lounge" },
+      { id: "room9", imageUrl: "https://placehold.co/600x800.png", alt: "Art deco hallway", hint: "art deco hallway" },
+      { id: "room10", imageUrl: "https://placehold.co/600x800.png", alt: "Minimalist kitchen", hint: "minimalist kitchen" },
+      { id: "room11", imageUrl: "https://placehold.co/600x800.png", alt: "Maximalist living space", hint: "maximalist living" },
+      { id: "room12", imageUrl: "https://placehold.co/600x800.png", alt: "Japandi style bedroom", hint: "japandi bedroom" },
     ],
   },
   step2: {
@@ -45,7 +49,7 @@ export const quizData: AllQuizData = {
     id: 3,
     title: "Room Improvement",
     question: "Which rooms are on your 'It needs a little something' list?",
-    instruction: "Select as many as you like. We'll help you prioritize later.",
+    instruction: "Select as many as you like, and specify how many of each. We'll help you prioritize later.",
     options: [
       { id: "living_room", name: "Living Room", icon: Sofa },
       { id: "bedroom", name: "Bedroom", icon: BedDouble },
@@ -66,7 +70,7 @@ export const quizData: AllQuizData = {
   step5: {
     id: 5,
     title: "Home Ownership",
-    question: "Let's get to know each other. Do you rent or own your place?", // Updated question to match image text somewhat
+    question: "Let's get to know each other. Do you rent or own your place?",
     instruction: "This helps us know what kind of changes you'd be able to make.",
     options: [
       { id: "rent", name: "Rent", icon: Key },
@@ -76,7 +80,7 @@ export const quizData: AllQuizData = {
   step6: {
     id: 6,
     title: "Home Type",
-    question: "What kind of home do you live in?", // Assuming "Nice to meet you" was placeholder
+    question: "What kind of home do you live in?",
     instruction: "Understanding your home type helps tailor advice.",
     options: [
       { id: "house", name: "House", icon: Home },
@@ -87,9 +91,9 @@ export const quizData: AllQuizData = {
   step7: {
     id: 7,
     title: "Budget & Contact",
-    question: "You're almost there! What's your budget and email?", // Combined for main question
+    question: "You're almost there! What's your budget and email?",
     instruction: "Select a budget for your focused room and provide your email for the style guide.",
-    options: [ // These are budget options
+    options: [
       { id: "budget_flexible", name: "Flexible / Just Exploring", icon: HandHeart },
       { id: "budget_starter", name: "Starter Sparkle ($ - $$)", icon: Paintbrush },
       { id: "budget_makeover", name: "Makeover Magic ($$ - $$$)", icon: LayoutGrid },
@@ -118,7 +122,7 @@ export const iconMap: { [key: string]: LucideIcon } = {
   budget_starter: Paintbrush,
   budget_makeover: LayoutGrid,
   budget_deluxe: Lamp,
-  default: Target, // Default/fallback icon
+  default: Target,
   email: Mail,
   submit: CheckCircle,
   budget: Wallet,

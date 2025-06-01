@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useQuiz } from "@/context/QuizContext";
 import { quizData } from "@/lib/quiz-data";
 import type { StyleOption } from "@/types/quiz";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"; // Card is used here for options
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
@@ -35,14 +34,13 @@ export function Step2StyleSelection() {
 
   return (
     <div>
-      {/* Question and instruction removed, handled by parent QuizPage */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6"> {/* Adjusted to 2 cols for better fit */}
+      <div className="flex flex-col gap-4 md:gap-6"> {/* Changed to flex flex-col */}
         {stepData.options.map((option: StyleOption) => (
-          <div // Changed Card to div and applied selectable-card class
+          <div
             key={option.id}
             onClick={() => handleSelectStyle(option.id)}
             className={cn(
-              "selectable-card overflow-hidden flex flex-col", // Added flex flex-col
+              "selectable-card flex flex-row items-stretch overflow-hidden", // Main card: flex-row, items-stretch
               answers.styleSelections.includes(option.id) && "selected"
             )}
             role="checkbox"
@@ -51,7 +49,7 @@ export function Step2StyleSelection() {
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectStyle(option.id); }}
           >
             {option.imageUrl && (
-              <div className="aspect-[16/10] relative w-full rounded-t-md overflow-hidden"> {/* Ensure image covers */}
+              <div className="relative w-2/5 sm:w-1/3 shrink-0 aspect-[16/10]"> {/* Image container */}
                 <Image
                   src={option.imageUrl}
                   alt={option.name}
@@ -61,8 +59,8 @@ export function Step2StyleSelection() {
                 />
               </div>
             )}
-            <div className="p-4 flex-grow"> {/* Replaced CardHeader and CardContent */}
-              <h3 className={cn("font-headline text-lg md:text-xl mb-1", answers.styleSelections.includes(option.id) ? "text-accent font-semibold" : "text-foreground")}>{option.name}</h3>
+            <div className="p-4 flex-grow flex flex-col justify-center"> {/* Text content container with padding */}
+              <h3 className={cn("font-headline text-base md:text-lg mb-1", answers.styleSelections.includes(option.id) ? "text-accent font-semibold" : "text-foreground")}>{option.name}</h3>
               <p className={cn("text-sm", answers.styleSelections.includes(option.id) ? "text-accent/80" : "text-muted-foreground")}>{option.description}</p>
             </div>
           </div>
@@ -71,4 +69,3 @@ export function Step2StyleSelection() {
     </div>
   );
 }
-
