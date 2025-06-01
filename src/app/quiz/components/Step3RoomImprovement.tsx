@@ -33,7 +33,7 @@ export function Step3RoomImprovement() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10"> {/* Adjusted md:grid-cols for new column layout */}
         {quizData.step3.options.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = !!answers.roomImprovementSelections[option.id];
@@ -44,7 +44,7 @@ export function Step3RoomImprovement() {
               <div
                 onClick={() => handleSelectRoom(option.id)}
                 className={cn(
-                  "circular-option group w-full h-auto min-h-[100px] md:min-h-[130px] p-3 relative",
+                  "circular-option group relative", // Simplified classes
                   isSelected && "circular-option-selected"
                 )}
                 role="checkbox"
@@ -54,7 +54,7 @@ export function Step3RoomImprovement() {
               >
                 {IconComponent && (
                   <div className="circular-option-icon mb-1.5">
-                    <IconComponent className="h-7 w-7 md:h-8 md:w-8" />
+                    <IconComponent className="h-8 w-8 md:h-10 md:w-10" /> {/* Standardized icon size */}
                   </div>
                 )}
                 <span className="circular-option-text">{option.name}</span>

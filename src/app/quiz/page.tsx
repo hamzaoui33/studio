@@ -115,17 +115,18 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-20 md:pb-24">
+    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32"> {/* Increased bottom padding */}
       <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-        <div className="md:col-span-5 lg:col-span-4 md:sticky md:top-10">
+        <div className="md:col-span-6 md:sticky md:top-10"> {/* Changed to md:col-span-6 */}
           {stepDetails && (
             <>
+              {/* Step indicator and divider removed as per previous request */}
               <h1 className="quiz-question-title">{stepDetails.question}</h1>
               <p className="quiz-instruction-text">{stepDetails.instruction}</p>
             </>
           )}
         </div>
-        <div className="md:col-span-7 lg:col-span-8 animate-fadeIn">
+        <div className="md:col-span-6 animate-fadeIn"> {/* Changed to md:col-span-6 */}
           {renderStepContent()}
         </div>
       </div>
@@ -133,4 +134,3 @@ export default function QuizPage() {
     </div>
   );
 }
-

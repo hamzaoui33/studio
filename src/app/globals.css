@@ -104,7 +104,7 @@ body {
 /* Updated component styles */
 @layer components {
   .circular-option { /* For steps 3, 4, 5, 6 */
-    @apply bg-card border-2 border-transparent rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-200 aspect-square p-3 text-center shadow-sm hover:border-muted;
+    @apply bg-card border-2 border-transparent rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-200 aspect-square text-center shadow-sm hover:border-muted w-28 h-28 md:w-36 md:h-36 p-3;
   }
   .circular-option-selected {
     @apply border-accent bg-accent/10 ring-2 ring-accent/70; /* Orange/Brown border, light orange fill */
@@ -116,11 +116,11 @@ body {
     @apply text-accent;
   }
   .circular-option-text {
-    @apply text-xs font-medium text-foreground/70 group-hover:text-accent transition-colors;
+    @apply font-medium text-foreground/70 group-hover:text-accent transition-colors text-xs md:text-sm;
   }
    .circular-option-selected .circular-option-text {
     @apply text-accent font-semibold;
-  }
+   }
 
   .image-selection-card { /* For step 1 */
     @apply relative overflow-hidden rounded-md shadow-sm cursor-pointer transition-all duration-200 border-2 border-transparent bg-card;
@@ -165,8 +165,8 @@ body {
   .quiz-instruction-text {
     @apply text-base text-muted-foreground mb-6 md:mb-8;
   }
-  .quiz-step-divider {
-    @apply h-2 md:h-3 w-full bg-primary my-10 md:my-16; /* Pink/Magenta bar */
+  .quiz-step-divider { /* Removed as per user request */
+    /* @apply h-2 md:h-3 w-full bg-primary my-10 md:my-16; */ 
   }
   .quiz-input-panel { 
     @apply bg-input-panel-bg p-6 md:p-10 rounded-lg flex flex-col items-center justify-center min-h-[200px] md:min-h-[250px] w-full;
