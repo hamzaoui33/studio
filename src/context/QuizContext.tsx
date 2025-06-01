@@ -95,7 +95,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const validateCurrentStep = useCallback((): boolean => {
     switch (currentStep) {
       case 1:
-        // No specific validation, but could check answers.swoonWorthyRooms.length > 0 if needed for "Next" button logic
+        if (answers.swoonWorthyRooms.length === 0) {
+          toast({ title: "Selection Required", description: "Please select at least one image to continue.", variant: "default" });
+          return false;
+        }
         break;
       case 2:
         if (answers.styleSelections.length === 0) {
@@ -281,5 +284,3 @@ export function useQuiz() {
   }
   return context;
 }
-
-    
