@@ -109,6 +109,9 @@ body {
   .circular-option-selected {
     @apply border-accent bg-accent/10 ring-2 ring-accent/70; /* Orange/Brown border, light orange fill */
   }
+  .circular-option-icon { /* Removed mb-1 from svg, using mb-2 on div wrapper in component */
+     /* @apply mb-2; Ensure this is applied in the component's div wrapping the icon */
+  }
   .circular-option-icon svg {
     @apply text-foreground/60 group-hover:text-accent transition-colors;
   }
@@ -169,7 +172,7 @@ body {
     /* @apply h-2 md:h-3 w-full bg-primary my-10 md:my-16; */ 
   }
   .quiz-input-panel { 
-    @apply bg-input-panel-bg p-6 md:p-10 rounded-lg flex flex-col items-center justify-center min-h-[200px] md:min-h-[250px] w-full;
+    @apply bg-input-panel-bg p-6 md:p-10 rounded-lg flex flex-col items-center justify-center min-h-[200px] md:min-h-[250px]; /* Removed w-full */
   }
 }
 
@@ -183,3 +186,4 @@ body {
 .instruction-text {
     /* Styles removed, components should use .quiz-instruction-text */
 }
+

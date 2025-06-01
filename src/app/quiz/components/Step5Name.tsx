@@ -14,16 +14,16 @@ export function Step5Name() {
   };
 
   return (
-    // This div is the panel itself, centered by its parent in QuizPage.
+    // This panel will be constrained by max-w-xl and centered by its parent in QuizPage.
     // The quiz-input-panel class handles background, padding, and centering of its children.
-    <div className="quiz-input-panel"> 
+    <div className="quiz-input-panel w-full max-w-xl"> 
       <Input
         type="text"
         id="userName"
         placeholder={stepData.placeholder || "Type your name here"}
         value={answers.userName}
         onChange={handleNameChange}
-        className="text-2xl md:text-3xl text-center p-4 h-auto bg-transparent border-none focus:ring-0 focus:border-none shadow-none placeholder:text-muted-foreground/70 w-full max-w-lg"
+        className="text-2xl md:text-3xl text-center p-4 h-auto bg-transparent border-none focus:ring-0 focus:border-none shadow-none placeholder:text-muted-foreground/70 w-full"
         autoFocus
       />
     </div>

@@ -59,7 +59,7 @@ export function Step7BudgetEmail() {
         })}
       </div>
 
-      <div className="quiz-input-panel">
+      <div className="quiz-input-panel w-full"> {/* Added w-full here */}
         <div className="w-full max-w-md text-center">
             <Label htmlFor="email" className="block text-lg font-semibold text-foreground mb-3">{stepData.emailPrompt}</Label>
             <Input
