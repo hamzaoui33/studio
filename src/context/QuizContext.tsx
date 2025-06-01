@@ -1,9 +1,10 @@
+
 "use client";
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import type { QuizAnswers } from '@/types/quiz';
-import { TOTAL_QUIZ_STEPS, quizData } from '@/lib/quiz-data';
+import { type QuizAnswers, TOTAL_QUIZ_STEPS } from '@/types/quiz';
+import { quizData } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
 
@@ -75,18 +76,15 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const getRoomOptionsForFocusStep = useCallback(() => {
     const selectedRoomIds = answers.roomImprovementSelections;
     if (!selectedRoomIds || selectedRoomIds.length === 0) {
-      // If no rooms selected in step 3, offer all available rooms (excluding "Other", "Not Sure Yet" if they existed)
-      // For now, assuming all step 3 options are valid focus rooms.
       return quizData.step3.options;
     }
     return quizData.step3.options.filter(option => selectedRoomIds.includes(option.id));
-  }, [answers.roomImprovementSelections]);
+  }, [answers.roomImprovementSelections, quizData.step3.options]);
 
 
   const handleQuizSubmit = async (): Promise<string | null> => {
     setIsLoading(true);
     try {
-      // Dynamically import server action
       const { generateStyleGuide } = await import('@/ai/flows/generate-style-guide');
       
       const aiInput: GenerateStyleGuideInput = {
@@ -108,16 +106,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Error generating style guide:", error);
       setIsLoading(false);
-      // Optionally, show a toast notification for the error
-      // toast({ title: "Error", description: "Failed to generate style guide. Please try again." });
       return null;
     }
   };
   
-  // Reset quiz if user navigates back to quiz start page and it's not the first load
   useEffect(() => {
     if (currentStep === 1 && JSON.stringify(answers) !== JSON.stringify(initialAnswers)) {
-      // This condition might need to be refined based on desired reset behavior
     }
   }, [currentStep, answers]);
 
