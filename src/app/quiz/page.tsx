@@ -150,7 +150,7 @@ export default function QuizPage() {
                 {line}
               </p>
             ))}
-            {(currentStep === 1 || currentStep === 5 || currentStep === 7) && (
+             {(currentStep === 1 || currentStep === 5 || currentStep === 7) && (
               <div className="mt-6">
                 <p className="text-sm text-muted-foreground">Already a member?</p>
                 <a
@@ -167,10 +167,15 @@ export default function QuizPage() {
           <div className={cn(
             "md:col-span-6 animate-fadeIn",
             (currentStep === 5 || currentStep === 7)
-              ? "bg-black rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto md:flex md:flex-col md:justify-center md:items-center" // Panel styles + desktop centering
+              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto md:flex md:flex-col md:items-center md:justify-start" // Panel styles + desktop centering
               : "flex flex-col justify-center items-center" // Default centering for other steps' content column
           )}>
-            {renderStepContent()}
+            <div className={cn(
+              "w-full",
+              (currentStep === 5 || currentStep === 7) && "md:flex md:h-full md:flex-col md:justify-center" // This inner div ensures vertical centering on desktop only for these steps
+            )}>
+              {renderStepContent()}
+            </div>
           </div>
         </div>
       )}
@@ -178,3 +183,4 @@ export default function QuizPage() {
     </div>
   );
 }
+
