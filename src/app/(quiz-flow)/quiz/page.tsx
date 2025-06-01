@@ -134,6 +134,7 @@ export default function QuizPage() {
         <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12 text-center">
             <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
             <p>Please try resetting the quiz or contact support.</p>
+            <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
         </div>
     );
   }
@@ -143,7 +144,7 @@ export default function QuizPage() {
     <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
       {stepDetails && (
         <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-          <div className="md:col-span-6 md:sticky md:top-28"> {/* Adjusted sticky top value */}
+          <div className="md:col-span-6 md:sticky md:top-32"> {/* Changed md:top-28 to md:top-32 */}
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
               <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && "mb-0" )}>
