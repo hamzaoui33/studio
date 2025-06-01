@@ -10,13 +10,13 @@ body {
 @layer base {
   :root {
     /* New color scheme based on the image */
-    --background: 40 60% 97%; /* Very light beige/off-white */
+    --background: 0 0% 100%; /* White */
     --foreground: 210 10% 23%; /* Dark Gray for text (slightly blueish cool gray) */
 
     --muted: 40 30% 90%; /* Lighter beige for muted backgrounds */
     --muted-foreground: 210 10% 45%; /* Slightly lighter gray for muted text */
 
-    --popover: 40 60% 97%;
+    --popover: 0 0% 100%; /* White */
     --popover-foreground: 210 10% 23%;
 
     --card: 40 50% 92%; /* Light beige for card backgrounds (options) */
@@ -54,7 +54,7 @@ body {
 
     /* Sidebar variables from original theme - adjust if sidebar is used with new theme */
     --sidebar-background: 210 10% 15%; /* Example: Darker for contrast if needed */
-    --sidebar-foreground: 40 60% 97%;
+    --sidebar-foreground: 0 0% 100%; /* White */
     --sidebar-primary: 330 80% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 36 30% 59%; /* New color #B69D78 for sidebar accent */
@@ -66,13 +66,13 @@ body {
   .dark {
     /* Define dark mode if necessary, for now, let's keep it simple or match light */
     --background: 210 10% 10%; 
-    --foreground: 40 60% 97%;
+    --foreground: 0 0% 100%; /* White */
     --muted: 210 10% 15%;
     --muted-foreground: 40 30% 80%;
     --popover: 210 10% 10%;
-    --popover-foreground: 40 60% 97%;
+    --popover-foreground: 0 0% 100%; /* White */
     --card: 210 10% 12%;
-    --card-foreground: 40 60% 97%;
+    --card-foreground: 0 0% 100%; /* White */
     --border: 210 10% 20%;
     --input: 210 10% 18%;
     --input-panel-bg: 210 10% 12%;
