@@ -53,7 +53,7 @@ export function Step3RoomImprovement() {
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectRoom(option.id); }}
               >
                 {IconComponent && (
-                  <div className="circular-option-icon mb-1.5">
+                  <div className="circular-option-icon mb-2">
                     <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
                   </div>
                 )}
