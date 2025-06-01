@@ -33,7 +33,8 @@ export function Step2StyleSelection() {
   };
 
   return (
-    <div className="w-full overflow-y-auto md:max-h-[calc(100vh-18rem)] pr-2"> {/* Adjusted max-h, added w-full */}
+    // Removed overflow-y-auto, md:max-h-..., and pr-2 from this div
+    <div className="w-full"> 
       <div className="flex flex-col gap-4 md:gap-6">
         {stepData.options.map((option: StyleOption) => (
           <div
@@ -69,5 +70,3 @@ export function Step2StyleSelection() {
     </div>
   );
 }
-
-    

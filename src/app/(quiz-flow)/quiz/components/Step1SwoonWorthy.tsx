@@ -7,11 +7,9 @@ import { quizData } from "@/lib/quiz-data";
 import type { ImageOption } from "@/types/quiz";
 import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-// Button import is no longer needed if the skip button is removed
-// import { Button } from "@/components/ui/button"; 
 
 export function Step1SwoonWorthy() {
-  const { answers, updateAnswer } = useQuiz(); // Removed triggerNextStepFlow as skip button is removed
+  const { answers, updateAnswer } = useQuiz();
 
   const handleSelectImage = (optionId: string) => {
     const currentSelection = answers.swoonWorthyRooms;
@@ -21,14 +19,10 @@ export function Step1SwoonWorthy() {
     updateAnswer("swoonWorthyRooms", newSelection);
   };
 
-  // handleSkipStep1 function is no longer needed
-  // const handleSkipStep1 = async () => { 
-  //   await triggerNextStepFlow(); 
-  // };
-
   return (
     <div className="w-full">
-      <div className="overflow-y-auto md:max-h-[calc(100vh-18rem)] pr-1">
+      {/* Removed overflow-y-auto, md:max-h-..., and pr-1 from this div */}
+      <div>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {quizData.step1.options.map((option: ImageOption, index: number) => (
             <div
@@ -60,7 +54,6 @@ export function Step1SwoonWorthy() {
           ))}
         </div>
       </div>
-      {/* Conditional skip button removed from here */}
     </div>
   );
 }
