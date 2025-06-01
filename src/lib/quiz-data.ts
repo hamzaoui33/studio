@@ -5,7 +5,7 @@ import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 8; // Updated from 11 to 8
+export const TOTAL_QUIZ_STEPS = 8;
 
 export const quizData: AllQuizData = {
   step1: {
@@ -77,23 +77,22 @@ export const quizData: AllQuizData = {
   step6: {
     id: 6,
     title: "Greeting",
-    question: "",
-    instruction: "",
+    question: "", // No question text, handled by component
+    instruction: "", // No instruction text, handled by component
   },
   step7: {
     id: 7,
     title: "Unlock Your Results",
     question: "You're almost there!",
-    instruction: "Enter your email to see your style results.\nAlready a member?\nLog in",
+    instruction: "Enter your email to see your style results.", // Simplified
     placeholder: "Type your email here",
   },
   step8: {
     id: 8,
     title: "Calculating Results",
-    question: "",
-    instruction: "",
+    question: "", // No question text, handled by component
+    instruction: "", // No instruction text, handled by component
   },
-  // Removed step9 (Home Ownership), step10 (Home Type), step11 (Budget)
 };
 
 export const iconMap: { [key: string]: LucideIcon } = {
@@ -109,19 +108,18 @@ export const iconMap: { [key: string]: LucideIcon } = {
   greeting: Hand,
   email: Mail,
   loading: Loader,
-  // Removed icons specific to deleted steps if any, or ensured they are harmless if shared
-  rent: Key, // Kept for now, though step is removed
-  own: Home, // Kept for now
-  house: Home, // Kept for now
-  townhouse: Building, // Kept for now
-  apartment_condo: Building2, // Kept for now
-  budget_flexible: HandHeart, // Kept for now
-  budget_starter: Paintbrush, // Kept for now
-  budget_makeover: LayoutGrid, // Kept for now
-  budget_deluxe: Lamp, // Kept for now
+  rent: Key,
+  own: Home,
+  house: Home,
+  townhouse: Building,
+  apartment_condo: Building2,
+  budget_flexible: HandHeart,
+  budget_starter: Paintbrush,
+  budget_makeover: LayoutGrid,
+  budget_deluxe: Lamp,
   default: Target,
   submit: CheckCircle,
-  wallet: Wallet, // Kept, alias for budget
+  wallet: Wallet,
 };
 
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {

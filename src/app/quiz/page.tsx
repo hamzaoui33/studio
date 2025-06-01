@@ -25,12 +25,8 @@ export default function QuizPage() {
   const validateStep = (): boolean => {
     switch (currentStep) {
       case 1:
-        if (answers.swoonWorthyRooms.length === 0) {
-          // Allow skipping if no images are selected, but next button will be disabled.
-          // Validation here is for proceeding, which is fine if they skip (handled by skip button).
-          // If they press Next (which should be disabled), this could trigger.
-          // However, the primary enforcement is disabling the Next button itself.
-        }
+        // Validation for proceeding is fine if they skip (handled by skip button).
+        // If they press Next, it's disabled if no selection, so this won't prevent flow if skip is used.
         break;
       case 2:
         if (answers.styleSelections.length === 0) {
@@ -120,7 +116,7 @@ export default function QuizPage() {
   
   const stepDetails = getCurrentStepDetails();
 
-  if ((currentStep === 6 || currentStep === 8) && stepDetails) {
+  if ((currentStep === 6 || currentStep === 8) && stepDetails) { // For full-screen auto-advancing steps
     return (
       <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
         <div className="h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
@@ -147,24 +143,26 @@ export default function QuizPage() {
           <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
-              <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && (currentStep === 7 || currentStep === 5) && "mb-0" )}>
-                {currentStep === 7 && line.toLowerCase().includes("log in") ? (
-                  <>
-                    {line.substring(0, line.toLowerCase().indexOf("log in"))}
-                    <a href="#" className="font-semibold text-accent hover:underline" onClick={(e) => e.preventDefault()}>
-                      Log in
-                    </a>
-                    {line.substring(line.toLowerCase().indexOf("log in") + "log in".length)}
-                  </>
-                ) : (
-                  line
-                )}
+              <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && (currentStep === 5 || currentStep === 7) && "mb-0" )}>
+                {line}
               </p>
             ))}
+            {(currentStep === 1 || currentStep === 5 || currentStep === 7) && (
+              <div className="mt-6">
+                <p className="text-sm text-muted-foreground">Already a member?</p>
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="text-sm font-semibold text-accent hover:underline"
+                >
+                  Log in
+                </a>
+              </div>
+            )}
           </div>
           <div className={cn(
             "md:col-span-6 animate-fadeIn flex flex-col justify-center items-center",
-            (currentStep === 5 || currentStep === 7) && "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[200px] md:min-h-[250px]"
+            (currentStep === 5 || currentStep === 7) && "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto"
           )}>
             {renderStepContent()}
           </div>
