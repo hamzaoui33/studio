@@ -1,5 +1,9 @@
+
 import type { AllQuizData } from '@/types/quiz';
-import { Sofa, BedDouble, Home, VenetianMask, Gem, Trees, Building, Landmark, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { 
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2 
+} from 'lucide-react';
 
 export const quizData: AllQuizData = {
   step1: {
@@ -43,9 +47,9 @@ export const quizData: AllQuizData = {
     options: [
       { id: "living_room", name: "Living Room", icon: Sofa },
       { id: "bedroom", name: "Bedroom", icon: BedDouble },
-      { id: "kitchen", name: "Kitchen", icon: ChefHat }, // Note: ChefHat not in lucide, using placeholder. Will use a suitable one.
-      { id: "dining_room", name: "Dining Room", icon: VenetianMask }, // Placeholder, will find better
-      { id: "bathroom", name: "Bathroom", icon: Gem }, // Placeholder
+      { id: "kitchen", name: "Kitchen", icon: CookingPot },
+      { id: "dining_room", name: "Dining Room", icon: GlassWater },
+      { id: "bathroom", name: "Bathroom", icon: Bath },
       { id: "home_office", name: "Home Office", icon: Briefcase },
       { id: "outdoor_patio", name: "Outdoor/Patio", icon: Trees },
       { id: "entryway", name: "Entryway/Hallway", icon: Home },
@@ -76,7 +80,7 @@ export const quizData: AllQuizData = {
     options: [
       { id: "house", name: "House", icon: Home },
       { id: "townhouse", name: "Townhouse", icon: Building },
-      { id: "apartment_condo", name: "Apartment/Condo", icon: Landmark }, // Placeholder
+      { id: "apartment_condo", name: "Apartment/Condo", icon: Building2 },
     ],
   },
   step7: {
@@ -95,14 +99,12 @@ export const quizData: AllQuizData = {
   },
 };
 
-// Mapping for icons if string based IDs were used in quizData
-// (Not strictly needed if directly using Lucide components, but good for reference or future SVG strings)
 export const iconMap: { [key: string]: LucideIcon } = {
   living_room: Sofa,
   bedroom: BedDouble,
-  kitchen: ChefHat, // This will need a replacement from lucide-react or an SVG
-  dining_room: VenetianMask, // Replacement needed
-  bathroom: Gem, // Replacement needed
+  kitchen: CookingPot,
+  dining_room: GlassWater,
+  bathroom: Bath,
   home_office: Briefcase,
   outdoor_patio: Trees,
   entryway: Home,
@@ -110,7 +112,7 @@ export const iconMap: { [key: string]: LucideIcon } = {
   own: Home,
   house: Home,
   townhouse: Building,
-  apartment_condo: Landmark, // Replacement needed
+  apartment_condo: Building2,
   budget_flexible: HandHeart,
   budget_starter: Paintbrush,
   budget_makeover: LayoutGrid,
@@ -120,24 +122,6 @@ export const iconMap: { [key: string]: LucideIcon } = {
   submit: CheckCircle,
   budget: Wallet,
 };
-
-// Find suitable Lucide icons:
-// ChefHat -> Utensils or HardHat (if being abstract) or ShoppingCart (for items) -> let's use CookingPot
-// VenetianMask (Dining) -> GlassWater or Wine
-// Gem (Bathroom) -> ShowerHead or Bath
-// Landmark (Apartment/Condo) -> Building2
-
-quizData.step3.options = quizData.step3.options.map(opt => {
-  if (opt.id === 'kitchen') opt.icon = CookingPot;
-  if (opt.id === 'dining_room') opt.icon = GlassWater;
-  if (opt.id === 'bathroom') opt.icon = Bath;
-  return opt;
-});
-quizData.step6.options = quizData.step6.options.map(opt => {
-  if (opt.id === 'apartment_condo') opt.icon = Building2;
-  return opt;
-});
-
 
 // Helper function for type safety, not strictly necessary for quizData structure but good practice
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {
