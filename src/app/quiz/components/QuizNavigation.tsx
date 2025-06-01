@@ -24,7 +24,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     }
     if (canProceed) {
       nextStep();
-      window.scrollTo(0, 0); // Scroll to top on step change
+      window.scrollTo(0, 0); 
     }
   };
 
@@ -53,35 +53,48 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
       });
     }
   };
+  
+  const totalSelectedRooms = currentStep === 3 && answers.roomImprovementSelections
+    ? Object.values(answers.roomImprovementSelections).reduce((sum, count) => sum + count, 0)
+    : 0;
 
   return (
-    <div className="mt-10 md:mt-16 flex flex-col sm:flex-row justify-end items-center gap-4 border-t border-border pt-6 md:pt-8"> 
-      {!isLastStep && (
-        <Button
-          onClick={handleNextClick}
-          disabled={isLoading || isNextDisabled}
-          className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
-          aria-label="Next Step"
-        >
-          Next
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      )}
-      {isLastStep && (
-        <Button
-          onClick={handleSubmitClick}
-          disabled={isLoading || !answers.email}
-          className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
-          aria-label="Submit Quiz"
-        >
-          {isLoading ? (
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-          ) : (
-            <CheckCircle className="mr-2 h-5 w-5" />
-          )}
-          {isLoading ? "Generating..." : "Get My Style Guide"}
-        </Button>
-      )}
+    <div className="mt-10 md:mt-16 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-border pt-6 md:pt-8"> 
+      <div className="w-full sm:w-auto sm:flex-grow text-center sm:text-left"> {/* Container for room counter */}
+        {currentStep === 3 && totalSelectedRooms > 0 && (
+          <span className="text-sm font-medium text-muted-foreground">
+            Total Rooms: {totalSelectedRooms}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"> {/* Container for buttons */}
+        {!isLastStep && (
+          <Button
+            onClick={handleNextClick}
+            disabled={isLoading || isNextDisabled}
+            className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
+            aria-label="Next Step"
+          >
+            Next
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        )}
+        {isLastStep && (
+          <Button
+            onClick={handleSubmitClick}
+            disabled={isLoading || !answers.email}
+            className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
+            aria-label="Submit Quiz"
+          >
+            {isLoading ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : (
+              <CheckCircle className="mr-2 h-5 w-5" />
+            )}
+            {isLoading ? "Generating..." : "Get My Style Guide"}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

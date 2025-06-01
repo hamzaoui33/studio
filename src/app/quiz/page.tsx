@@ -34,7 +34,7 @@ export default function QuizPage() {
         }
         break;
       case 3:
-        if (answers.roomImprovementSelections.length === 0) {
+        if (Object.keys(answers.roomImprovementSelections).length === 0) {
           toast({ title: "Selection Required", description: "Please select at least one room to improve.", variant: "default" });
           return false;
         }
@@ -45,6 +45,9 @@ export default function QuizPage() {
            toast({ title: "Selection Required", description: "Please select a room to focus on.", variant: "default" });
           return false;
         }
+        // If focusOptions.length is 0, it means no rooms were selected in step 3.
+        // The Step4RoomFocus component will show an alert. We can let them proceed,
+        // or require them to go back. For now, let's allow proceeding if nothing to select.
         break;
       case 5:
         if (!answers.homeOwnershipStatus) {
@@ -83,8 +86,10 @@ export default function QuizPage() {
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
       case 2: return answers.styleSelections.length === 0;
-      case 3: return answers.roomImprovementSelections.length === 0;
-      case 4: return getRoomOptionsForFocusStep().length > 0 && !answers.roomFocusSelection;
+      case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
+      case 4: 
+        const focusOptions = getRoomOptionsForFocusStep();
+        return focusOptions.length > 0 && !answers.roomFocusSelection;
       case 5: return !answers.homeOwnershipStatus;
       case 6: return !answers.homeTypeSelection;
       case 7: return !answers.budgetRangeSelection || !answers.email;
@@ -114,14 +119,8 @@ export default function QuizPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12">
-      {/* Magenta divider bar removed */}
-      {/* {currentStep > 1 && <div className="quiz-step-divider mb-10 md:mb-16"></div>} */}
-
       <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-        {/* Left Column: Step Info & Question (spans 4 out of 12 columns on md+) */}
         <div className="md:col-span-4 lg:col-span-3 md:sticky md:top-10">
-          {/* Step indicator text removed */}
-          {/* <span className="quiz-step-indicator-text">Step {currentStep}</span> */}
           {stepDetails && (
             <>
               <h1 className="quiz-question-title">{stepDetails.question}</h1>
@@ -129,13 +128,10 @@ export default function QuizPage() {
             </>
           )}
         </div>
-
-        {/* Right Column: Step Options/Content (spans 8 out of 12 columns on md+) */}
         <div className="md:col-span-8 lg:col-span-9 animate-fadeIn">
           {renderStepContent()}
         </div>
       </div>
-
       <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
     </div>
   );

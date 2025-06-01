@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -19,8 +20,8 @@ const GenerateStyleGuideInputSchema = z.object({
     .array(z.string())
     .describe('List of selected style IDs from the style selection step.'),
   roomImprovementSelections: z
-    .array(z.string())
-    .describe('List of selected room IDs from the room improvement selection step.'),
+    .record(z.string(), z.number())
+    .describe('An object mapping selected room IDs to a desired quantity or focus level (e.g., {"living_room": 2, "bedroom": 1}). Helps prioritize improvements.'),
   roomFocusSelection: z
     .string()
     .describe('The selected room ID from the room focus selection step.'),
@@ -52,7 +53,7 @@ const prompt = ai.definePrompt({
 Quiz Responses:
 Swoon-Worthy Rooms: {{swoonWorthyRooms}}
 Style Selections: {{styleSelections}}
-Room Improvement Selections: {{roomImprovementSelections}}
+Room Improvement Selections: {{#if roomImprovementSelections}}Rooms to improve (room: count/focus level): {{#each roomImprovementSelections}}{{@key}}: {{this}}{{#unless @last}}, {{/unless}}{{/each}}.{{else}}No specific rooms listed for improvement focus.{{/if}}
 Room Focus Selection: {{roomFocusSelection}}
 Home Ownership Status: {{homeOwnershipStatus}}
 Home Type Selection: {{homeTypeSelection}}
@@ -62,7 +63,7 @@ Based on these responses, create a style guide that includes:
 - A summary of the user's style preferences.
 - Specific decor recommendations for the focused room.
 - General tips for incorporating the selected styles into their home.
-- How the users other selections influenced the output
+- How the user's other selections (like room improvement counts, home ownership, budget) influenced the output. Consider the quantities in 'Room Improvement Selections' as indicators of priority or number of spaces if applicable.
 
 Make the style guide engaging and easy to understand.
 `,

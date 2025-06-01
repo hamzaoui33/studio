@@ -3,7 +3,7 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { type QuizAnswers } from '@/types/quiz';
+import { type QuizAnswers, type RoomImprovementSelection } from '@/types/quiz';
 import { quizData, TOTAL_QUIZ_STEPS } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
@@ -12,7 +12,7 @@ import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
 const initialAnswers: QuizAnswers = {
   swoonWorthyRooms: [],
   styleSelections: [],
-  roomImprovementSelections: [],
+  roomImprovementSelections: {},
   roomFocusSelection: '',
   homeOwnershipStatus: '',
   homeTypeSelection: '',
@@ -27,7 +27,7 @@ interface QuizContextType {
   isLastStep: boolean;
   isLoading: boolean;
   nextStep: () => void;
-  prevStep: () => void;
+  // prevStep: () => void; // Removed as per previous request
   goToStep: (step: number) => void;
   updateAnswer: <K extends keyof QuizAnswers>(field: K, value: QuizAnswers[K]) => void;
   handleQuizSubmit: () => Promise<string | null>; // Returns style guide text or null
@@ -53,11 +53,11 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     }
   }, [currentStep]);
 
-  const prevStep = useCallback(() => {
-    if (currentStep > 1) {
-      setCurrentStep((prev) => prev - 1);
-    }
-  }, [currentStep]);
+  // const prevStep = useCallback(() => { // Removed as per previous request
+  //   if (currentStep > 1) {
+  //     setCurrentStep((prev) => prev - 1);
+  //   }
+  // }, [currentStep]);
 
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= TOTAL_QUIZ_STEPS) {
@@ -74,9 +74,9 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const getRoomOptionsForFocusStep = useCallback(() => {
-    const selectedRoomIds = answers.roomImprovementSelections;
+    const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
     if (!selectedRoomIds || selectedRoomIds.length === 0) {
-      return quizData.step3.options;
+      return quizData.step3.options; // If no rooms selected in step 3, show all for focus
     }
     return quizData.step3.options.filter(option => selectedRoomIds.includes(option.id));
   }, [answers.roomImprovementSelections]);
@@ -90,7 +90,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       const aiInput: GenerateStyleGuideInput = {
         swoonWorthyRooms: answers.swoonWorthyRooms,
         styleSelections: answers.styleSelections,
-        roomImprovementSelections: answers.roomImprovementSelections,
+        roomImprovementSelections: answers.roomImprovementSelections, // Will be Record<string, number>
         roomFocusSelection: answers.roomFocusSelection,
         homeOwnershipStatus: answers.homeOwnershipStatus,
         homeTypeSelection: answers.homeTypeSelection,
@@ -112,6 +112,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   
   useEffect(() => {
     if (currentStep === 1 && JSON.stringify(answers) !== JSON.stringify(initialAnswers)) {
+      // Logic for when returning to step 1 if needed, or remove if not.
     }
   }, [currentStep, answers]);
 
@@ -125,7 +126,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         isLastStep: currentStep === TOTAL_QUIZ_STEPS,
         isLoading,
         nextStep,
-        prevStep,
+        // prevStep, // Removed
         goToStep,
         updateAnswer,
         handleQuizSubmit,
