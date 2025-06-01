@@ -40,7 +40,7 @@ export function Step2StyleSelection() {
             key={option.id}
             onClick={() => handleSelectStyle(option.id)}
             className={cn(
-              "selectable-card flex flex-row items-stretch overflow-hidden", 
+              "selectable-card flex flex-col sm:flex-row items-stretch overflow-hidden", 
               answers.styleSelections.includes(option.id) && "selected"
             )}
             role="checkbox"
@@ -49,7 +49,7 @@ export function Step2StyleSelection() {
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectStyle(option.id); }}
           >
             {option.imageUrl && (
-              <div className="relative w-2/5 sm:w-1/3 shrink-0 aspect-square">
+              <div className="relative w-full sm:w-1/3 shrink-0 aspect-square">
                 <Image
                   src={option.imageUrl}
                   alt={option.name}
