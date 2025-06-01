@@ -22,10 +22,7 @@ export default function QuizPage() {
   const validateStep = (): boolean => {
     switch (currentStep) {
       case 1:
-        if (answers.swoonWorthyRooms.length === 0) {
-          toast({ title: "Selection Required", description: "Please select at least one room image.", variant: "default" });
-          return false;
-        }
+        // No validation needed if user can skip
         break;
       case 2:
         if (answers.styleSelections.length === 0) {
@@ -81,7 +78,7 @@ export default function QuizPage() {
   
   const isNextButtonDisabled = (): boolean => {
     switch (currentStep) {
-      case 1: return answers.swoonWorthyRooms.length === 0;
+      case 1: return false; // User can always proceed from step 1 (either selection or skip)
       case 2: return answers.styleSelections.length === 0;
       case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
       case 4: 
@@ -115,18 +112,17 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32"> {/* Increased bottom padding */}
+    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
       <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-        <div className="md:col-span-6 md:sticky md:top-10"> {/* Changed to md:col-span-6 */}
+        <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
           {stepDetails && (
             <>
-              {/* Step indicator and divider removed as per previous request */}
               <h1 className="quiz-question-title">{stepDetails.question}</h1>
               <p className="quiz-instruction-text">{stepDetails.instruction}</p>
             </>
           )}
         </div>
-        <div className="md:col-span-6 animate-fadeIn"> {/* Changed to md:col-span-6 */}
+        <div className="md:col-span-6 animate-fadeIn">
           {renderStepContent()}
         </div>
       </div>
@@ -134,3 +130,4 @@ export default function QuizPage() {
     </div>
   );
 }
+
