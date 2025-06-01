@@ -12,86 +12,19 @@ import { Step6Greeting } from "./components/Step6Greeting";
 import { Step7Email } from "./components/Step7Email";
 import { Step8Loading } from "./components/Step8Loading";
 import { quizData } from "@/lib/quiz-data";
-import { useToast } from "@/hooks/use-toast";
+// useToast import removed as validation and toasts are handled in QuizContext
 import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 import { useIframeResizer } from '@/hooks/useIframeResizer';
 
 
 export default function QuizPage() {
-  const { currentStep, answers, getRoomOptionsForFocusStep } = useQuiz();
-  const { toast } = useToast();
+  const { currentStep, answers, triggerNextStepFlow, isNextActionDisabled } = useQuiz();
+  // validateStep and toast related logic moved to QuizContext
 
   useIframeResizer([currentStep, answers]); // Dependencies trigger re-calculation
 
-  const validateStep = (): boolean => {
-    switch (currentStep) {
-      case 1:
-        break;
-      case 2:
-        if (answers.styleSelections.length === 0) {
-          toast({ title: "Selection Required", description: "Please select at least one style.", variant: "default" });
-          return false;
-        }
-        break;
-      case 3:
-        if (Object.keys(answers.roomImprovementSelections).length === 0) {
-          toast({ title: "Selection Required", description: "Please select at least one room to improve.", variant: "default" });
-          return false;
-        }
-        break;
-      case 4:
-         const focusOptions = getRoomOptionsForFocusStep();
-        if (focusOptions.length > 0 && !answers.roomFocusSelection) {
-           toast({ title: "Selection Required", description: "Please select a room to focus on.", variant: "default" });
-          return false;
-        }
-        break;
-      case 5: // Name Step
-        if (!answers.userName.trim()) {
-          toast({ title: "Name Required", description: "Please enter your name.", variant: "default" });
-          return false;
-        }
-        break;
-      case 6: // Greeting Step - auto advances
-        return true;
-      case 7: // Email Step
-        if (!answers.email.trim()) {
-          toast({ title: "Email Required", description: "Please enter your email address.", variant: "default" });
-          return false;
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(answers.email)) {
-          toast({ title: "Invalid Email", description: "Please enter a valid email address.", variant: "destructive" });
-          return false;
-        }
-        break;
-      case 8: // Loading Step - auto advances & submits
-        return true;
-      default:
-        break;
-    }
-    return true;
-  };
-  
-  const isNextButtonDisabled = (): boolean => {
-    switch (currentStep) {
-      case 1: return answers.swoonWorthyRooms.length === 0;
-      case 2: return answers.styleSelections.length === 0;
-      case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
-      case 4:
-        const focusOptions = getRoomOptionsForFocusStep();
-        return focusOptions.length > 0 && !answers.roomFocusSelection;
-      case 5: return !answers.userName.trim();
-      case 6: return true; // Greeting step auto-advances
-      case 7:
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return !answers.email.trim() || !emailRegex.test(answers.email);
-      case 8: return true; // Loading step auto-advances & submits
-      default: return false;
-    }
-  };
-
+  // renderStepContent and getCurrentStepDetails remain the same
   const renderStepContent = () => {
     switch (currentStep) {
       case 1: return <Step1SwoonWorthy />;
@@ -128,7 +61,8 @@ export default function QuizPage() {
             {renderStepContent()}
           </div>
         </div>
-        <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
+        {/* Pass triggerNextStepFlow and isNextActionDisabled to QuizNavigation */}
+        <QuizNavigation onNext={triggerNextStepFlow} isNextDisabled={isNextActionDisabled()} />
       </>
     );
   }
@@ -142,7 +76,7 @@ export default function QuizPage() {
             <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
             <p>Please try resetting the quiz or contact support.</p>
         </div>
-        <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
+        <QuizNavigation onNext={triggerNextStepFlow} isNextDisabled={isNextActionDisabled()} />
       </>
     );
   }
@@ -181,7 +115,7 @@ export default function QuizPage() {
               "md:col-span-6 animate-fadeIn",
               (currentStep === 5 || currentStep === 7) 
                 ? "bg-input-panel-bg rounded-lg p-6 md:p-12 w-full max-w-xl mx-auto flex flex-col items-center justify-center"
-                : "flex flex-col justify-start items-center md:max-h-[calc(100vh-8rem-7rem)] md:overflow-y-auto md:pr-4" 
+                : "flex flex-col justify-start items-center" // Removed md:max-h and md:overflow-y-auto from here
             )}>
               <div className={cn(
                 "w-full",
@@ -193,7 +127,9 @@ export default function QuizPage() {
           </div>
         )}
       </div>
-      <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
+      <QuizNavigation onNext={triggerNextStepFlow} isNextDisabled={isNextActionDisabled()} />
     </>
   );
 }
+
+    
