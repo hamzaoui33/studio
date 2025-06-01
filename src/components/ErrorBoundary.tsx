@@ -47,11 +47,8 @@ class ErrorBoundary extends Component<Props, State> {
               {this.state.errorInfo && <p>Component Stack: {this.state.errorInfo.componentStack}</p>}
             </details>
           )}
-          <button 
+          <button
             onClick={() => {
-              // Attempt to reload the page or reset state
-              // For a simple reset, we can try to clear the error state
-              // A full page reload might be more robust: window.location.reload();
               this.setState({ hasError: false, error: undefined, errorInfo: undefined });
             }}
             style={{ marginTop: '10px', padding: '8px 15px', cursor: 'pointer' }}
