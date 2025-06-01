@@ -14,6 +14,7 @@ import { Step7BudgetEmail } from "./components/Step7BudgetEmail"; // Renamed to 
 import { quizData } from "@/lib/quiz-data"; 
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
+import { cn } from "@/lib/utils";
 
 
 export default function QuizPage() {
@@ -124,7 +125,10 @@ export default function QuizPage() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
       <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-        <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
+        <div className={cn(
+          "md:col-span-6 md:sticky md:top-10 md:pr-[82px]",
+          currentStep === 5 && "bg-input-panel-bg rounded-lg p-6 md:p-10" // Conditional panel styling for left column in Step 5
+        )}>
           {stepDetails && (
             <>
               <h1 className="quiz-question-title">{stepDetails.question}</h1>
