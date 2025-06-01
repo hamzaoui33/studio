@@ -92,19 +92,16 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
   }
   main {
-    flex-grow: 1;
+    /* flex-grow removed */
   }
 }
 
 /* Updated component styles */
 @layer components {
   .circular-option { /* For steps 3, 4, 5, 6 */
-    @apply bg-card border-2 border-transparent rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-200 aspect-square text-center shadow-sm hover:border-muted w-28 h-28 md:w-36 md:h-36 p-3;
+    @apply bg-card border-2 border-transparent rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-200 aspect-square text-center shadow-sm hover:border-muted w-32 h-32 md:w-36 md:h-36 p-3;
   }
   .circular-option-selected {
     @apply border-accent bg-accent/10 ring-2 ring-accent/70; 
@@ -172,7 +169,7 @@ body {
     /* @apply h-2 md:h-3 w-full bg-primary my-10 md:my-16; */ 
   }
   .quiz-input-panel { 
-    @apply bg-input-panel-bg p-6 md:p-10 rounded-lg flex flex-col items-center justify-center min-h-[200px] md:min-h-[250px];
+    @apply bg-input-panel-bg p-6 md:p-10 rounded-lg flex flex-col items-center justify-center; /* Removed min-h */
   }
 }
 
@@ -207,4 +204,3 @@ body {
     transition: background-color 5000s ease-in-out 0s; /* Optional: Delay browser style application */
   }
 }
-
