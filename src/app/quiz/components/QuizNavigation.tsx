@@ -13,7 +13,8 @@ interface QuizNavigationProps {
 }
 
 export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigationProps) {
-  const { currentStep, nextStep, isLastStep, handleQuizSubmit, isLoading, answers } = useQuiz();
+  const { currentStep, nextStep, isLastStep, isLoading, answers } = useQuiz();
+  // Removed handleQuizSubmit from here, as Step8Loading will handle it
   const router = useRouter();
   const { toast } = useToast();
 
@@ -23,46 +24,31 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
       canProceed = await onNext();
     }
     if (canProceed) {
+      // If the current step is 7 (Email), and it's the step before the last (Loading screen),
+      // then nextStep() will advance to the Loading screen (Step 8).
+      // The Loading screen will then handle the submission.
       nextStep();
       window.scrollTo(0, 0);
     }
   };
 
+  // The main submit button is effectively removed because Step 8 (Loading) is the last step,
+  // and QuizNavigation is hidden for Step 8. Submission is handled by Step8Loading.
+  // The handleSubmitClick function below would only be relevant if there was an interactive last step.
+  // We keep it structurally for now but it won't be called in the current flow where step 8 is last.
   const handleSubmitClick = async () => {
-    // Verify email from Step 7 before submitting
-    if (!answers.email) {
+    if (!answers.email) { // This check is technically redundant if Step 8 is last & auto-submits
       toast({
         title: "Email Required",
-        description: "An email address is required to generate your style guide. Please go back if needed.",
+        description: "An email address is required. Please ensure it was entered in Step 7.",
         variant: "destructive",
       });
       return;
     }
-    // Verify budget from the last step (now Step 11)
-    if (isLastStep && !answers.budgetRangeSelection) {
-       toast({
-        title: "Budget Selection Required",
-        description: "Please select a budget range to continue.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-
-    const styleGuide = await handleQuizSubmit();
-    if (styleGuide) {
-      toast({
-        title: "Style Guide Generated!",
-        description: "Redirecting to your personalized results...",
-      });
-      router.push("/results");
-    } else {
-       toast({
-        title: "Submission Failed",
-        description: "Could not generate your style guide. Please try again.",
-        variant: "destructive",
-      });
-    }
+    // The handleQuizSubmit() call that was here is now in Step8Loading.tsx
+    // For safety, we could call it here too IF this button was somehow made visible on a final interactive step
+    // but that's not the current design.
+    console.warn("handleSubmitClick in QuizNavigation called unexpectedly with Step 8 (Loading) as the last step.");
   };
 
   const handleSkipStep1 = () => {
@@ -98,6 +84,8 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             I don&apos;t like these. Skip.
           </button>
         )}
+        
+        {/* Show "Next" button for all steps except the last one (which is now Step 8, the loading screen) */}
         {!isLastStep && (
           <Button
             onClick={handleNextClick}
@@ -109,9 +97,14 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         )}
-        {isLastStep && ( 
+
+        {/* The "Get My Style Guide" button will not be shown if Step 8 (Loading) is the last step,
+            because QuizNavigation is hidden for Step 8.
+            This block is effectively dead code in the current configuration.
+         */}
+        {isLastStep && currentStep !== 8 && ( 
           <Button
-            onClick={handleSubmitClick}
+            onClick={handleSubmitClick} // This won't be called if currentStep 8 is last.
             disabled={isLoading || isNextDisabled} 
             className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
             aria-label="Submit Quiz"

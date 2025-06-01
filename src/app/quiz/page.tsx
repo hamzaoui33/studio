@@ -9,12 +9,10 @@ import { Step3RoomImprovement } from "./components/Step3RoomImprovement";
 import { Step4RoomFocus } from "./components/Step4RoomFocus";
 import { Step5Name } from "./components/Step5Name";
 import { Step6Greeting } from "./components/Step6Greeting";
-import { Step7Email } from "./components/Step7Email"; 
-import { Step8Loading } from "./components/Step8Loading"; // New Loading Step
-import { Step5HomeOwnership } from "./components/Step5HomeOwnership"; 
-import { Step6HomeType } from "./components/Step6HomeType"; 
-import { Step10Budget } from "./components/Step10Budget"; 
-import { quizData } from "@/lib/quiz-data"; 
+import { Step7Email } from "./components/Step7Email";
+import { Step8Loading } from "./components/Step8Loading";
+// Removed imports for Step5HomeOwnership, Step6HomeType, Step10Budget
+import { quizData } from "@/lib/quiz-data";
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
@@ -66,26 +64,9 @@ export default function QuizPage() {
           return false;
         }
         break;
-      case 8: // Loading Step - auto advances
+      case 8: // Loading Step - auto advances & submits
         return true;
-      case 9: // Was Step 8 (Home Ownership)
-        if (!answers.homeOwnershipStatus) {
-          toast({ title: "Selection Required", description: "Please select your home ownership status.", variant: "default" });
-          return false;
-        }
-        break;
-      case 10: // Was Step 9 (Home Type)
-        if (!answers.homeTypeSelection) {
-          toast({ title: "Selection Required", description: "Please select your home type.", variant: "default" });
-          return false;
-        }
-        break;
-      case 11: // Was Step 10 (Budget)
-        if (!answers.budgetRangeSelection) {
-           toast({ title: "Selection Required", description: "Please select a budget range.", variant: "default" });
-          return false;
-        }
-        break;
+      // Removed validation for steps 9, 10, 11
       default:
         break;
     }
@@ -94,21 +75,19 @@ export default function QuizPage() {
   
   const isNextButtonDisabled = (): boolean => {
     switch (currentStep) {
-      case 1: return false; 
+      case 1: return false;
       case 2: return answers.styleSelections.length === 0;
       case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
-      case 4: 
+      case 4:
         const focusOptions = getRoomOptionsForFocusStep();
         return focusOptions.length > 0 && !answers.roomFocusSelection;
       case 5: return !answers.userName.trim();
       case 6: return true; // Greeting step auto-advances
-      case 7: 
+      case 7:
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return !answers.email.trim() || !emailRegex.test(answers.email);
-      case 8: return true; // Loading step auto-advances
-      case 9: return !answers.homeOwnershipStatus; 
-      case 10: return !answers.homeTypeSelection; 
-      case 11: return !answers.budgetRangeSelection; 
+      case 8: return true; // Loading step auto-advances & submits
+      // Removed logic for steps 9, 10, 11
       default: return false;
     }
   };
@@ -121,18 +100,21 @@ export default function QuizPage() {
       case 4: return <Step4RoomFocus />;
       case 5: return <Step5Name />;
       case 6: return <Step6Greeting />;
-      case 7: return <Step7Email />; 
+      case 7: return <Step7Email />;
       case 8: return <Step8Loading />;
-      case 9: return <Step5HomeOwnership />; // Renamed to map to original component
-      case 10: return <Step6HomeType />; // Renamed to map to original component
-      case 11: return <Step10Budget />; // Renamed to map to original component
+      // Removed cases for steps 9, 10, 11
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
 
   const getCurrentStepDetails = () => {
     const stepKey = `step${currentStep}` as keyof AllQuizData;
-    return quizData[stepKey];
+    // Ensure quizData[stepKey] exists before trying to access its properties
+    // This check is more robust if TOTAL_QUIZ_STEPS and quizData structure can mismatch.
+    if (quizData && quizData[stepKey]) {
+        return quizData[stepKey];
+    }
+    return null; // Or a default step object, or handle error
   }
   
   const stepDetails = getCurrentStepDetails();
@@ -144,8 +126,18 @@ export default function QuizPage() {
         <div className="h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
         </div>
+        {/* Navigation is hidden for steps 6 and 8 by QuizNavigation component */}
         <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
       </div>
+    );
+  }
+  
+  if (!stepDetails) { // Handle case where stepDetails might be null
+    return (
+        <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32 text-center">
+            <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
+            <p>Please try resetting the quiz or contact support.</p>
+        </div>
     );
   }
 
@@ -158,7 +150,6 @@ export default function QuizPage() {
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
               <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && (currentStep === 7 || currentStep === 5) && "mb-0" )}>
-                {/* Special handling for "Log in" link on Step 7 */}
                 {currentStep === 7 && line.toLowerCase().includes("log in") ? (
                   <>
                     {line.substring(0, line.toLowerCase().indexOf("log in"))}

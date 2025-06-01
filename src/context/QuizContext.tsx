@@ -14,11 +14,9 @@ const initialAnswers: QuizAnswers = {
   styleSelections: [],
   roomImprovementSelections: {},
   roomFocusSelection: '',
-  userName: '', // Added userName
-  homeOwnershipStatus: '',
-  homeTypeSelection: '',
-  budgetRangeSelection: '',
+  userName: '',
   email: '',
+  // Removed homeOwnershipStatus, homeTypeSelection, budgetRangeSelection
 };
 
 interface QuizContextType {
@@ -28,10 +26,9 @@ interface QuizContextType {
   isLastStep: boolean;
   isLoading: boolean;
   nextStep: () => void;
-  // prevStep: () => void; // Removed as per previous request
   goToStep: (step: number) => void;
   updateAnswer: <K extends keyof QuizAnswers>(field: K, value: QuizAnswers[K]) => void;
-  handleQuizSubmit: () => Promise<string | null>; // Returns style guide text or null
+  handleQuizSubmit: () => Promise<string | null>;
   resetQuiz: () => void;
   getRoomOptionsForFocusStep: () => Array<{ id: string; name: string; icon?: any }>;
 }
@@ -49,16 +46,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const nextStep = useCallback(() => {
+    // If currentStep is the loading step (which is now the last step),
+    // and it calls nextStep(), submission should be handled by Step8Loading itself.
+    // This nextStep function will mainly advance through interactive steps.
     if (currentStep < TOTAL_QUIZ_STEPS) {
       setCurrentStep((prev) => prev + 1);
     }
+    // If currentStep === TOTAL_QUIZ_STEPS (e.g. on loading screen),
+    // and nextStep() is called from there, the submission and navigation
+    // are handled within Step8Loading.tsx.
   }, [currentStep]);
-
-  // const prevStep = useCallback(() => { // Removed as per previous request
-  //   if (currentStep > 1) {
-  //     setCurrentStep((prev) => prev - 1);
-  //   }
-  // }, [currentStep]);
 
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= TOTAL_QUIZ_STEPS) {
@@ -77,7 +74,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const getRoomOptionsForFocusStep = useCallback(() => {
     const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
     if (!selectedRoomIds || selectedRoomIds.length === 0) {
-      return quizData.step3.options; // If no rooms selected in step 3, show all for focus
+      return quizData.step3.options;
     }
     return quizData.step3.options.filter(option => selectedRoomIds.includes(option.id));
   }, [answers.roomImprovementSelections]);
@@ -93,10 +90,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         styleSelections: answers.styleSelections,
         roomImprovementSelections: answers.roomImprovementSelections,
         roomFocusSelection: answers.roomFocusSelection,
-        userName: answers.userName, // Pass userName
-        homeOwnershipStatus: answers.homeOwnershipStatus,
-        homeTypeSelection: answers.homeTypeSelection,
-        budgetRangeSelection: answers.budgetRangeSelection,
+        userName: answers.userName,
+        // Removed homeOwnershipStatus, homeTypeSelection, budgetRangeSelection
+        // Email is implicitly part of the user profile, but not directly passed if not needed by AI prompt here.
+        // The AI prompt already receives userName.
       };
       
       const result = await generateStyleGuide(aiInput);
@@ -128,7 +125,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         isLastStep: currentStep === TOTAL_QUIZ_STEPS,
         isLoading,
         nextStep,
-        // prevStep, // Removed
         goToStep,
         updateAnswer,
         handleQuizSubmit,

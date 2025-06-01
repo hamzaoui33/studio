@@ -3,16 +3,18 @@
 
 import { useEffect } from 'react';
 import { useQuiz } from "@/context/QuizContext";
+import { useRouter } from 'next/navigation';
+import { useToast } from "@/hooks/use-toast";
+// import { Sparkles } from 'lucide-react'; // If Sparkles was used for the badge center
 
 const GuaranteeBadge = () => (
   <div className="relative w-36 h-36 md:w-44 md:h-44 border-2 border-muted rounded-full flex items-center justify-center text-center p-2 bg-card shadow-md">
-    {/* Using a simpler approach for the text circle for better cross-browser rendering and easier maintenance */}
     <div className="absolute inset-0 flex items-center justify-center">
       <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
         <defs>
           <path
             id="circlePathBadge"
-            d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" 
+            d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"
             fill="none"
           />
         </defs>
@@ -30,19 +32,36 @@ const GuaranteeBadge = () => (
 
 
 export function Step8Loading() {
-  const { nextStep } = useQuiz();
+  const { handleQuizSubmit } = useQuiz(); // Removed nextStep, using handleQuizSubmit directly
+  const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      nextStep();
+    const timer = setTimeout(async () => {
+      const styleGuide = await handleQuizSubmit();
+      if (styleGuide) {
+        toast({
+          title: "Style Guide Generated!",
+          description: "Redirecting to your personalized results...",
+        });
+        router.push("/results");
+      } else {
+         toast({
+          title: "Submission Failed",
+          description: "Could not generate your style guide. Please try again or contact support.",
+          variant: "destructive",
+        });
+        // Optionally, redirect to a previous step or quiz home
+        // router.push("/quiz"); // Example: redirect back to quiz start
+      }
     }, 3000); // 3 seconds
 
     return () => clearTimeout(timer);
-  }, [nextStep]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleQuizSubmit, router, toast]); // Added dependencies
 
   return (
     <div className="flex flex-col items-center justify-center text-center h-full animate-fadeIn space-y-12 md:space-y-20 py-10">
-      {/* Top section: Calculating results */}
       <div className="flex flex-col items-center space-y-3.5">
         <p className="text-base text-muted-foreground tracking-wide">
           Calculating your results...
@@ -55,7 +74,6 @@ export function Step8Loading() {
         </div>
       </div>
 
-      {/* Bottom section: Did you know */}
       <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
         <div className="text-center md:text-left max-w-xs">
           <p className="text-xs font-semibold uppercase text-muted-foreground mb-1.5 tracking-wider">

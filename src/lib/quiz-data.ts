@@ -5,7 +5,7 @@ import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 11; 
+export const TOTAL_QUIZ_STEPS = 8; // Updated from 11 to 8
 
 export const quizData: AllQuizData = {
   step1: {
@@ -71,16 +71,16 @@ export const quizData: AllQuizData = {
     id: 5,
     title: "Your Name",
     question: "Let's get to know each other.",
-    instruction: "Type your name below.", 
+    instruction: "Type your name below.",
     placeholder: "Type your name here",
   },
-  step6: { 
+  step6: {
     id: 6,
     title: "Greeting",
-    question: "", 
-    instruction: "", 
+    question: "",
+    instruction: "",
   },
-  step7: { 
+  step7: {
     id: 7,
     title: "Unlock Your Results",
     question: "You're almost there!",
@@ -90,42 +90,10 @@ export const quizData: AllQuizData = {
   step8: {
     id: 8,
     title: "Calculating Results",
-    question: "", // No main question for loading screen
-    instruction: "", // No main instruction for loading screen
+    question: "",
+    instruction: "",
   },
-  step9: { 
-    id: 9, // Was step 8
-    title: "Home Ownership",
-    question: "Do you rent or own your place?",
-    instruction: "This helps us know what kind of changes you'd be able to make.",
-    options: [
-      { id: "rent", name: "Rent", icon: Key },
-      { id: "own", name: "Own", icon: Home },
-    ],
-  },
-  step10: { 
-    id: 10, // Was step 9
-    title: "Home Type",
-    question: "What kind of home do you live in?",
-    instruction: "Understanding your home type helps tailor advice.",
-    options: [
-      { id: "house", name: "House", icon: Home },
-      { id: "townhouse", name: "Townhouse", icon: Building },
-      { id: "apartment_condo", name: "Apartment/Condo", icon: Building2 },
-    ],
-  },
-  step11: { 
-    id: 11, // Was step 10
-    title: "Final Touch: Budget",
-    question: "What's your budget for the focused room?",
-    instruction: "Select a budget range. This helps us tailor recommendations effectively.",
-    options: [
-      { id: "budget_flexible", name: "Flexible / Just Exploring", icon: HandHeart },
-      { id: "budget_starter", name: "Starter Sparkle ($ - $$)", icon: Paintbrush },
-      { id: "budget_makeover", name: "Makeover Magic ($$ - $$$)", icon: LayoutGrid },
-      { id: "budget_deluxe", name: "Deluxe Dream ($$$ - $$$$)", icon: Lamp },
-    ],
-  },
+  // Removed step9 (Home Ownership), step10 (Home Type), step11 (Budget)
 };
 
 export const iconMap: { [key: string]: LucideIcon } = {
@@ -139,20 +107,21 @@ export const iconMap: { [key: string]: LucideIcon } = {
   entryway: Home,
   name: User,
   greeting: Hand,
-  email: Mail, 
-  loading: Loader, // Added for loading step if needed, though component handles visuals
-  rent: Key,
-  own: Home,
-  house: Home,
-  townhouse: Building,
-  apartment_condo: Building2,
-  budget_flexible: HandHeart,
-  budget_starter: Paintbrush,
-  budget_makeover: LayoutGrid,
-  budget_deluxe: Lamp,
+  email: Mail,
+  loading: Loader,
+  // Removed icons specific to deleted steps if any, or ensured they are harmless if shared
+  rent: Key, // Kept for now, though step is removed
+  own: Home, // Kept for now
+  house: Home, // Kept for now
+  townhouse: Building, // Kept for now
+  apartment_condo: Building2, // Kept for now
+  budget_flexible: HandHeart, // Kept for now
+  budget_starter: Paintbrush, // Kept for now
+  budget_makeover: LayoutGrid, // Kept for now
+  budget_deluxe: Lamp, // Kept for now
   default: Target,
   submit: CheckCircle,
-  budget: Wallet,
+  wallet: Wallet, // Kept, alias for budget
 };
 
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {

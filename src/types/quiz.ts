@@ -22,7 +22,8 @@ export interface IconTextOption {
   icon?: LucideIcon | string;
 }
 
-export interface BudgetOption extends IconTextOption {}
+// BudgetOption is no longer needed as budget step is removed
+// export interface BudgetOption extends IconTextOption {}
 
 export interface StepData {
   id: number;
@@ -58,7 +59,7 @@ export interface Step6GreetingData extends StepData {
   // This step's content is primarily handled by its component
 }
 
-export interface Step7EmailData extends StepData { 
+export interface Step7EmailData extends StepData {
   placeholder?: string; // For the email input
 }
 
@@ -66,18 +67,7 @@ export interface Step8LoadingData extends StepData {
   // This step's content is primarily handled by its component
 }
 
-export interface Step9HomeOwnershipData extends StepData { // Was Step8, originally Step7
-  options: IconTextOption[];
-}
-
-export interface Step10HomeTypeData extends StepData { // Was Step9, originally Step8
-  options: IconTextOption[];
-}
-
-export interface Step11BudgetData extends StepData { // Was Step10, originally Step9
-  options: BudgetOption[];
-}
-
+// Removed Step9HomeOwnershipData, Step10HomeTypeData, Step11BudgetData
 
 export type RoomImprovementSelection = Record<string, number>;
 
@@ -87,10 +77,8 @@ export type QuizAnswers = {
   roomImprovementSelections: RoomImprovementSelection;
   roomFocusSelection: string;
   userName: string;
-  email: string; 
-  homeOwnershipStatus: string;
-  homeTypeSelection: string;
-  budgetRangeSelection: string;
+  email: string;
+  // Removed: homeOwnershipStatus, homeTypeSelection, budgetRangeSelection
 };
 
 export type AllQuizData = {
@@ -100,9 +88,7 @@ export type AllQuizData = {
   step4: Step4Data;
   step5: Step5NameData;
   step6: Step6GreetingData;
-  step7: Step7EmailData; 
-  step8: Step8LoadingData; // New Loading Step
-  step9: Step9HomeOwnershipData; 
-  step10: Step10HomeTypeData; 
-  step11: Step11BudgetData; 
+  step7: Step7EmailData;
+  step8: Step8LoadingData;
+  // Removed step9, step10, step11
 };
