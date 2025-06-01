@@ -14,7 +14,7 @@ export const quizData: AllQuizData = {
     question: "Which rooms make your heart skip a beat?",
     instruction: "Can’t decide? No problem, choose as many as you like! These images help us get a feel for your style.",
     options: [
-      { id: "room1", imageUrl: "https://placehold.co/600x800.png", alt: "Modern minimalist living room", hint: "modern living room" },
+      { id: "room1", imageUrl: "https://placehold.co/600x800.png", alt: "Bright modern minimalist living room with large window", hint: "bright modern" },
       { id: "room2", imageUrl: "https://placehold.co/600x800.png", alt: "Cozy bohemian bedroom", hint: "bohemian bedroom" },
       { id: "room3", imageUrl: "https://placehold.co/600x800.png", alt: "Elegant classic dining room", hint: "classic dining" },
       { id: "room4", imageUrl: "https://placehold.co/600x800.png", alt: "Rustic farmhouse kitchen", hint: "farmhouse kitchen" },
