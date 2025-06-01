@@ -25,6 +25,12 @@ export default function QuizPage() {
   const validateStep = (): boolean => {
     switch (currentStep) {
       case 1:
+        if (answers.swoonWorthyRooms.length === 0) {
+          // Allow skipping if no images are selected, but next button will be disabled.
+          // Validation here is for proceeding, which is fine if they skip (handled by skip button).
+          // If they press Next (which should be disabled), this could trigger.
+          // However, the primary enforcement is disabling the Next button itself.
+        }
         break;
       case 2:
         if (answers.styleSelections.length === 0) {
@@ -66,7 +72,6 @@ export default function QuizPage() {
         break;
       case 8: // Loading Step - auto advances & submits
         return true;
-      // Removed validation for steps 9, 10, 11
       default:
         break;
     }
@@ -75,7 +80,7 @@ export default function QuizPage() {
   
   const isNextButtonDisabled = (): boolean => {
     switch (currentStep) {
-      case 1: return false;
+      case 1: return answers.swoonWorthyRooms.length === 0;
       case 2: return answers.styleSelections.length === 0;
       case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
       case 4:
@@ -87,7 +92,6 @@ export default function QuizPage() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return !answers.email.trim() || !emailRegex.test(answers.email);
       case 8: return true; // Loading step auto-advances & submits
-      // Removed logic for steps 9, 10, 11
       default: return false;
     }
   };
@@ -102,37 +106,32 @@ export default function QuizPage() {
       case 6: return <Step6Greeting />;
       case 7: return <Step7Email />;
       case 8: return <Step8Loading />;
-      // Removed cases for steps 9, 10, 11
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
 
   const getCurrentStepDetails = () => {
     const stepKey = `step${currentStep}` as keyof AllQuizData;
-    // Ensure quizData[stepKey] exists before trying to access its properties
-    // This check is more robust if TOTAL_QUIZ_STEPS and quizData structure can mismatch.
     if (quizData && quizData[stepKey]) {
         return quizData[stepKey];
     }
-    return null; // Or a default step object, or handle error
+    return null; 
   }
   
   const stepDetails = getCurrentStepDetails();
 
-  // Layout for Greeting (6) & Loading (8) steps - Full width, centered content
   if ((currentStep === 6 || currentStep === 8) && stepDetails) {
     return (
       <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
         <div className="h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
         </div>
-        {/* Navigation is hidden for steps 6 and 8 by QuizNavigation component */}
         <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
       </div>
     );
   }
   
-  if (!stepDetails) { // Handle case where stepDetails might be null
+  if (!stepDetails) { 
     return (
         <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32 text-center">
             <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
@@ -141,7 +140,6 @@ export default function QuizPage() {
     );
   }
 
-  // Default layout for all other steps, including 5 and 7
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
       {stepDetails && (
