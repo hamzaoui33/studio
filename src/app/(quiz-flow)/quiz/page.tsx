@@ -167,12 +167,12 @@ export default function QuizPage() {
           <div className={cn(
             "md:col-span-6 animate-fadeIn",
             (currentStep === 5 || currentStep === 7)
-              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto md:flex md:flex-col md:items-center md:justify-center" // Panel styles + desktop centering
+              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto flex flex-col items-center justify-center" // Panel styles with flex centering for all screens
               : "flex flex-col justify-center items-center" // Default centering for other steps' content column
           )}>
             <div className={cn(
               "w-full",
-              (currentStep === 5 || currentStep === 7) && "md:flex md:h-full md:flex-col md:justify-center" // This inner div ensures vertical centering on desktop only for these steps
+              (currentStep === 5 || currentStep === 7) && "flex h-full flex-col justify-center items-center" // This inner div ensures vertical centering for all screens for these steps
             )}>
               {renderStepContent()}
             </div>
@@ -183,4 +183,3 @@ export default function QuizPage() {
     </div>
   );
 }
-
