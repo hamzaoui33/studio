@@ -2,10 +2,10 @@
 import type { AllQuizData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 7;
+export const TOTAL_QUIZ_STEPS = 8;
 
 export const quizData: AllQuizData = {
   step1: {
@@ -69,6 +69,13 @@ export const quizData: AllQuizData = {
   },
   step5: {
     id: 5,
+    title: "Your Name",
+    question: "Let's get to know each other.",
+    instruction: "Type your name below. If you're an existing member, you can Log in (feature coming soon!).",
+    placeholder: "Type your name here",
+  },
+  step6: {
+    id: 6,
     title: "Home Ownership",
     question: "Let's get to know each other. Do you rent or own your place?",
     instruction: "This helps us know what kind of changes you'd be able to make.",
@@ -77,8 +84,8 @@ export const quizData: AllQuizData = {
       { id: "own", name: "Own", icon: Home },
     ],
   },
-  step6: {
-    id: 6,
+  step7: {
+    id: 7,
     title: "Home Type",
     question: "What kind of home do you live in?",
     instruction: "Understanding your home type helps tailor advice.",
@@ -88,8 +95,8 @@ export const quizData: AllQuizData = {
       { id: "apartment_condo", name: "Apartment/Condo", icon: Building2 },
     ],
   },
-  step7: {
-    id: 7,
+  step8: {
+    id: 8,
     title: "Budget & Contact",
     question: "You're almost there! What's your budget and email?",
     instruction: "Select a budget for your focused room and provide your email for the style guide.",
@@ -113,6 +120,7 @@ export const iconMap: { [key: string]: LucideIcon } = {
   home_office: Briefcase,
   outdoor_patio: Trees,
   entryway: Home,
+  name: User, // Added for new step
   rent: Key,
   own: Home,
   house: Home,

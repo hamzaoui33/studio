@@ -14,6 +14,7 @@ const initialAnswers: QuizAnswers = {
   styleSelections: [],
   roomImprovementSelections: {},
   roomFocusSelection: '',
+  userName: '', // Added userName
   homeOwnershipStatus: '',
   homeTypeSelection: '',
   budgetRangeSelection: '',
@@ -90,8 +91,9 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       const aiInput: GenerateStyleGuideInput = {
         swoonWorthyRooms: answers.swoonWorthyRooms,
         styleSelections: answers.styleSelections,
-        roomImprovementSelections: answers.roomImprovementSelections, // Will be Record<string, number>
+        roomImprovementSelections: answers.roomImprovementSelections,
         roomFocusSelection: answers.roomFocusSelection,
+        userName: answers.userName, // Pass userName
         homeOwnershipStatus: answers.homeOwnershipStatus,
         homeTypeSelection: answers.homeTypeSelection,
         budgetRangeSelection: answers.budgetRangeSelection,

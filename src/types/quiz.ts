@@ -50,19 +50,24 @@ export interface Step4Data extends StepData {
   // Options derived from Step 3.
 }
 
-export interface Step5Data extends StepData {
+export interface Step5NameData extends StepData {
+  placeholder?: string; // For the name input
+}
+
+export interface Step6HomeOwnershipData extends StepData {
   options: IconTextOption[];
 }
 
-export interface Step6Data extends StepData {
+export interface Step7HomeTypeData extends StepData {
   options: IconTextOption[];
 }
 
-export interface Step7Data extends StepData {
+export interface Step8BudgetEmailData extends StepData {
   options: BudgetOption[]; // These are the budget options
   emailPrompt: string;
   emailPlaceholder: string;
 }
+
 
 export type RoomImprovementSelection = Record<string, number>;
 
@@ -71,6 +76,7 @@ export type QuizAnswers = {
   styleSelections: string[];
   roomImprovementSelections: RoomImprovementSelection;
   roomFocusSelection: string;
+  userName: string; // New field for user's name
   homeOwnershipStatus: string;
   homeTypeSelection: string;
   budgetRangeSelection: string;
@@ -82,9 +88,10 @@ export type AllQuizData = {
   step2: Step2Data;
   step3: Step3Data;
   step4: Step4Data;
-  step5: Step5Data;
-  step6: Step6Data;
-  step7: Step7Data;
+  step5: Step5NameData; // New step type
+  step6: Step6HomeOwnershipData;
+  step7: Step7HomeTypeData;
+  step8: Step8BudgetEmailData;
 };
 
 // TOTAL_QUIZ_STEPS is now exported from quiz-data.ts to avoid circular dependencies if QuizPage needs it.

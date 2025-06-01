@@ -7,9 +7,10 @@ import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
 import { Step3RoomImprovement } from "./components/Step3RoomImprovement";
 import { Step4RoomFocus } from "./components/Step4RoomFocus";
-import { Step5HomeOwnership } from "./components/Step5HomeOwnership";
-import { Step6HomeType } from "./components/Step6HomeType";
-import { Step7BudgetEmail } from "./components/Step7BudgetEmail";
+import { Step5Name } from "./components/Step5Name"; // New Step
+import { Step5HomeOwnership } from "./components/Step5HomeOwnership"; // Renamed to Step6HomeOwnership for component file, logic will point to step 6
+import { Step6HomeType } from "./components/Step6HomeType"; // Renamed to Step7HomeType
+import { Step7BudgetEmail } from "./components/Step7BudgetEmail"; // Renamed to Step8BudgetEmail
 import { quizData } from "@/lib/quiz-data"; 
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
@@ -43,19 +44,25 @@ export default function QuizPage() {
           return false;
         }
         break;
-      case 5:
+      case 5: // New Name Step
+        if (!answers.userName.trim()) {
+          toast({ title: "Name Required", description: "Please enter your name.", variant: "default" });
+          return false;
+        }
+        break;
+      case 6: // Was Step 5 (Home Ownership)
         if (!answers.homeOwnershipStatus) {
           toast({ title: "Selection Required", description: "Please select your home ownership status.", variant: "default" });
           return false;
         }
         break;
-      case 6:
+      case 7: // Was Step 6 (Home Type)
         if (!answers.homeTypeSelection) {
           toast({ title: "Selection Required", description: "Please select your home type.", variant: "default" });
           return false;
         }
         break;
-      case 7:
+      case 8: // Was Step 7 (Budget & Email)
         if (!answers.budgetRangeSelection) {
            toast({ title: "Selection Required", description: "Please select a budget range.", variant: "default" });
           return false;
@@ -78,15 +85,16 @@ export default function QuizPage() {
   
   const isNextButtonDisabled = (): boolean => {
     switch (currentStep) {
-      case 1: return false; // User can always proceed from step 1 (either selection or skip)
+      case 1: return false; 
       case 2: return answers.styleSelections.length === 0;
       case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
       case 4: 
         const focusOptions = getRoomOptionsForFocusStep();
         return focusOptions.length > 0 && !answers.roomFocusSelection;
-      case 5: return !answers.homeOwnershipStatus;
-      case 6: return !answers.homeTypeSelection;
-      case 7: return !answers.budgetRangeSelection || !answers.email;
+      case 5: return !answers.userName.trim(); // New Name Step
+      case 6: return !answers.homeOwnershipStatus; // Was Step 5
+      case 7: return !answers.homeTypeSelection; // Was Step 6
+      case 8: return !answers.budgetRangeSelection || !answers.email; // Was Step 7
       default: return false;
     }
   };
@@ -97,14 +105,16 @@ export default function QuizPage() {
       case 2: return <Step2StyleSelection />;
       case 3: return <Step3RoomImprovement />;
       case 4: return <Step4RoomFocus />;
-      case 5: return <Step5HomeOwnership />;
-      case 6: return <Step6HomeType />;
-      case 7: return <Step7BudgetEmail />;
+      case 5: return <Step5Name />; // New Step
+      case 6: return <Step5HomeOwnership />; // Component for original step 5
+      case 7: return <Step6HomeType />; // Component for original step 6
+      case 8: return <Step7BudgetEmail />; // Component for original step 7
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
 
   const getCurrentStepDetails = () => {
+    // Adjust step key mapping due to new step insertion
     const stepKey = `step${currentStep}` as keyof AllQuizData;
     return quizData[stepKey];
   }
@@ -130,4 +140,3 @@ export default function QuizPage() {
     </div>
   );
 }
-
