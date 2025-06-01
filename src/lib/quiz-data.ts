@@ -5,7 +5,7 @@ import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 10; // Updated from 9 to 10
+export const TOTAL_QUIZ_STEPS = 10; 
 
 export const quizData: AllQuizData = {
   step1: {
@@ -71,7 +71,7 @@ export const quizData: AllQuizData = {
     id: 5,
     title: "Your Name",
     question: "Let's get to know each other.",
-    instruction: "Type your name below. If you're an existing member, you can Log in (feature coming soon!).",
+    instruction: "Type your name below.", // Simplified instruction
     placeholder: "Type your name here",
   },
   step6: { 
@@ -80,14 +80,14 @@ export const quizData: AllQuizData = {
     question: "", 
     instruction: "", 
   },
-  step7: { // New Email Collection Step
+  step7: { 
     id: 7,
     title: "Unlock Your Results",
     question: "You're almost there!",
-    instruction: "Enter your email to see your style results.\nAlready a member? Log in",
+    instruction: "Enter your email to see your style results.\nAlready a member?\nLog in", // Multi-line for parsing
     placeholder: "Type your email here",
   },
-  step8: { // Was Step 7 (Home Ownership)
+  step8: { 
     id: 8,
     title: "Home Ownership",
     question: "Do you rent or own your place?",
@@ -97,7 +97,7 @@ export const quizData: AllQuizData = {
       { id: "own", name: "Own", icon: Home },
     ],
   },
-  step9: { // Was Step 8 (Home Type)
+  step9: { 
     id: 9,
     title: "Home Type",
     question: "What kind of home do you live in?",
@@ -108,7 +108,7 @@ export const quizData: AllQuizData = {
       { id: "apartment_condo", name: "Apartment/Condo", icon: Building2 },
     ],
   },
-  step10: { // Was Step 9 (Budget & Email), now only Budget
+  step10: { 
     id: 10,
     title: "Final Touch: Budget",
     question: "What's your budget for the focused room?",
@@ -133,7 +133,7 @@ export const iconMap: { [key: string]: LucideIcon } = {
   entryway: Home,
   name: User,
   greeting: Hand,
-  email: Mail, // For new email step icon if needed, or use text input style
+  email: Mail, 
   rent: Key,
   own: Home,
   house: Home,

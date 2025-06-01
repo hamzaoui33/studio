@@ -9,10 +9,10 @@ import { Step3RoomImprovement } from "./components/Step3RoomImprovement";
 import { Step4RoomFocus } from "./components/Step4RoomFocus";
 import { Step5Name } from "./components/Step5Name";
 import { Step6Greeting } from "./components/Step6Greeting";
-import { Step7Email } from "./components/Step7Email"; // New Email Step
-import { Step5HomeOwnership } from "./components/Step5HomeOwnership"; // Component for original step 5, now quizData.step8
-import { Step6HomeType } from "./components/Step6HomeType"; // Component for original step 6, now quizData.step9
-import { Step10Budget } from "./components/Step10Budget"; // Renamed from Step7BudgetEmail, now quizData.step10
+import { Step7Email } from "./components/Step7Email"; 
+import { Step5HomeOwnership } from "./components/Step5HomeOwnership"; 
+import { Step6HomeType } from "./components/Step6HomeType"; 
+import { Step10Budget } from "./components/Step10Budget"; 
 import { quizData } from "@/lib/quiz-data"; 
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
@@ -102,9 +102,9 @@ export default function QuizPage() {
       case 7: // New Email Step
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return !answers.email.trim() || !emailRegex.test(answers.email);
-      case 8: return !answers.homeOwnershipStatus; // Was Step 7
-      case 9: return !answers.homeTypeSelection; // Was Step 8
-      case 10: return !answers.budgetRangeSelection; // Was Step 9, now only budget
+      case 8: return !answers.homeOwnershipStatus; 
+      case 9: return !answers.homeTypeSelection; 
+      case 10: return !answers.budgetRangeSelection; 
       default: return false;
     }
   };
@@ -117,10 +117,10 @@ export default function QuizPage() {
       case 4: return <Step4RoomFocus />;
       case 5: return <Step5Name />;
       case 6: return <Step6Greeting />;
-      case 7: return <Step7Email />; // New Email Step
-      case 8: return <Step5HomeOwnership />; // Component for quizData.step8 (original step 5)
-      case 9: return <Step6HomeType />; // Component for quizData.step9 (original step 6)
-      case 10: return <Step10Budget />; // Component for quizData.step10 (original step 7 - budget part)
+      case 7: return <Step7Email />; 
+      case 8: return <Step5HomeOwnership />; 
+      case 9: return <Step6HomeType />; 
+      case 10: return <Step10Budget />; 
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
@@ -132,54 +132,64 @@ export default function QuizPage() {
   
   const stepDetails = getCurrentStepDetails();
 
-  const showStepDetails = currentStep !== 6 && stepDetails; // Greeting step (6) handles its own content
+  // Special layout for Name (5) and Email (7) steps
+  if ((currentStep === 5 || currentStep === 7) && stepDetails) {
+    const instructionParts = stepDetails.instruction ? stepDetails.instruction.split('\n') : [];
+    return (
+      <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
+        <div className="grid md:grid-cols-2 gap-x-8 md:gap-x-16 items-stretch min-h-[calc(100vh-280px)]"> {/* Adjust min-h as needed */}
+          {/* Left Column for instructions */}
+          <div className="flex flex-col justify-center pt-8 pb-4 md:py-12">
+            <h1 className="quiz-question-title">{stepDetails.question}</h1>
+            {instructionParts[0] && <p className="quiz-instruction-text mt-2">{instructionParts[0]}</p>}
+            
+            {currentStep === 7 && instructionParts.length > 1 && (
+              <div className="mt-8 text-sm">
+                {instructionParts[1] && <p className="text-muted-foreground">{instructionParts[1]}</p>}
+                {instructionParts[2] && (
+                  <a href="#" className="font-semibold text-accent hover:underline" onClick={(e) => e.preventDefault()}>
+                    {instructionParts[2]}
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+          {/* Right Column for input panel */}
+          <div className="bg-input-panel-bg rounded-lg flex flex-col justify-center items-center p-6 md:p-12 animate-fadeIn">
+            {renderStepContent()}
+          </div>
+        </div>
+        <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
+      </div>
+    );
+  }
 
+  // Layout for Greeting step (6) - Full width
+  if (currentStep === 6 && stepDetails) {
+    return (
+      <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
+        <div className="h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
+          {renderStepContent()}
+        </div>
+        <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
+      </div>
+    );
+  }
+
+  // Default layout for other steps
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
-      <div className={cn(
-          "grid md:grid-cols-12 gap-8 md:gap-12 items-start",
-          (currentStep === 6 || currentStep === 5 || currentStep === 7 ) && "md:grid-cols-1" // Full width for greeting, name, and email input steps
-        )}
-      >
-        {showStepDetails && (
-          <div className={cn("md:col-span-6 md:sticky md:top-10 md:pr-[82px]",
-            (currentStep === 5 || currentStep === 7) && "hidden" // Hide left column for name and email input steps
-          )}>
+      {stepDetails && (
+        <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+          <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             <p className="quiz-instruction-text">{stepDetails.instruction}</p>
           </div>
-        )}
-
-        {/* Special layout for name and email input steps */}
-        {(currentStep === 5 || currentStep === 7) && stepDetails && (
-          <div className="md:col-span-12 flex flex-col items-center"> {/* Centering column for the panel */}
-             <div className="md:w-1/2 text-center md:text-left mb-8 md:mb-0 md:pr-[82px]"> {/* Mimic left column style */}
-                <h1 className="quiz-question-title">{stepDetails.question}</h1>
-                <p className="quiz-instruction-text">{stepDetails.instruction}</p>
-             </div>
-             <div className="w-full md:w-1/2 animate-fadeIn flex flex-col justify-center items-center">
-                {renderStepContent()}
-            </div>
+          <div className="md:col-span-6 animate-fadeIn flex flex-col justify-center items-center">
+            {renderStepContent()}
           </div>
-        )}
-
-        {/* Default layout for other steps */}
-        {currentStep !== 5 && currentStep !== 6 && currentStep !== 7 && (
-           <div className={cn(
-            "md:col-span-6 animate-fadeIn flex flex-col justify-center items-center"
-          )}
-        >
-          {renderStepContent()}
         </div>
-        )}
-
-        {/* Greeting Step specific layout */}
-        {currentStep === 6 && (
-           <div className="md:col-span-12 h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
-             {renderStepContent()}
-           </div>
-        )}
-      </div>
+      )}
       <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
     </div>
   );
