@@ -63,7 +63,12 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
       <div className="flex items-center gap-2 md:gap-4">
         <Link href="/" aria-label="Go to homepage" className="block">
           {/* ---- Logo Replaced ---- */}
-          <Image src="https://decorwhisper.com/wp-content/uploads/2025/06/my-logo.png" alt="DecorStyle Discovery Logo" width={80} height={28} className="h-7 w-auto" />
+          <Image 
+            src="https://decorwhisper.com/wp-content/uploads/2025/06/my-logo.png" 
+            alt="DecorStyle Discovery Logo" 
+            width={80} 
+            height={28} 
+            className="h-7 w-auto" />
           {/* ---- End Logo ---- */}
         </Link>
         {/* Total Rooms: Shown on desktop for step 3 */}
