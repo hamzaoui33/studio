@@ -8,20 +8,20 @@ import { useEffect, type RefObject } from 'react';
 const PARENT_ORIGIN = '*'; 
 
 export function useIframeResizer(
-  contentRef: RefObject<HTMLElement>,
   dependencies: any[] // e.g., currentStep, or any other value that changing might affect height
 ) {
   useEffect(() => {
-    // Ensure this code runs only in the browser and the ref is current
-    if (typeof window === 'undefined' || !contentRef.current) {
+    // Ensure this code runs only in the browser
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
     }
 
     // Function to send height to parent
     const sendHeight = () => {
       // Check if the app is actually embedded in an iframe
-      if (contentRef.current && window.parent !== window) { 
-        const height = contentRef.current.scrollHeight;
+      if (window.parent !== window) { 
+        // Use document.documentElement.scrollHeight for a more comprehensive height
+        const height = document.documentElement.scrollHeight;
         // console.log('Next.js app: Sending height to parent:', height); // For debugging
         window.parent.postMessage({ type: 'quizAppResize', height: height }, PARENT_ORIGIN);
       }
@@ -31,18 +31,21 @@ export function useIframeResizer(
     let debounceTimeout: NodeJS.Timeout;
     const debouncedSendHeight = () => {
       clearTimeout(debounceTimeout);
-      debounceTimeout = setTimeout(sendHeight, 100); // Adjust delay as needed (e.g., 50-200ms)
+      debounceTimeout = setTimeout(sendHeight, 150); // Adjusted delay slightly
     };
     
     // Send height initially and whenever dependencies change
     debouncedSendHeight();
 
-    // Observe content for size changes
+    // Observe document body for size changes
+    // Changes to content within the body will cause the body to resize, triggering the observer.
+    // sendHeight will then read document.documentElement.scrollHeight.
     const resizeObserver = new ResizeObserver(() => {
       debouncedSendHeight();
     });
 
-    resizeObserver.observe(contentRef.current);
+    // Observe document.body as its size changes reflect content changes
+    resizeObserver.observe(document.body);
 
     // Cleanup observer on component unmount
     return () => {
@@ -50,5 +53,6 @@ export function useIframeResizer(
       resizeObserver.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentRef, ...dependencies]); // Spread dependencies into the useEffect hook's dependency array
+  }, [...dependencies]); // Spread dependencies into the useEffect hook's dependency array
 }
+
