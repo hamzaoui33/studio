@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useRef } from 'react'; // Added useRef
 import { useQuiz } from "@/context/QuizContext";
 import { QuizNavigation } from "./components/QuizNavigation";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
@@ -16,11 +17,18 @@ import { quizData } from "@/lib/quiz-data";
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
+import { useIframeResizer } from '@/hooks/useIframeResizer'; // Import the new hook
 
 
 export default function QuizPage() {
   const { currentStep, answers, getRoomOptionsForFocusStep } = useQuiz();
   const { toast } = useToast();
+  const quizPageWrapperRef = useRef<HTMLDivElement>(null); // Create ref for the main content wrapper
+
+  // Use the iframe resizer hook
+  // Pass `answers` as a dependency because changes to answers might affect content height
+  // (e.g. Step 4's options depend on Step 3's answers)
+  useIframeResizer(quizPageWrapperRef, [currentStep, answers]);
 
   const validateStep = (): boolean => {
     switch (currentStep) {
@@ -119,7 +127,10 @@ export default function QuizPage() {
   // Full-screen steps (Greeting, Loading)
   if ((currentStep === 6 || currentStep === 8) && stepDetails) { 
     return (
-      <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
+      <div 
+        ref={quizPageWrapperRef} // Assign ref
+        id="quiz-page-wrapper"   // Assign ID
+        className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
         {/* This container ensures these steps take up significant vertical space for centering */}
         <div className="min-h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
@@ -131,7 +142,10 @@ export default function QuizPage() {
   
   if (!stepDetails) { 
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12 text-center">
+        <div 
+          ref={quizPageWrapperRef} // Assign ref
+          id="quiz-page-wrapper"   // Assign ID
+          className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12 text-center">
             <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
             <p>Please try resetting the quiz or contact support.</p>
             <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
@@ -141,7 +155,11 @@ export default function QuizPage() {
 
   // Standard two-column layout for other steps
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
+    <div 
+      ref={quizPageWrapperRef} // Assign ref
+      id="quiz-page-wrapper"   // Assign ID
+      className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12"
+    >
       {stepDetails && (
         <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
           <div className="md:col-span-6 md:sticky md:top-32"> 
