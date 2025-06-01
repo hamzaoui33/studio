@@ -31,8 +31,8 @@ export const quizData: AllQuizData = {
   step2: {
     id: 2,
     title: "Style Selection",
-    question: "What style feels most like you?",
-    instruction: "You can choose up to 3 styles. Think about the overall feeling you want in your home.",
+    question: "Which style feels most like you?",
+    instruction: "Pick up to 3 that speak to you. Think about the vibe you want your home to have.",
     maxSelections: 3,
     options: [
       { id: "modern_minimalist", name: "Modern Minimalist", description: "Clean lines, simplicity, and a neutral color palette.", imageUrl: "https://placehold.co/300x200.png", hint: "minimalist interior" },
