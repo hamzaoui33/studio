@@ -11,7 +11,7 @@ import { Step5Name } from "./components/Step5Name";
 import { Step6Greeting } from "./components/Step6Greeting";
 import { Step7Email } from "./components/Step7Email";
 import { Step8Loading } from "./components/Step8Loading";
-// Removed imports for Step5HomeOwnership, Step6HomeType, Step10Budget
+// Removed imports for Step5HomeOwnership, Step6HomeType, Step10Budget as they are no longer used
 import { quizData } from "@/lib/quiz-data";
 import { useToast } from "@/hooks/use-toast";
 import type { AllQuizData } from "@/types/quiz";
@@ -26,7 +26,7 @@ export default function QuizPage() {
     switch (currentStep) {
       case 1:
         // Validation for proceeding is fine if they skip (handled by skip button).
-        // If they press Next, it's disabled if no selection, so this won't prevent flow if skip is used.
+        // If they press Next, it's disabled if no selection.
         break;
       case 2:
         if (answers.styleSelections.length === 0) {
@@ -116,10 +116,12 @@ export default function QuizPage() {
   
   const stepDetails = getCurrentStepDetails();
 
-  if ((currentStep === 6 || currentStep === 8) && stepDetails) { // For full-screen auto-advancing steps
+  // Full-screen steps (Greeting, Loading)
+  if ((currentStep === 6 || currentStep === 8) && stepDetails) { 
     return (
       <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
-        <div className="h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
+        {/* This container ensures these steps take up significant vertical space for centering */}
+        <div className="min-h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
         </div>
         <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
@@ -136,6 +138,7 @@ export default function QuizPage() {
     );
   }
 
+  // Standard two-column layout for other steps
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
       {stepDetails && (
@@ -143,7 +146,7 @@ export default function QuizPage() {
           <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
-              <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && (currentStep === 5 || currentStep === 7) && "mb-0" )}>
+              <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && "mb-0" )}>
                 {line}
               </p>
             ))}
@@ -152,7 +155,7 @@ export default function QuizPage() {
                 <p className="text-sm text-muted-foreground">Already a member?</p>
                 <a
                   href="#"
-                  onClick={(e) => e.preventDefault()}
+                  onClick={(e) => {e.preventDefault(); /* Implement login logic or navigation */}}
                   className="text-sm font-semibold text-accent hover:underline"
                 >
                   Log in
@@ -160,9 +163,12 @@ export default function QuizPage() {
               </div>
             )}
           </div>
+          
           <div className={cn(
-            "md:col-span-6 animate-fadeIn flex flex-col justify-center items-center",
-            (currentStep === 5 || currentStep === 7) && "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto"
+            "md:col-span-6 animate-fadeIn",
+            (currentStep === 5 || currentStep === 7)
+              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto md:flex md:flex-col md:justify-center md:items-center" // Panel styles + desktop centering
+              : "flex flex-col justify-center items-center" // Default centering for other steps' content column
           )}>
             {renderStepContent()}
           </div>
@@ -172,3 +178,4 @@ export default function QuizPage() {
     </div>
   );
 }
+
