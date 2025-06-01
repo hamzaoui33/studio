@@ -119,7 +119,7 @@ export default function QuizPage() {
   // Full-screen steps (Greeting, Loading)
   if ((currentStep === 6 || currentStep === 8) && stepDetails) { 
     return (
-      <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
+      <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
         {/* This container ensures these steps take up significant vertical space for centering */}
         <div className="min-h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
@@ -131,7 +131,7 @@ export default function QuizPage() {
   
   if (!stepDetails) { 
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32 text-center">
+        <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12 text-center">
             <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
             <p>Please try resetting the quiz or contact support.</p>
         </div>
@@ -140,10 +140,10 @@ export default function QuizPage() {
 
   // Standard two-column layout for other steps
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
+    <div className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
       {stepDetails && (
         <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-          <div className="md:col-span-6 md:sticky md:top-10 md:pr-[82px]">
+          <div className="md:col-span-6 md:sticky md:top-28"> {/* Adjusted sticky top value */}
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
               <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && "mb-0" )}>

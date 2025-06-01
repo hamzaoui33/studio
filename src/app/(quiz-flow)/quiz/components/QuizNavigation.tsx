@@ -56,7 +56,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border p-4 md:p-6 flex flex-col justify-center sm:flex-row sm:justify-end items-center gap-4">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border p-4 md:p-6 flex flex-col justify-center sm:flex-row sm:justify-end items-center gap-4">
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         {currentStep === 3 && totalSelectedRooms > 0 && (
           <span className="text-sm font-medium text-muted-foreground sm:order-1">
