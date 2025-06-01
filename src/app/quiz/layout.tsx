@@ -1,12 +1,8 @@
-import { QuizProvider } from '@/context/QuizContext';
+// This layout has been moved to /src/app/(quiz-flow)/layout.tsx
+// This file is intentionally left to prevent route conflicts during transition.
+// It should ideally be removed from the project.
 import type { ReactNode } from 'react';
 
-export default function QuizLayout({ children }: { children: ReactNode }) {
-  return (
-    <QuizProvider>
-      <main className="container mx-auto px-4 py-8 flex-grow">
-        {children}
-      </main>
-    </QuizProvider>
-  );
+export default function PlaceholderQuizLayout({ children }: { children: ReactNode }) {
+  return <>{children}</>;
 }
