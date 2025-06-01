@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useQuiz } from "@/context/QuizContext";
-import { ArrowLeft, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2 } from "lucide-react"; // Removed ArrowLeft
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
@@ -12,7 +12,7 @@ interface QuizNavigationProps {
 }
 
 export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigationProps) {
-  const { currentStep, prevStep, nextStep, isFirstStep, isLastStep, handleQuizSubmit, isLoading, answers } = useQuiz();
+  const { currentStep, nextStep, isLastStep, handleQuizSubmit, isLoading, answers } = useQuiz(); // Removed prevStep, isFirstStep
   const router = useRouter();
   const { toast } = useToast();
 
@@ -53,17 +53,8 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
   };
 
   return (
-    <div className="mt-12 flex flex-col sm:flex-row justify-between items-center gap-4 border-t pt-6">
-      <Button
-        variant="outline"
-        onClick={prevStep}
-        disabled={isFirstStep || isLoading}
-        className="w-full sm:w-auto"
-        aria-label="Previous Step"
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Previous
-      </Button>
+    <div className="mt-12 flex flex-col sm:flex-row justify-end items-center gap-4 border-t pt-6"> 
+      {/* Removed Previous button and adjusted flex alignment */}
       {!isLastStep && (
         <Button
           onClick={handleNextClick}
