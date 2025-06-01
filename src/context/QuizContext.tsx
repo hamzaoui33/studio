@@ -3,8 +3,8 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { type QuizAnswers, TOTAL_QUIZ_STEPS } from '@/types/quiz';
-import { quizData } from '@/lib/quiz-data';
+import { type QuizAnswers } from '@/types/quiz';
+import { quizData, TOTAL_QUIZ_STEPS } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
 
@@ -79,7 +79,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       return quizData.step3.options;
     }
     return quizData.step3.options.filter(option => selectedRoomIds.includes(option.id));
-  }, [answers.roomImprovementSelections, quizData.step3.options]);
+  }, [answers.roomImprovementSelections]);
 
 
   const handleQuizSubmit = async (): Promise<string | null> => {

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useQuiz } from "@/context/QuizContext";
@@ -8,7 +9,7 @@ import type { LucideIcon } from 'lucide-react';
 
 export function Step3RoomImprovement() {
   const { answers, updateAnswer } = useQuiz();
-  const stepData = quizData.step3;
+  // const stepData = quizData.step3; // Handled by parent
 
   const handleSelectRoom = (optionId: string) => {
     const currentSelection = answers.roomImprovementSelections;
@@ -19,11 +20,10 @@ export function Step3RoomImprovement() {
   };
 
   return (
-    <div className="animate-fadeIn">
-      <h2 className="question-heading">{stepData.question}</h2>
-      <p className="instruction-text">{stepData.instruction}</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
-        {stepData.options.map((option: IconTextOption) => {
+    <div>
+      {/* Question and instruction removed */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5"> {/* Adjusted grid for better fit */}
+        {quizData.step3.options.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = answers.roomImprovementSelections.includes(option.id);
           
@@ -32,7 +32,7 @@ export function Step3RoomImprovement() {
               key={option.id}
               onClick={() => handleSelectRoom(option.id)}
               className={cn(
-                "circular-option group w-full h-auto min-h-[120px] md:min-h-[150px] p-3",
+                "circular-option group w-full h-auto min-h-[100px] md:min-h-[130px] p-3",
                 isSelected && "circular-option-selected"
               )}
               role="checkbox"
@@ -41,11 +41,11 @@ export function Step3RoomImprovement() {
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectRoom(option.id); }}
             >
               {IconComponent && (
-                <div className="circular-option-icon mb-2">
-                  <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
+                <div className="circular-option-icon mb-1.5">
+                  <IconComponent className="h-7 w-7 md:h-8 md:w-8" />
                 </div>
               )}
-              <span className="circular-option-text font-medium">{option.name}</span>
+              <span className="circular-option-text">{option.name}</span>
             </div>
           );
         })}

@@ -1,10 +1,11 @@
+
 "use client";
 
 import Image from "next/image";
 import { useQuiz } from "@/context/QuizContext";
 import { quizData } from "@/lib/quiz-data";
 import type { StyleOption } from "@/types/quiz";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"; // Card is used here for options
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
@@ -33,16 +34,15 @@ export function Step2StyleSelection() {
   };
 
   return (
-    <div className="animate-fadeIn">
-      <h2 className="question-heading">{stepData.question}</h2>
-      <p className="instruction-text">{stepData.instruction}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    <div>
+      {/* Question and instruction removed, handled by parent QuizPage */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6"> {/* Adjusted to 2 cols for better fit */}
         {stepData.options.map((option: StyleOption) => (
-          <Card
+          <div // Changed Card to div and applied selectable-card class
             key={option.id}
             onClick={() => handleSelectStyle(option.id)}
             className={cn(
-              "selectable-card overflow-hidden",
+              "selectable-card overflow-hidden flex flex-col", // Added flex flex-col
               answers.styleSelections.includes(option.id) && "selected"
             )}
             role="checkbox"
@@ -51,7 +51,7 @@ export function Step2StyleSelection() {
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectStyle(option.id); }}
           >
             {option.imageUrl && (
-              <div className="aspect-[3/2] relative">
+              <div className="aspect-[16/10] relative w-full rounded-t-md overflow-hidden"> {/* Ensure image covers */}
                 <Image
                   src={option.imageUrl}
                   alt={option.name}
@@ -61,13 +61,11 @@ export function Step2StyleSelection() {
                 />
               </div>
             )}
-            <CardHeader>
-              <CardTitle className={cn("font-headline text-xl", answers.styleSelections.includes(option.id) && "text-primary")}>{option.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className={cn(answers.styleSelections.includes(option.id) && "text-primary/80")}>{option.description}</CardDescription>
-            </CardContent>
-          </Card>
+            <div className="p-4 flex-grow"> {/* Replaced CardHeader and CardContent */}
+              <h3 className={cn("font-headline text-xl mb-1", answers.styleSelections.includes(option.id) ? "text-accent font-semibold" : "text-foreground")}>{option.name}</h3>
+              <p className={cn("text-sm", answers.styleSelections.includes(option.id) ? "text-accent/80" : "text-muted-foreground")}>{option.description}</p>
+            </div>
+          </div>
         ))}
       </div>
     </div>

@@ -1,18 +1,19 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { useQuiz } from "@/context/QuizContext";
-import { ArrowRight, CheckCircle, Loader2 } from "lucide-react"; // Removed ArrowLeft
+import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
 interface QuizNavigationProps {
-  onNext?: () => boolean | Promise<boolean>; // Optional validation callback
+  onNext?: () => boolean | Promise<boolean>; 
   isNextDisabled?: boolean;
 }
 
 export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigationProps) {
-  const { currentStep, nextStep, isLastStep, handleQuizSubmit, isLoading, answers } = useQuiz(); // Removed prevStep, isFirstStep
+  const { currentStep, nextStep, isLastStep, handleQuizSubmit, isLoading, answers } = useQuiz();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -23,6 +24,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     }
     if (canProceed) {
       nextStep();
+      window.scrollTo(0, 0); // Scroll to top on step change
     }
   };
 
@@ -53,30 +55,29 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
   };
 
   return (
-    <div className="mt-12 flex flex-col sm:flex-row justify-end items-center gap-4 border-t pt-6"> 
-      {/* Removed Previous button and adjusted flex alignment */}
+    <div className="mt-10 md:mt-16 flex flex-col sm:flex-row justify-end items-center gap-4 border-t border-border pt-6 md:pt-8"> 
       {!isLastStep && (
         <Button
           onClick={handleNextClick}
           disabled={isLoading || isNextDisabled}
-          className="w-full sm:w-auto"
+          className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
           aria-label="Next Step"
         >
           Next
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       )}
       {isLastStep && (
         <Button
           onClick={handleSubmitClick}
           disabled={isLoading || !answers.email}
-          className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground"
+          className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
           aria-label="Submit Quiz"
         >
           {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
           ) : (
-            <CheckCircle className="mr-2 h-4 w-4" />
+            <CheckCircle className="mr-2 h-5 w-5" />
           )}
           {isLoading ? "Generating..." : "Get My Style Guide"}
         </Button>

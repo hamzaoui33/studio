@@ -5,10 +5,12 @@ import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2 
 } from 'lucide-react';
 
+export const TOTAL_QUIZ_STEPS = 7; // Moved here for QuizPage import
+
 export const quizData: AllQuizData = {
   step1: {
     id: 1,
-    title: "Swoon-Worthy Rooms",
+    title: "Swoon-Worthy Rooms", // Used by QuizPage if needed, but question/instruction are primary
     question: "Select the rooms that make you swoon.",
     instruction: "Decisions are hard. Pick as many as you want. These images help us understand your initial vibe.",
     options: [
@@ -60,12 +62,11 @@ export const quizData: AllQuizData = {
     title: "Room Focus",
     question: "Great! Which room should we focus on first?",
     instruction: "This will be the primary room for your personalized style guide.",
-    // Options are dynamically populated based on Step 3 selections.
   },
   step5: {
     id: 5,
     title: "Home Ownership",
-    question: "Do you rent or own your place?",
+    question: "Let's get to know each other. Do you rent or own your place?", // Updated question to match image text somewhat
     instruction: "This helps us know what kind of changes you'd be able to make.",
     options: [
       { id: "rent", name: "Rent", icon: Key },
@@ -75,7 +76,7 @@ export const quizData: AllQuizData = {
   step6: {
     id: 6,
     title: "Home Type",
-    question: "What kind of home do you live in?",
+    question: "What kind of home do you live in?", // Assuming "Nice to meet you" was placeholder
     instruction: "Understanding your home type helps tailor advice.",
     options: [
       { id: "house", name: "House", icon: Home },
@@ -86,15 +87,15 @@ export const quizData: AllQuizData = {
   step7: {
     id: 7,
     title: "Budget & Contact",
-    question: "What's your approximate budget range for each room?",
-    instruction: "Select a budget that feels comfortable for your focused room project.",
-    options: [
+    question: "You're almost there! What's your budget and email?", // Combined for main question
+    instruction: "Select a budget for your focused room and provide your email for the style guide.",
+    options: [ // These are budget options
       { id: "budget_flexible", name: "Flexible / Just Exploring", icon: HandHeart },
       { id: "budget_starter", name: "Starter Sparkle ($ - $$)", icon: Paintbrush },
       { id: "budget_makeover", name: "Makeover Magic ($$ - $$$)", icon: LayoutGrid },
       { id: "budget_deluxe", name: "Deluxe Dream ($$$ - $$$$)", icon: Lamp },
     ],
-    emailPrompt: "Enter your email to receive your personalized style guide:",
+    emailPrompt: "Finally, type your email here:",
     emailPlaceholder: "your.email@example.com",
   },
 };
@@ -117,14 +118,12 @@ export const iconMap: { [key: string]: LucideIcon } = {
   budget_starter: Paintbrush,
   budget_makeover: LayoutGrid,
   budget_deluxe: Lamp,
-  default: Target,
+  default: Target, // Default/fallback icon
   email: Mail,
   submit: CheckCircle,
   budget: Wallet,
 };
 
-// Helper function for type safety, not strictly necessary for quizData structure but good practice
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {
   return quizData[stepKey];
 }
-

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,77 +9,80 @@ body {
 
 @layer base {
   :root {
-    --background: 60 56% 93%; /* #F5F5DC Light Beige */
-    --foreground: 200 7% 24%; /* #3A3F42 Dark Gray */
+    /* New color scheme based on the image */
+    --background: 40 60% 97%; /* Very light beige/off-white */
+    --foreground: 210 10% 23%; /* Dark Gray for text (slightly blueish cool gray) */
 
-    --muted: 60 20% 85%; /* Lighter beige for muted backgrounds */
-    --muted-foreground: 200 7% 40%; /* Slightly lighter gray for muted text */
+    --muted: 40 30% 90%; /* Lighter beige for muted backgrounds */
+    --muted-foreground: 210 10% 45%; /* Slightly lighter gray for muted text */
 
-    --popover: 60 56% 93%;
-    --popover-foreground: 200 7% 24%;
+    --popover: 40 60% 97%;
+    --popover-foreground: 210 10% 23%;
 
-    --card: 60 56% 93%;
-    --card-foreground: 200 7% 24%;
+    --card: 40 50% 92%; /* Light beige for card backgrounds (options) */
+    --card-foreground: 210 10% 23%;
 
-    --border: 60 20% 80%; /* Beige-toned border */
-    --input: 60 20% 88%; /* Lighter beige for input */
+    --border: 40 30% 85%; /* Beige-toned border */
+    --input: 40 50% 94%; /* Slightly lighter beige for input fields themselves */
+    --input-panel-bg: 40 50% 92%; /* For larger input areas like in step 7 */
 
-    --primary: 115 22% 71%; /* #A6C9A3 Soft Sage */
-    --primary-foreground: 0 0% 100%; /* #FFFFFF White */
 
-    --secondary: 115 22% 85%; /* Lighter Soft Sage */
-    --secondary-foreground: 115 22% 30%; /* Darker Sage for text on light sage */
+    /* Primary is now the Pink/Magenta for step dividers/indicators */
+    --primary: 330 80% 55%; 
+    --primary-foreground: 0 0% 100%; /* White text on pink */
 
-    --accent: 43 100% 36%; /* #B8860B Muted Gold */
-    --accent-foreground: 0 0% 100%; /* #FFFFFF White */
+    /* Secondary can be a lighter pink or a neutral for subtle backgrounds */
+    --secondary: 330 80% 95%; /* Very Lighter Pink */
+    --secondary-foreground: 330 80% 40%; 
+
+    /* Accent is now the Orange/Brown for buttons and selections */
+    --accent: 30 70% 50%; 
+    --accent-foreground: 0 0% 100%; /* White text on orange/brown */
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --ring: 115 22% 71%; /* Soft Sage for ring */
+    --ring: 30 70% 50%; /* Orange/Brown for ring */
 
-    --radius: 0.5rem;
+    --radius: 0.5rem; /* Existing radius */
 
-    --chart-1: 115 22% 71%;
-    --chart-2: 43 100% 36%;
+    --chart-1: 330 80% 55%;
+    --chart-2: 30 70% 50%;
     --chart-3: 115 22% 50%;
     --chart-4: 43 100% 50%;
     --chart-5: 115 22% 60%;
+
+    /* Sidebar variables from original theme - adjust if sidebar is used with new theme */
+    --sidebar-background: 210 10% 15%; /* Example: Darker for contrast if needed */
+    --sidebar-foreground: 40 60% 97%;
+    --sidebar-primary: 330 80% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 70% 60%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 10% 25%;
+    --sidebar-ring: 30 70% 60%;
   }
 
   .dark {
-    /* Keeping dark mode similar for now, can be customized later if needed */
-    --background: 200 7% 10%; 
-    --foreground: 60 56% 93%;
-
-    --muted: 200 7% 15%;
-    --muted-foreground: 60 20% 80%;
-
-    --popover: 200 7% 10%;
-    --popover-foreground: 60 56% 93%;
-
-    --card: 200 7% 10%;
-    --card-foreground: 60 56% 93%;
-
-    --border: 200 7% 20%;
-    --input: 200 7% 20%;
-
-    --primary: 115 22% 71%;
+    /* Define dark mode if necessary, for now, let's keep it simple or match light */
+    --background: 210 10% 10%; 
+    --foreground: 40 60% 97%;
+    --muted: 210 10% 15%;
+    --muted-foreground: 40 30% 80%;
+    --popover: 210 10% 10%;
+    --popover-foreground: 40 60% 97%;
+    --card: 210 10% 12%;
+    --card-foreground: 40 60% 97%;
+    --border: 210 10% 20%;
+    --input: 210 10% 18%;
+    --input-panel-bg: 210 10% 12%;
+    --primary: 330 70% 50%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 115 22% 30%;
-    --secondary-foreground: 115 22% 85%;
-    
-    --accent: 43 100% 40%;
+    --secondary: 330 70% 20%;
+    --secondary-foreground: 330 70% 80%;
+    --accent: 30 60% 45%;
     --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --ring: 115 22% 71%;
-
-    --chart-1: 115 22% 60%;
-    --chart-2: 43 100% 50%;
+    --ring: 30 60% 45%;
   }
 }
 
@@ -97,61 +101,85 @@ body {
   }
 }
 
+/* Updated component styles */
 @layer components {
-  .circular-option {
-    @apply border border-border rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-200 bg-card hover:border-accent aspect-square p-2;
+  .circular-option { /* For steps 3, 4, 5, 6 */
+    @apply bg-card border-2 border-transparent rounded-full flex flex-col items-center justify-center cursor-pointer transition-all duration-200 aspect-square p-3 text-center shadow-sm hover:border-muted;
   }
   .circular-option-selected {
-    @apply border-primary bg-primary/10 ring-2 ring-primary;
+    @apply border-accent bg-accent/10 ring-2 ring-accent/70; /* Orange/Brown border, light orange fill */
   }
   .circular-option-icon svg {
-    @apply text-foreground group-hover:text-accent transition-colors;
+    @apply text-foreground/60 group-hover:text-accent transition-colors mb-1;
   }
   .circular-option-selected .circular-option-icon svg {
-    @apply text-primary;
+    @apply text-accent;
   }
   .circular-option-text {
-    @apply text-xs text-center text-muted-foreground group-hover:text-accent transition-colors;
+    @apply text-xs font-medium text-foreground/70 group-hover:text-accent transition-colors;
   }
    .circular-option-selected .circular-option-text {
-    @apply text-primary font-medium;
+    @apply text-accent font-semibold;
   }
 
-  .image-selection-card {
-    @apply relative overflow-hidden rounded-lg shadow-md cursor-pointer transition-all duration-200;
+  .image-selection-card { /* For step 1 */
+    @apply relative overflow-hidden rounded-md shadow-sm cursor-pointer transition-all duration-200 border-2 border-transparent bg-card;
   }
   .image-selection-card img {
-    @apply w-full h-full object-cover transition-transform duration-300;
+    @apply w-full h-full object-cover transition-transform duration-300 group-hover:scale-105;
   }
-  .image-selection-card .overlay {
-    @apply absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-300 flex items-center justify-center;
+  .image-selection-card .overlay { 
+    @apply absolute inset-0 bg-black/10 opacity-0 transition-opacity duration-300 flex items-center justify-center group-hover:opacity-100;
   }
   .image-selection-card.selected {
-    @apply ring-4 ring-primary ring-offset-2 ring-offset-background;
+    @apply border-accent ring-2 ring-accent/50; /* Orange/Brown border */
   }
-  .image-selection-card.selected .overlay {
-    @apply opacity-100 bg-primary/50;
+  .image-selection-card.selected .overlay { 
+    @apply opacity-100 bg-accent/40;
   }
-  .image-selection-card.selected .overlay svg {
-    @apply text-primary-foreground;
+  .image-selection-card.selected .overlay svg { /* Assuming CheckCircle is used */
+    @apply text-accent-foreground;
   }
 
-  .selectable-card {
-    @apply p-4 border rounded-lg cursor-pointer hover:border-accent hover:shadow-lg transition-all bg-card;
+  .selectable-card { /* For step 2 and budget options in step 7 */
+    @apply p-4 border-2 border-transparent rounded-lg cursor-pointer hover:border-muted transition-all bg-card shadow-sm;
   }
   .selectable-card.selected {
-    @apply border-primary bg-primary/10 ring-2 ring-primary;
+    @apply border-accent bg-accent/10 ring-2 ring-accent/70; /* Orange/Brown border, light orange fill */
   }
-   .selectable-card.selected h3, .selectable-card.selected p {
-    @apply text-primary;
+   .selectable-card.selected h3, .selectable-card.selected p, .selectable-card.selected .text-muted-foreground {
+    @apply text-accent; 
+   }
+   .selectable-card.selected h3 {
+    @apply font-semibold;
+   }
+
+
+  /* New styles for quiz layout */
+  .quiz-step-indicator-text { /* Renamed to avoid conflict if "quiz-step-indicator" is a structural class */
+    @apply text-sm font-bold uppercase tracking-wider text-primary mb-4 block; /* Pink/Magenta */
+  }
+  .quiz-question-title {
+    @apply text-3xl md:text-4xl font-semibold text-foreground mb-3 font-headline; 
+  }
+  .quiz-instruction-text {
+    @apply text-base text-muted-foreground mb-6 md:mb-8;
+  }
+  .quiz-step-divider {
+    @apply h-2 md:h-3 w-full bg-primary my-10 md:my-16; /* Pink/Magenta bar */
+  }
+  .quiz-input-panel { 
+    @apply bg-input-panel-bg p-6 md:p-10 rounded-lg flex flex-col items-center justify-center min-h-[200px] md:min-h-[250px] w-full;
   }
 }
 
+/* Remove old global .question-heading and .instruction-text if no longer needed, or ensure they point to new styles if used elsewhere. 
+   For this refactor, assuming step components will use the new classes directly.
+*/
 .question-heading {
-    font-family: var(--font-headline); /* Ensure this is defined in tailwind.config.js */
-    @apply text-3xl md:text-4xl font-semibold text-foreground mb-2;
+    /* Styles removed, components should use .quiz-question-title */
 }
 
 .instruction-text {
-    @apply text-base text-muted-foreground mb-6;
+    /* Styles removed, components should use .quiz-instruction-text */
 }

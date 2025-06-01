@@ -1,7 +1,7 @@
+
 "use client";
 
 import { useQuiz } from "@/context/QuizContext";
-// import { QuizProgressBar } from "./components/QuizProgressBar"; // Removed import
 import { QuizNavigation } from "./components/QuizNavigation";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
@@ -10,9 +10,10 @@ import { Step4RoomFocus } from "./components/Step4RoomFocus";
 import { Step5HomeOwnership } from "./components/Step5HomeOwnership";
 import { Step6HomeType } from "./components/Step6HomeType";
 import { Step7BudgetEmail } from "./components/Step7BudgetEmail";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { quizData } from "@/lib/quiz-data";
+import { quizData, TOTAL_QUIZ_STEPS } from "@/lib/quiz-data"; // Ensure TOTAL_QUIZ_STEPS is exported or defined here
 import { useToast } from "@/hooks/use-toast";
+import type { AllQuizData } from "@/types/quiz";
+
 
 export default function QuizPage() {
   const { currentStep, answers, getRoomOptionsForFocusStep } = useQuiz();
@@ -43,14 +44,6 @@ export default function QuizPage() {
         if (focusOptions.length > 0 && !answers.roomFocusSelection) {
            toast({ title: "Selection Required", description: "Please select a room to focus on.", variant: "default" });
           return false;
-        } else if (focusOptions.length === 0 && !answers.roomFocusSelection) {
-          // If no options, effectively this step is skipped for validation if no selection possible.
-          // But QuizNavigation will try to submit if it's the last step.
-          // If step 3 selections lead to no options for step 4, then step 4 is 'valid' if nothing can be selected.
-          // But the submit logic needs a focus room. This scenario means step 3 must be revisited.
-          // For now, the UI in Step4RoomFocus handles this with an Alert.
-          // If user somehow skips past that, this could be an issue.
-          // This path should ideally not be reachable if Step4RoomFocus shows an alert and navigation prevents proceeding.
         }
         break;
       case 5:
@@ -94,11 +87,10 @@ export default function QuizPage() {
       case 4: return getRoomOptionsForFocusStep().length > 0 && !answers.roomFocusSelection;
       case 5: return !answers.homeOwnershipStatus;
       case 6: return !answers.homeTypeSelection;
-      case 7: return !answers.budgetRangeSelection || !answers.email; // Handled by QuizNavigation submit logic
+      case 7: return !answers.budgetRangeSelection || !answers.email;
       default: return false;
     }
   };
-
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -113,25 +105,37 @@ export default function QuizPage() {
     }
   };
 
-  const getCurrentStepTitle = () => {
-    const stepKey = `step${currentStep}` as keyof typeof quizData;
-    return quizData[stepKey]?.title || "DecorStyle Quiz";
+  const getCurrentStepDetails = () => {
+    const stepKey = `step${currentStep}` as keyof AllQuizData;
+    return quizData[stepKey];
   }
+  
+  const stepDetails = getCurrentStepDetails();
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Card className="shadow-xl rounded-lg">
-        <CardHeader className="border-b">
-          <CardTitle className="font-headline text-2xl text-primary text-center">
-            {getCurrentStepTitle()}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6 md:p-8">
-          {/* <QuizProgressBar /> */} {/* Removed QuizProgressBar component */}
+    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12">
+      {/* Magenta divider bar appears *before* the new step content */}
+      {currentStep > 1 && <div className="quiz-step-divider mb-10 md:mb-16"></div>}
+
+      <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
+        {/* Left Column: Step Info & Question (spans 4 out of 12 columns on md+) */}
+        <div className="md:col-span-4 lg:col-span-3 md:sticky md:top-10">
+          <span className="quiz-step-indicator-text">Step {currentStep}</span>
+          {stepDetails && (
+            <>
+              <h1 className="quiz-question-title">{stepDetails.question}</h1>
+              <p className="quiz-instruction-text">{stepDetails.instruction}</p>
+            </>
+          )}
+        </div>
+
+        {/* Right Column: Step Options/Content (spans 8 out of 12 columns on md+) */}
+        <div className="md:col-span-8 lg:col-span-9 animate-fadeIn">
           {renderStepContent()}
-          <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
     </div>
   );
 }

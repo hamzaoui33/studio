@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useQuiz } from "@/context/QuizContext";
@@ -11,7 +12,7 @@ import type { LucideIcon } from 'lucide-react';
 
 export function Step4RoomFocus() {
   const { answers, updateAnswer, getRoomOptionsForFocusStep } = useQuiz();
-  const stepData = quizData.step4;
+  // const stepData = quizData.step4; // Handled by parent
   const focusRoomOptions = getRoomOptionsForFocusStep();
 
   const handleSelectFocusRoom = (optionId: string) => {
@@ -20,12 +21,12 @@ export function Step4RoomFocus() {
 
   if (focusRoomOptions.length === 0) {
     return (
-      <div className="animate-fadeIn">
-        <h2 className="question-heading">{stepData.question}</h2>
-        <Alert>
-          <Target className="h-4 w-4" />
-          <AlertTitle>No Rooms Selected</AlertTitle>
-          <AlertDescription>
+      <div>
+        {/* Question and instruction removed */}
+        <Alert variant="default" className="bg-card border-border">
+          <Target className="h-4 w-4 text-accent" />
+          <AlertTitle className="text-foreground">No Rooms Selected</AlertTitle>
+          <AlertDescription className="text-muted-foreground">
             Please go back to Step 3 and select at least one room you'd like to improve.
             This will help us determine which room to focus on.
           </AlertDescription>
@@ -35,10 +36,9 @@ export function Step4RoomFocus() {
   }
 
   return (
-    <div className="animate-fadeIn">
-      <h2 className="question-heading">{stepData.question}</h2>
-      <p className="instruction-text">{stepData.instruction}</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
+    <div>
+      {/* Question and instruction removed */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
         {focusRoomOptions.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = answers.roomFocusSelection === option.id;
@@ -48,7 +48,7 @@ export function Step4RoomFocus() {
               key={option.id}
               onClick={() => handleSelectFocusRoom(option.id)}
               className={cn(
-                "circular-option group w-full h-auto min-h-[120px] md:min-h-[150px] p-3",
+                "circular-option group w-full h-auto min-h-[100px] md:min-h-[130px] p-3",
                 isSelected && "circular-option-selected"
               )}
               role="radio"
@@ -57,11 +57,11 @@ export function Step4RoomFocus() {
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelectFocusRoom(option.id); }}
             >
               {IconComponent && (
-                <div className="circular-option-icon mb-2">
-                  <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
+                <div className="circular-option-icon mb-1.5">
+                  <IconComponent className="h-7 w-7 md:h-8 md:w-8" />
                 </div>
               )}
-              <span className="circular-option-text font-medium">{option.name}</span>
+              <span className="circular-option-text">{option.name}</span>
             </div>
           );
         })}

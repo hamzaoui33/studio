@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useQuiz } from "@/context/QuizContext";
@@ -8,18 +9,17 @@ import type { LucideIcon } from 'lucide-react';
 
 export function Step6HomeType() {
   const { answers, updateAnswer } = useQuiz();
-  const stepData = quizData.step6;
+  // const stepData = quizData.step6; // Handled by parent
 
   const handleSelectHomeType = (optionId: string) => {
     updateAnswer("homeTypeSelection", optionId);
   };
 
   return (
-    <div className="animate-fadeIn">
-      <h2 className="question-heading">{stepData.question}</h2>
-      <p className="instruction-text">{stepData.instruction}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto">
-        {stepData.options.map((option: IconTextOption) => {
+    <div>
+      {/* Question and instruction removed */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-xl mx-auto"> {/* Centered options */}
+        {quizData.step6.options.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = answers.homeTypeSelection === option.id;
           
@@ -28,7 +28,7 @@ export function Step6HomeType() {
               key={option.id}
               onClick={() => handleSelectHomeType(option.id)}
               className={cn(
-                "circular-option group w-full h-auto min-h-[150px] md:min-h-[180px] p-4",
+                "circular-option group w-full h-auto min-h-[130px] md:min-h-[160px] p-4",
                 isSelected && "circular-option-selected"
               )}
               role="radio"
@@ -38,10 +38,10 @@ export function Step6HomeType() {
             >
               {IconComponent && (
                 <div className="circular-option-icon mb-2">
-                  <IconComponent className="h-10 w-10 md:h-12 md:w-12" />
+                  <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
                 </div>
               )}
-              <span className="circular-option-text text-base md:text-lg font-medium">{option.name}</span>
+              <span className="circular-option-text text-sm md:text-base">{option.name}</span>
             </div>
           );
         })}

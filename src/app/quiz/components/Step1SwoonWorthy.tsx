@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -9,7 +10,8 @@ import { cn } from "@/lib/utils";
 
 export function Step1SwoonWorthy() {
   const { answers, updateAnswer } = useQuiz();
-  const stepData = quizData.step1;
+  // Step question and instruction are now rendered by QuizPage
+  // const stepData = quizData.step1;
 
   const handleSelectImage = (optionId: string) => {
     const currentSelection = answers.swoonWorthyRooms;
@@ -20,16 +22,15 @@ export function Step1SwoonWorthy() {
   };
 
   return (
-    <div className="animate-fadeIn">
-      <h2 className="question-heading">{stepData.question}</h2>
-      <p className="instruction-text">{stepData.instruction}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {stepData.options.map((option: ImageOption) => (
+    <div>
+      {/* Question and instruction removed, handled by parent QuizPage */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {quizData.step1.options.map((option: ImageOption, index: number) => (
           <div
             key={option.id}
             onClick={() => handleSelectImage(option.id)}
             className={cn(
-              "image-selection-card group aspect-[4/3]", // Added 'group'
+              "image-selection-card group aspect-[4/3]",
               answers.swoonWorthyRooms.includes(option.id) && "selected"
             )}
             role="checkbox"
@@ -42,13 +43,12 @@ export function Step1SwoonWorthy() {
               alt={option.alt}
               width={600}
               height={400}
-              className="group-hover:scale-105" // Added className for group-hover effect
               data-ai-hint={option.hint}
-              priority={stepData.options.indexOf(option) < 4} // Prioritize loading for first few images
+              priority={index < 4} 
             />
-            <div className="overlay group-hover:opacity-100"> {/* Added group-hover:opacity-100 */}
+            <div className="overlay">
               {answers.swoonWorthyRooms.includes(option.id) && (
-                <CheckCircle className="h-12 w-12 text-primary-foreground" />
+                <CheckCircle className="h-10 w-10 md:h-12 md:w-12" />
               )}
             </div>
           </div>
