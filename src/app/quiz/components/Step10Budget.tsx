@@ -9,8 +9,7 @@ import type { LucideIcon } from 'lucide-react';
 
 export function Step10Budget() {
   const { answers, updateAnswer } = useQuiz();
-  // This component now handles Step 10 data, which is for budget selection only.
-  const stepData = quizData.step10; 
+  const stepData = quizData.step11; // Updated to reflect new step numbering (was step10)
 
   const handleSelectBudget = (optionId: string) => {
     updateAnswer("budgetRangeSelection", optionId);
@@ -18,7 +17,6 @@ export function Step10Budget() {
 
   return (
     <div className="max-w-lg mx-auto_ md:max-w-none">
-      {/* Budget options rendering */}
       <div className="grid grid-cols-2 gap-4 md:gap-5">
         {stepData.options.map((option: BudgetOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
@@ -47,7 +45,6 @@ export function Step10Budget() {
           );
         })}
       </div>
-      {/* Email input is removed from this component */}
     </div>
   );
 }

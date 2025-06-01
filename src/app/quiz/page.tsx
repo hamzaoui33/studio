@@ -10,6 +10,7 @@ import { Step4RoomFocus } from "./components/Step4RoomFocus";
 import { Step5Name } from "./components/Step5Name";
 import { Step6Greeting } from "./components/Step6Greeting";
 import { Step7Email } from "./components/Step7Email"; 
+import { Step8Loading } from "./components/Step8Loading"; // New Loading Step
 import { Step5HomeOwnership } from "./components/Step5HomeOwnership"; 
 import { Step6HomeType } from "./components/Step6HomeType"; 
 import { Step10Budget } from "./components/Step10Budget"; 
@@ -54,7 +55,7 @@ export default function QuizPage() {
         break;
       case 6: // Greeting Step - auto advances
         return true;
-      case 7: // New Email Step
+      case 7: // Email Step
         if (!answers.email.trim()) {
           toast({ title: "Email Required", description: "Please enter your email address.", variant: "default" });
           return false;
@@ -65,19 +66,21 @@ export default function QuizPage() {
           return false;
         }
         break;
-      case 8: // Was Step 7 (Home Ownership)
+      case 8: // Loading Step - auto advances
+        return true;
+      case 9: // Was Step 8 (Home Ownership)
         if (!answers.homeOwnershipStatus) {
           toast({ title: "Selection Required", description: "Please select your home ownership status.", variant: "default" });
           return false;
         }
         break;
-      case 9: // Was Step 8 (Home Type)
+      case 10: // Was Step 9 (Home Type)
         if (!answers.homeTypeSelection) {
           toast({ title: "Selection Required", description: "Please select your home type.", variant: "default" });
           return false;
         }
         break;
-      case 10: // Was Step 9 (Budget & Email), now only Budget
+      case 11: // Was Step 10 (Budget)
         if (!answers.budgetRangeSelection) {
            toast({ title: "Selection Required", description: "Please select a budget range.", variant: "default" });
           return false;
@@ -99,12 +102,13 @@ export default function QuizPage() {
         return focusOptions.length > 0 && !answers.roomFocusSelection;
       case 5: return !answers.userName.trim();
       case 6: return true; // Greeting step auto-advances
-      case 7: // New Email Step
+      case 7: 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return !answers.email.trim() || !emailRegex.test(answers.email);
-      case 8: return !answers.homeOwnershipStatus; 
-      case 9: return !answers.homeTypeSelection; 
-      case 10: return !answers.budgetRangeSelection; 
+      case 8: return true; // Loading step auto-advances
+      case 9: return !answers.homeOwnershipStatus; 
+      case 10: return !answers.homeTypeSelection; 
+      case 11: return !answers.budgetRangeSelection; 
       default: return false;
     }
   };
@@ -118,9 +122,10 @@ export default function QuizPage() {
       case 5: return <Step5Name />;
       case 6: return <Step6Greeting />;
       case 7: return <Step7Email />; 
-      case 8: return <Step5HomeOwnership />; 
-      case 9: return <Step6HomeType />; 
-      case 10: return <Step10Budget />; 
+      case 8: return <Step8Loading />;
+      case 9: return <Step5HomeOwnership />; // Renamed to map to original component
+      case 10: return <Step6HomeType />; // Renamed to map to original component
+      case 11: return <Step10Budget />; // Renamed to map to original component
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
@@ -132,8 +137,8 @@ export default function QuizPage() {
   
   const stepDetails = getCurrentStepDetails();
 
-  // Layout for Greeting step (6) - Full width, centered content
-  if (currentStep === 6 && stepDetails) {
+  // Layout for Greeting (6) & Loading (8) steps - Full width, centered content
+  if ((currentStep === 6 || currentStep === 8) && stepDetails) {
     return (
       <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-28 md:pb-32">
         <div className="h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
@@ -180,6 +185,3 @@ export default function QuizPage() {
     </div>
   );
 }
-
-
-    

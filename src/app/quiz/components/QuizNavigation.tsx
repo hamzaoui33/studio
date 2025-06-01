@@ -38,7 +38,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
       });
       return;
     }
-    // Verify budget from the last step (now Step 10)
+    // Verify budget from the last step (now Step 11)
     if (isLastStep && !answers.budgetRangeSelection) {
        toast({
         title: "Budget Selection Required",
@@ -74,8 +74,8 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     ? Object.values(answers.roomImprovementSelections).reduce((sum, count) => sum + count, 0)
     : 0;
 
-  // Hide navigation for Greeting step (step 6)
-  if (currentStep === 6) {
+  // Hide navigation for Greeting step (step 6) and Loading step (step 8)
+  if (currentStep === 6 || currentStep === 8) {
     return null;
   }
 
@@ -109,10 +109,10 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         )}
-        {isLastStep && ( // This is now for Step 10 (Budget)
+        {isLastStep && ( 
           <Button
             onClick={handleSubmitClick}
-            disabled={isLoading || isNextDisabled} // isNextDisabled checks budget for last step
+            disabled={isLoading || isNextDisabled} 
             className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
             aria-label="Submit Quiz"
           >

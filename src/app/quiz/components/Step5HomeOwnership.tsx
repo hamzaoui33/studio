@@ -9,7 +9,7 @@ import type { LucideIcon } from 'lucide-react';
 
 export function Step5HomeOwnership() {
   const { answers, updateAnswer } = useQuiz();
-  const stepData = quizData.step8; // Updated from step7 to step8
+  const stepData = quizData.step9; // Updated to reflect new step numbering (was step8, originally step7)
 
   const handleSelectOwnership = (optionId: string) => {
     updateAnswer("homeOwnershipStatus", optionId);

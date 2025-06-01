@@ -2,10 +2,10 @@
 import type { AllQuizData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 10; 
+export const TOTAL_QUIZ_STEPS = 11; 
 
 export const quizData: AllQuizData = {
   step1: {
@@ -71,7 +71,7 @@ export const quizData: AllQuizData = {
     id: 5,
     title: "Your Name",
     question: "Let's get to know each other.",
-    instruction: "Type your name below.", // Simplified instruction
+    instruction: "Type your name below.", 
     placeholder: "Type your name here",
   },
   step6: { 
@@ -84,11 +84,17 @@ export const quizData: AllQuizData = {
     id: 7,
     title: "Unlock Your Results",
     question: "You're almost there!",
-    instruction: "Enter your email to see your style results.\nAlready a member?\nLog in", // Multi-line for parsing
+    instruction: "Enter your email to see your style results.\nAlready a member?\nLog in",
     placeholder: "Type your email here",
   },
-  step8: { 
+  step8: {
     id: 8,
+    title: "Calculating Results",
+    question: "", // No main question for loading screen
+    instruction: "", // No main instruction for loading screen
+  },
+  step9: { 
+    id: 9, // Was step 8
     title: "Home Ownership",
     question: "Do you rent or own your place?",
     instruction: "This helps us know what kind of changes you'd be able to make.",
@@ -97,8 +103,8 @@ export const quizData: AllQuizData = {
       { id: "own", name: "Own", icon: Home },
     ],
   },
-  step9: { 
-    id: 9,
+  step10: { 
+    id: 10, // Was step 9
     title: "Home Type",
     question: "What kind of home do you live in?",
     instruction: "Understanding your home type helps tailor advice.",
@@ -108,8 +114,8 @@ export const quizData: AllQuizData = {
       { id: "apartment_condo", name: "Apartment/Condo", icon: Building2 },
     ],
   },
-  step10: { 
-    id: 10,
+  step11: { 
+    id: 11, // Was step 10
     title: "Final Touch: Budget",
     question: "What's your budget for the focused room?",
     instruction: "Select a budget range. This helps us tailor recommendations effectively.",
@@ -134,6 +140,7 @@ export const iconMap: { [key: string]: LucideIcon } = {
   name: User,
   greeting: Hand,
   email: Mail, 
+  loading: Loader, // Added for loading step if needed, though component handles visuals
   rent: Key,
   own: Home,
   house: Home,
