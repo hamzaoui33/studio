@@ -120,7 +120,7 @@ export default function QuizPage() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12">
       <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-        <div className="md:col-span-4 lg:col-span-3 md:sticky md:top-10">
+        <div className="md:col-span-5 lg:col-span-4 md:sticky md:top-10">
           {stepDetails && (
             <>
               <h1 className="quiz-question-title">{stepDetails.question}</h1>
@@ -128,7 +128,7 @@ export default function QuizPage() {
             </>
           )}
         </div>
-        <div className="md:col-span-8 lg:col-span-9 animate-fadeIn">
+        <div className="md:col-span-7 lg:col-span-8 animate-fadeIn">
           {renderStepContent()}
         </div>
       </div>

@@ -30,7 +30,7 @@ export function Step1SwoonWorthy() {
             key={option.id}
             onClick={() => handleSelectImage(option.id)}
             className={cn(
-              "image-selection-card group aspect-[4/3]",
+              "image-selection-card group aspect-[3/4]",
               answers.swoonWorthyRooms.includes(option.id) && "selected"
             )}
             role="checkbox"
@@ -42,7 +42,7 @@ export function Step1SwoonWorthy() {
               src={option.imageUrl}
               alt={option.alt}
               width={600}
-              height={400}
+              height={800} // Adjusted height for 3:4 aspect ratio with width 600
               data-ai-hint={option.hint}
               priority={index < 4} 
             />
