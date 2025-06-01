@@ -18,10 +18,10 @@ export function Step6Greeting() {
 
   return (
     <div className="flex flex-col items-center justify-center text-center h-full animate-fadeIn">
-      <h1 className="font-headline text-4xl md:text-5xl font-semibold text-foreground mb-6">
+      <h1 className="font-headline text-4xl md:text-5xl font-semibold text-foreground mb-8">
         Nice to meet you, {answers.userName || "Explorer"}!
       </h1>
-      <Hand className="w-20 h-20 text-primary" strokeWidth={1.5} />
+      <Hand className="w-16 h-16 text-primary" strokeWidth={1.5} />
     </div>
   );
 }
