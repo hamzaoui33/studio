@@ -7,10 +7,11 @@ import { quizData } from "@/lib/quiz-data";
 import type { ImageOption } from "@/types/quiz";
 import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button"; 
+// Button import is no longer needed if the skip button is removed
+// import { Button } from "@/components/ui/button"; 
 
 export function Step1SwoonWorthy() {
-  const { answers, updateAnswer, triggerNextStepFlow } = useQuiz(); 
+  const { answers, updateAnswer } = useQuiz(); // Removed triggerNextStepFlow as skip button is removed
 
   const handleSelectImage = (optionId: string) => {
     const currentSelection = answers.swoonWorthyRooms;
@@ -20,9 +21,10 @@ export function Step1SwoonWorthy() {
     updateAnswer("swoonWorthyRooms", newSelection);
   };
 
-  const handleSkipStep1 = async () => {
-    await triggerNextStepFlow(); 
-  };
+  // handleSkipStep1 function is no longer needed
+  // const handleSkipStep1 = async () => { 
+  //   await triggerNextStepFlow(); 
+  // };
 
   return (
     <div className="w-full">
@@ -58,18 +60,7 @@ export function Step1SwoonWorthy() {
           ))}
         </div>
       </div>
-      {answers.swoonWorthyRooms.length === 0 && (
-        <div className="mt-6 text-center">
-          <Button
-            variant="ghost"
-            onClick={handleSkipStep1}
-            className="bg-transparent hover:bg-transparent text-sm text-muted-foreground hover:text-accent transition-colors"
-            aria-label="Skip this step"
-          >
-            I don&apos;t like these. Skip.
-          </Button>
-        </div>
-      )}
+      {/* Conditional skip button removed from here */}
     </div>
   );
 }
