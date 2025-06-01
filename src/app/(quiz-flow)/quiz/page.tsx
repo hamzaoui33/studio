@@ -2,7 +2,6 @@
 "use client";
 
 import { useQuiz } from "@/context/QuizContext";
-// QuizNavigation import removed as it's no longer used
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
 import { Step3RoomImprovement } from "./components/Step3RoomImprovement";
@@ -18,7 +17,7 @@ import { useIframeResizer } from '@/hooks/useIframeResizer';
 
 
 export default function QuizPage() {
-  const { currentStep, answers, triggerNextStepFlow, isNextActionDisabled } = useQuiz();
+  const { currentStep, answers } = useQuiz(); // Removed triggerNextStepFlow, isNextActionDisabled as QuizNavigation is gone
 
   useIframeResizer([currentStep, answers]); 
 
@@ -51,13 +50,11 @@ export default function QuizPage() {
     return (
       <div 
         id={mainWrapperId} 
-        // Removed top padding (pt-28 md:pt-32) as QuizNavigation is removed
         className="w-full max-w-7xl mx-auto px-[15px] pb-8 md:pb-12"> 
         <div className="animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
         </div>
       </div>
-      // QuizNavigation component removed
     );
   }
   
@@ -65,24 +62,21 @@ export default function QuizPage() {
     return (
       <div 
         id={mainWrapperId}
-        // Removed top padding
         className="w-full max-w-7xl mx-auto px-[15px] pb-8 md:pb-12 text-center">
           <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
           <p>Please try resetting the quiz or contact support.</p>
       </div>
-      // QuizNavigation component removed
     );
   }
 
   return (
     <div 
       id={mainWrapperId}
-      // Removed top padding
       className="w-full max-w-7xl mx-auto px-[15px] pb-8 md:pb-12"
     >
       {stepDetails && (
         <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-          <div className="md:col-span-6 md:sticky md:top-8">  {/* Adjusted sticky top if needed */}
+          <div className="md:col-span-6 md:sticky md:top-8"> 
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
               <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && "mb-0" )}>
@@ -119,6 +113,5 @@ export default function QuizPage() {
         </div>
       )}
     </div>
-    // QuizNavigation component removed
   );
 }
