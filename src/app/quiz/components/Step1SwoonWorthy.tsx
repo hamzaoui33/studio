@@ -10,8 +10,6 @@ import { cn } from "@/lib/utils";
 
 export function Step1SwoonWorthy() {
   const { answers, updateAnswer } = useQuiz();
-  // Step question and instruction are now rendered by QuizPage
-  // const stepData = quizData.step1;
 
   const handleSelectImage = (optionId: string) => {
     const currentSelection = answers.swoonWorthyRooms;
@@ -22,8 +20,7 @@ export function Step1SwoonWorthy() {
   };
 
   return (
-    <div>
-      {/* Question and instruction removed, handled by parent QuizPage */}
+    <div className="overflow-y-auto md:max-h-[calc(100vh-8.5rem)] pr-2">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {quizData.step1.options.map((option: ImageOption, index: number) => (
           <div
@@ -42,7 +39,7 @@ export function Step1SwoonWorthy() {
               src={option.imageUrl}
               alt={option.alt}
               width={600}
-              height={800} // Adjusted height for 3:4 aspect ratio with width 600
+              height={800}
               data-ai-hint={option.hint}
               priority={index < 4} 
             />
