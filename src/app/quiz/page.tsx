@@ -122,7 +122,7 @@ export default function QuizPage() {
             </>
           )}
         </div>
-        <div className="md:col-span-6 animate-fadeIn">
+        <div className="md:col-span-6 animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
         </div>
       </div>
