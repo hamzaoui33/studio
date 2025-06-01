@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useQuiz } from "@/context/QuizContext";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface QuizNavigationProps {
   onNext?: () => boolean | Promise<boolean>; // Optional validation callback

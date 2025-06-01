@@ -6,7 +6,7 @@ import { quizData } from "@/lib/quiz-data";
 import type { StyleOption } from "@/types/quiz";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export function Step2StyleSelection() {
   const { answers, updateAnswer } = useQuiz();

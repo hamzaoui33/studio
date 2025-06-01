@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { QuizAnswers } from '@/types/quiz';
 import { TOTAL_QUIZ_STEPS, quizData } from '@/lib/quiz-data';
-import { useRouter }الوصف: إضافة Router
+import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
 
 
@@ -117,7 +117,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   // Reset quiz if user navigates back to quiz start page and it's not the first load
   useEffect(() => {
     if (currentStep === 1 && JSON.stringify(answers) !== JSON.stringify(initialAnswers)) {
-      // This condition might need refinement based on desired reset behavior
+      // This condition might need to be refined based on desired reset behavior
     }
   }, [currentStep, answers]);
 

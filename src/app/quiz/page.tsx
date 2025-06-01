@@ -12,7 +12,7 @@ import { Step6HomeType } from "./components/Step6HomeType";
 import { Step7BudgetEmail } from "./components/Step7BudgetEmail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { quizData } from "@/lib/quiz-data";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export default function QuizPage() {
   const { currentStep, answers, getRoomOptionsForFocusStep } = useQuiz();
