@@ -10,9 +10,9 @@ export const TOTAL_QUIZ_STEPS = 8;
 export const quizData: AllQuizData = {
   step1: {
     id: 1,
-    title: "Swoon-Worthy Rooms",
-    question: "Select the rooms that make you swoon.",
-    instruction: "Decisions are hard. Pick as many as you want. These images help us understand your initial vibe.",
+    title: "Swoon-Worthy Rooms", // This is the internal title, not directly displayed as the main question.
+    question: "Which rooms make your heart skip a beat?", // This is displayed as the main question.
+    instruction: "Can’t decide? No problem, choose as many as you like! These images help us get a feel for your style.",
     options: [
       { id: "room1", imageUrl: "https://placehold.co/600x800.png", alt: "Modern minimalist living room", hint: "modern living room" },
       { id: "room2", imageUrl: "https://placehold.co/600x800.png", alt: "Cozy bohemian bedroom", hint: "bohemian bedroom" },
@@ -84,7 +84,7 @@ export const quizData: AllQuizData = {
     id: 7,
     title: "Unlock Your Results",
     question: "You're almost there!",
-    instruction: "Enter your email to see your style results.", // Simplified
+    instruction: "Enter your email to see your style results.",
     placeholder: "Type your email here",
   },
   step8: {
@@ -125,3 +125,4 @@ export const iconMap: { [key: string]: LucideIcon } = {
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {
   return quizData[stepKey];
 }
+
