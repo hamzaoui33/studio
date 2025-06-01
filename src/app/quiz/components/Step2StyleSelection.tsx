@@ -62,7 +62,7 @@ export function Step2StyleSelection() {
               </div>
             )}
             <div className="p-4 flex-grow"> {/* Replaced CardHeader and CardContent */}
-              <h3 className={cn("font-headline text-xl mb-1", answers.styleSelections.includes(option.id) ? "text-accent font-semibold" : "text-foreground")}>{option.name}</h3>
+              <h3 className={cn("font-headline text-lg md:text-xl mb-1", answers.styleSelections.includes(option.id) ? "text-accent font-semibold" : "text-foreground")}>{option.name}</h3>
               <p className={cn("text-sm", answers.styleSelections.includes(option.id) ? "text-accent/80" : "text-muted-foreground")}>{option.description}</p>
             </div>
           </div>
@@ -71,3 +71,4 @@ export function Step2StyleSelection() {
     </div>
   );
 }
+
