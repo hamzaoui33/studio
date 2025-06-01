@@ -10,8 +10,8 @@ export const TOTAL_QUIZ_STEPS = 8;
 export const quizData: AllQuizData = {
   step1: {
     id: 1,
-    title: "Swoon-Worthy Rooms", // This is the internal title, not directly displayed as the main question.
-    question: "Which rooms make your heart skip a beat?", // This is displayed as the main question.
+    title: "Swoon-Worthy Rooms",
+    question: "Which rooms make your heart skip a beat?",
     instruction: "Can’t decide? No problem, choose as many as you like! These images help us get a feel for your style.",
     options: [
       { id: "room1", imageUrl: "https://placehold.co/600x800.png", alt: "Modern minimalist living room", hint: "modern living room" },
@@ -35,14 +35,76 @@ export const quizData: AllQuizData = {
     instruction: "Pick up to 3 that speak to you. Think about the vibe you want your home to have.",
     maxSelections: 3,
     options: [
-      { id: "modern_minimalist", name: "Modern Minimalist", description: "Clean lines, simplicity, and a neutral color palette.", imageUrl: "https://placehold.co/300x200.png", hint: "minimalist interior" },
-      { id: "bohemian", name: "Bohemian", description: "Free-spirited, eclectic, with rich patterns and textures.", imageUrl: "https://placehold.co/300x200.png", hint: "bohemian decor" },
-      { id: "classic_traditional", name: "Classic Traditional", description: "Timeless, elegant, with refined details and symmetry.", imageUrl: "https://placehold.co/300x200.png", hint: "traditional interior" },
-      { id: "farmhouse_rustic", name: "Farmhouse Rustic", description: "Warm, cozy, with natural materials and a touch of vintage.", imageUrl: "https://placehold.co/300x200.png", hint: "rustic decor" },
-      { id: "scandinavian", name: "Scandinavian", description: "Light, airy, functional, with a focus on natural light and wood.", imageUrl: "https://placehold.co/300x200.png", hint: "scandinavian design" },
-      { id: "industrial", name: "Industrial", description: "Raw, edgy, with exposed elements like brick and metal.", imageUrl: "https://placehold.co/300x200.png", hint: "industrial style" },
-      { id: "coastal_chic", name: "Coastal Chic", description: "Relaxed, breezy, inspired by the beach with light colors and natural textures.", imageUrl: "https://placehold.co/300x200.png", hint: "coastal home" },
-      { id: "mid_century_modern", name: "Mid-Century Modern", description: "Retro yet timeless, with organic shapes and iconic furniture.", imageUrl: "https://placehold.co/300x200.png", hint: "midcentury furniture" },
+      {
+        id: "iconic_midcentury_modern",
+        name: "Iconic Midcentury Modern",
+        description: "You love clean lines, tapered legs, and a healthy dose of nostalgia. Midcentury Modern is your style sweet spot where form meets function with a retro twist. Your space is filled with warm woods, bold shapes, and iconic furniture that makes you feel like you’ve stepped into a scene from Mad Men (cocktails optional, but encouraged).",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "midcentury modern"
+      },
+      {
+        id: "free_spirited_bohemian",
+        name: "Free-Spirited Bohemian",
+        description: "Your home is your canvas, and you paint it with textiles, trinkets, and treasures from around the world. Bohemian style is all about freedom layered rugs, macramé wall hangings, and plants in every corner. Whether it’s Moroccan poufs or handwoven throws, your space tells stories only you could write.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "bohemian decor"
+      },
+      {
+        id: "breezy_coastal",
+        name: "Breezy Coastal",
+        description: "Breezy and blissful, your home channels seaside serenity. You gravitate toward a soft color palette of whites, sandy neutrals, and ocean blues. Driftwood accents, linen upholstery, and rattan textures make your space feel like a beach house getaway even if you're miles from the coast.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "coastal home"
+      },
+      {
+        id: "refined_modern",
+        name: "Refined Modern",
+        description: "Less is more in your design playbook. Your space is sleek, refined, and minimal without feeling cold. Clean architecture, neutral tones, and understated decor set the tone, while thoughtful statement pieces bring just enough edge. Function and aesthetics are perfectly in sync in your modern sanctuary.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "refined modern"
+      },
+      {
+        id: "cozy_rustic",
+        name: "Cozy Rustic",
+        description: "Home is where the heart and the reclaimed wood is. Rustic design is your go-to, featuring cozy textures, natural materials, and that perfect patina. Your dream space feels like a mountain lodge or farmhouse retreat, complete with chunky knits, stone accents, and vintage finds that tell a story.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "rustic decor"
+      },
+      {
+        id: "timeless_traditional",
+        name: "Timeless Traditional",
+        description: "You believe timeless is always in style. Traditional design speaks to your love of symmetry, structure, and refinement. Think elegant drapery, carved wood furniture, and detailed millwork. Your space feels classic and comforting, with just the right amount of polish and old-world charm.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "traditional interior"
+      },
+      {
+        id: "minimalist_scandinavian",
+        name: "Minimalist Scandinavian",
+        description: "Your home is a masterclass in “hygge.” Scandinavian design combines simplicity, warmth, and a touch of nature. You love soft lighting, clean lines, and neutral palettes. Add a cozy sheepskin throw and a few houseplants, and your space becomes a serene escape from the everyday hustle.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "scandinavian design"
+      },
+      {
+        id: "luxe_glam",
+        name: "Luxe Glam",
+        description: "More is more and you make it work beautifully. Glam style is your way of life, mixing luxe fabrics, metallic finishes, and bold design choices. From velvet sofas to crystal chandeliers, your space is equal parts drama and sophistication. It’s not just decorated it’s dressed to impress.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "glam decor"
+      },
+      {
+        id: "urban_industrial",
+        name: "Urban Industrial",
+        description: "Urban edge meets raw elegance in your industrial-inspired home. You love exposed brick, matte black finishes, and repurposed materials that add character. Your space blends function and grit with comfort, whether it's a loft apartment or a house with warehouse vibes. It's moody, modern, and unapologetically bold.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "industrial style"
+      },
+      {
+        id: "artful_eclectic",
+        name: "Artful Eclectic",
+        description: "You break all the design rules and the result is magic. Eclectic style is all about mixing eras, cultures, and colors in a way that’s uniquely you. Your space might have a mid-century chair, a Persian rug, and contemporary art and somehow, it all works. Bold, vibrant, and full of personality, your home is anything but ordinary.",
+        imageUrl: "https://placehold.co/300x200.png",
+        hint: "eclectic interior"
+      }
     ],
   },
   step3: {
@@ -77,8 +139,8 @@ export const quizData: AllQuizData = {
   step6: {
     id: 6,
     title: "Greeting",
-    question: "", // No question text, handled by component
-    instruction: "", // No instruction text, handled by component
+    question: "", 
+    instruction: "", 
   },
   step7: {
     id: 7,
@@ -90,8 +152,8 @@ export const quizData: AllQuizData = {
   step8: {
     id: 8,
     title: "Calculating Results",
-    question: "", // No question text, handled by component
-    instruction: "", // No instruction text, handled by component
+    question: "", 
+    instruction: "", 
   },
 };
 
