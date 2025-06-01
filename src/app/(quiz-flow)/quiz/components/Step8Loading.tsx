@@ -40,6 +40,18 @@ const didYouKnowFacts = [
     title: "Your Vision, Realized",
     description: "Unlock a home that perfectly reflects your personality.",
   },
+  {
+    title: "Style on a Budget",
+    description: "Great design doesn't have to break the bank. We'll show you how."
+  },
+  {
+    title: "Trends vs. Timeless",
+    description: "Discover styles that last, beyond fleeting fads."
+  },
+  {
+    title: "Small Space, Big Impact",
+    description: "Learn tricks to maximize style in any room size."
+  }
 ];
 
 export function Step8Loading() {
@@ -51,7 +63,7 @@ export function Step8Loading() {
   useEffect(() => {
     const factInterval = setInterval(() => {
       setCurrentFactIndex((prevIndex) => (prevIndex + 1) % didYouKnowFacts.length);
-    }, 4000); // Change fact every 4 seconds
+    }, 1500); // Change fact every 1.5 seconds
 
     const submissionTimer = setTimeout(async () => {
       clearInterval(factInterval); // Clear fact interval once submission starts/finishes
