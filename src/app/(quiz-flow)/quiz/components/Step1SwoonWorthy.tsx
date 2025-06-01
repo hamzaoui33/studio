@@ -21,17 +21,13 @@ export function Step1SwoonWorthy() {
   };
 
   const handleSkipStep1 = async () => {
-    // Even when skipping, we don't strictly need to validate,
-    // but triggerNextStepFlow will internally try to validate (which passes for skip) and then advances.
-    // Or, we could directly call internalNextStep if skip doesn't need validation.
-    // For consistency, using triggerNextStepFlow which now handles advancement.
     await triggerNextStepFlow(); 
   };
 
   return (
     <div className="w-full">
       <div className="overflow-y-auto md:max-h-[calc(100vh-18rem)] pr-1">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {quizData.step1.options.map((option: ImageOption, index: number) => (
             <div
               key={option.id}

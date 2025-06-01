@@ -16,7 +16,7 @@ export default function QuizFlowLayout({ children }: { children: ReactNode }) {
       }
     >
       <QuizProvider>
-        <main className="container mx-auto px-[15px] py-8 bg-white">
+        <main className="container mx-auto px-[10px] py-8 bg-white">
           {children}
         </main>
       </QuizProvider>

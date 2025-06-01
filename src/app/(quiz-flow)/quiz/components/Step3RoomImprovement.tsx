@@ -55,7 +55,7 @@ export function Step3RoomImprovement() {
               >
                 {IconComponent && (
                   <div className="circular-option-icon mb-2">
-                    <IconComponent className="h-8 w-8 md:h-10 md:w-10" />
+                    <IconComponent className="h-[34px] w-[34px] md:h-10 md:w-10" />
                   </div>
                 )}
                 <span className="circular-option-text">{option.name}</span>
