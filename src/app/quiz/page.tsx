@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuiz } from "@/context/QuizContext";
-import { QuizProgressBar } from "./components/QuizProgressBar";
+// import { QuizProgressBar } from "./components/QuizProgressBar"; // Removed import
 import { QuizNavigation } from "./components/QuizNavigation";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
@@ -127,7 +127,7 @@ export default function QuizPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 md:p-8">
-          <QuizProgressBar />
+          {/* <QuizProgressBar /> */} {/* Removed QuizProgressBar component */}
           {renderStepContent()}
           <QuizNavigation onNext={validateStep} isNextDisabled={isNextButtonDisabled()} />
         </CardContent>
