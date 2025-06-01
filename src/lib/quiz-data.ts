@@ -137,8 +137,8 @@ export const quizData: AllQuizData = {
   step5: {
     id: 5,
     title: "Your Name",
-    question: "Let's get to know each other.",
-    instruction: "Type your name below.",
+    question: "Let’s get to know you!",
+    instruction: "What’s your name? Just type it below.",
     placeholder: "Type your name here",
   },
   step6: {
