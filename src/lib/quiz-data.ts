@@ -2,7 +2,7 @@
 import type { AllQuizData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick
 } from 'lucide-react';
 
 export const TOTAL_QUIZ_STEPS = 8;
@@ -110,17 +110,20 @@ export const quizData: AllQuizData = {
   step3: {
     id: 3,
     title: "Room Improvement",
-    question: "Which rooms are on your 'It needs a little something' list?",
-    instruction: "Select as many as you like, and specify how many of each. We'll help you prioritize later.",
+    question: "Which rooms feel like they need a little something?",
+    instruction: "Pick as many as you like, and let us know how many of each. We’ll help you sort out the priorities later.",
     options: [
       { id: "living_room", name: "Living Room", icon: Sofa },
-      { id: "bedroom", name: "Bedroom", icon: BedDouble },
-      { id: "kitchen", name: "Kitchen", icon: CookingPot },
       { id: "dining_room", name: "Dining Room", icon: GlassWater },
+      { id: "bedroom", name: "Bedroom", icon: BedDouble },
+      { id: "nursery", name: "Nursery", icon: Baby },
+      { id: "home_office", name: "Office", icon: Briefcase },
+      { id: "kitchen", name: "Kitchen", icon: CookingPot },
       { id: "bathroom", name: "Bathroom", icon: Bath },
-      { id: "home_office", name: "Home Office", icon: Briefcase },
-      { id: "outdoor_patio", name: "Outdoor/Patio", icon: Trees },
-      { id: "entryway", name: "Entryway/Hallway", icon: Home },
+      { id: "reading_room", name: "Reading Room", icon: BookOpen },
+      { id: "outdoor_space", name: "Outdoor Space", icon: Trees },
+      { id: "entryway", name: "Entryway", icon: Home },
+      { id: "playroom", name: "Playroom", icon: ToyBrick },
     ],
   },
   step4: {
@@ -164,8 +167,11 @@ export const iconMap: { [key: string]: LucideIcon } = {
   dining_room: GlassWater,
   bathroom: Bath,
   home_office: Briefcase,
-  outdoor_patio: Trees,
+  outdoor_space: Trees, // Changed from outdoor_patio
   entryway: Home,
+  nursery: Baby,
+  reading_room: BookOpen,
+  playroom: ToyBrick,
   name: User,
   greeting: Hand,
   email: Mail,
