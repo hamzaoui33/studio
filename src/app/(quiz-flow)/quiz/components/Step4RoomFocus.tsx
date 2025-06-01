@@ -12,18 +12,40 @@ import type { LucideIcon } from 'lucide-react';
 export function Step4RoomFocus() {
   const { answers, updateAnswer, getRoomOptionsForFocusStep } = useQuiz();
   
-  const allStep3Options = quizData.step3.options;
-  const initiallySelectedOptions = getRoomOptionsForFocusStep();
+  const allStep3OptionsFiltered = quizData.step3.options.filter(
+    option => option.id !== 'other' && option.id !== 'not_sure_yet'
+  );
+  const initiallySelectedOptions = getRoomOptionsForFocusStep(); // This already filters out "other" and "not_sure_yet"
 
-  const [showAllRooms, setShowAllRooms] = useState(initiallySelectedOptions.length === 0);
+  const [showAllRooms, setShowAllRooms] = useState(initiallySelectedOptions.length === 0 && allStep3OptionsFiltered.length > 0);
 
   const handleSelectFocusRoom = (optionId: string) => {
     updateAnswer("roomFocusSelection", optionId);
   };
 
-  const optionsToDisplay = showAllRooms ? allStep3Options : initiallySelectedOptions;
+  // Ensure optionsToDisplay only contains valid rooms for focus
+  let optionsToDisplay = showAllRooms ? allStep3OptionsFiltered : initiallySelectedOptions;
+  optionsToDisplay = optionsToDisplay.filter(option => option.id !== 'other' && option.id !== 'not_sure_yet');
 
-  const showToggleButton = initiallySelectedOptions.length > 0 && initiallySelectedOptions.length < allStep3Options.length;
+
+  const showToggleButton = initiallySelectedOptions.length > 0 && initiallySelectedOptions.length < allStep3OptionsFiltered.length;
+
+  // If there are no valid options to display (e.g., only "other" or "not_sure_yet" was selected, and skip logic didn't fire)
+  // this step might appear empty or with just the toggle button if conditions are met.
+  // The skip logic in QuizContext should prevent reaching this step if only "other" / "not_sure_yet" is chosen.
+  if (optionsToDisplay.length === 0 && !showToggleButton) {
+     // This case should ideally be prevented by the skip logic in QuizContext.
+     // If it's reached, it implies an issue or an edge case not covered.
+     // For safety, we can render nothing or a message, though the skip should handle it.
+     // console.warn("Step4RoomFocus: No valid options to display. This might indicate an issue with skip logic.");
+     return (
+        <div className="text-center text-muted-foreground">
+            <p>Please select a room in the previous step to focus on.</p>
+            <p>(If you selected "Other" or "Not Sure Yet", you might be skipped to the next relevant step automatically.)</p>
+        </div>
+     );
+  }
+
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -69,4 +91,3 @@ export function Step4RoomFocus() {
     </div>
   );
 }
-

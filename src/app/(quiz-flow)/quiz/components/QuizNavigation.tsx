@@ -46,7 +46,9 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
   }
 
   const totalSelectedRooms = currentStep === 3 && answers.roomImprovementSelections
-    ? Object.values(answers.roomImprovementSelections).reduce((sum, count) => sum + count, 0)
+    ? Object.entries(answers.roomImprovementSelections)
+        .filter(([key]) => key !== 'other' && key !== 'not_sure_yet')
+        .reduce((sum, [, count]) => sum + count, 0)
     : 0;
 
   if (currentStep === 6 || currentStep === 8) {
@@ -55,7 +57,6 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border p-4 md:p-6 flex flex-col justify-center sm:flex-row sm:justify-end items-center gap-4">
-      {/* Button group now contains the counter and all buttons */}
       <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
         {currentStep === 3 && totalSelectedRooms > 0 && (
           <span className="text-sm font-medium text-muted-foreground sm:order-1">
@@ -104,4 +105,3 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     </div>
   );
 }
-

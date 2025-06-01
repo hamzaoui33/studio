@@ -2,7 +2,7 @@
 import type { AllQuizData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick, HelpCircle, Edit3
 } from 'lucide-react';
 
 export const TOTAL_QUIZ_STEPS = 8;
@@ -124,6 +124,8 @@ export const quizData: AllQuizData = {
       { id: "outdoor_space", name: "Outdoor Space", icon: Trees },
       { id: "entryway", name: "Entryway", icon: Home },
       { id: "playroom", name: "Playroom", icon: ToyBrick },
+      { id: "other", name: "Other", icon: Edit3 },
+      { id: "not_sure_yet", name: "Not Sure Yet", icon: HelpCircle },
     ],
   },
   step4: {
@@ -167,11 +169,13 @@ export const iconMap: { [key: string]: LucideIcon } = {
   dining_room: GlassWater,
   bathroom: Bath,
   home_office: Briefcase,
-  outdoor_space: Trees, // Changed from outdoor_patio
+  outdoor_space: Trees,
   entryway: Home,
   nursery: Baby,
   reading_room: BookOpen,
   playroom: ToyBrick,
+  other: Edit3,
+  not_sure_yet: HelpCircle,
   name: User,
   greeting: Hand,
   email: Mail,
@@ -193,4 +197,3 @@ export const iconMap: { [key: string]: LucideIcon } = {
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {
   return quizData[stepKey];
 }
-

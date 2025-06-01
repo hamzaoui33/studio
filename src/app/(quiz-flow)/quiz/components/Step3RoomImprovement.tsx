@@ -27,9 +27,9 @@ export function Step3RoomImprovement() {
       currentSelections[optionId] = newQuantity;
       updateAnswer("roomImprovementSelections", currentSelections);
     }
-    // If newQuantity < 1, do nothing, maintaining minimum 1.
-    // Deselection is handled by handleSelectRoom.
   };
+
+  const noQuantitySelectorIds = ["other", "not_sure_yet"];
 
   return (
     <div className="flex flex-col items-center">
@@ -38,6 +38,7 @@ export function Step3RoomImprovement() {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = !!answers.roomImprovementSelections[option.id];
           const quantity = answers.roomImprovementSelections[option.id] || 0;
+          const showQuantitySelector = isSelected && !noQuantitySelectorIds.includes(option.id);
           
           return (
             <div key={option.id} className="flex flex-col items-center">
@@ -64,7 +65,7 @@ export function Step3RoomImprovement() {
                   </div>
                 )}
               </div>
-              {isSelected && (
+              {showQuantitySelector && (
                 <div className="mt-3 flex items-center justify-center space-x-2.5">
                   <button
                     onClick={(e) => { e.stopPropagation(); handleQuantityChange(option.id, quantity - 1); }}

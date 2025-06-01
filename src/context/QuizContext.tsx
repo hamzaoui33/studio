@@ -16,7 +16,6 @@ const initialAnswers: QuizAnswers = {
   roomFocusSelection: '',
   userName: '',
   email: '',
-  // Removed homeOwnershipStatus, homeTypeSelection, budgetRangeSelection
 };
 
 interface QuizContextType {
@@ -45,23 +44,29 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     setAnswers((prev) => ({ ...prev, [field]: value }));
   }, []);
 
-  const nextStep = useCallback(() => {
-    // If currentStep is the loading step (which is now the last step),
-    // and it calls nextStep(), submission should be handled by Step8Loading itself.
-    // This nextStep function will mainly advance through interactive steps.
-    if (currentStep < TOTAL_QUIZ_STEPS) {
-      setCurrentStep((prev) => prev + 1);
-    }
-    // If currentStep === TOTAL_QUIZ_STEPS (e.g. on loading screen),
-    // and nextStep() is called from there, the submission and navigation
-    // are handled within Step8Loading.tsx.
-  }, [currentStep]);
-
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= TOTAL_QUIZ_STEPS) {
       setCurrentStep(step);
     }
   }, []);
+  
+  const nextStep = useCallback(() => {
+    if (currentStep === 3) {
+      const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
+      const isOnlyOtherSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'other';
+      const isOnlyNotSureYetSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'not_sure_yet';
+
+      if (isOnlyOtherSelected || isOnlyNotSureYetSelected) {
+        goToStep(5); // Skip to Step 5 (Name)
+        return;
+      }
+    }
+
+    if (currentStep < TOTAL_QUIZ_STEPS) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  }, [currentStep, answers.roomImprovementSelections, goToStep]);
+
 
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
@@ -72,11 +77,23 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const getRoomOptionsForFocusStep = useCallback(() => {
-    const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
+    const selectedRoomIds = Object.keys(answers.roomImprovementSelections)
+                              .filter(id => id !== 'other' && id !== 'not_sure_yet');
+    
+    const allStandardRoomOptions = quizData.step3.options.filter(
+      option => option.id !== 'other' && option.id !== 'not_sure_yet'
+    );
+
     if (!selectedRoomIds || selectedRoomIds.length === 0) {
-      return quizData.step3.options;
+      // If no standard rooms are selected (e.g. only "Other" or "Not Sure Yet" was selected, or nothing)
+      // then Step 4 should not be shown or its options should be empty or handled appropriately.
+      // Given the skip logic in nextStep, this case might mean we show all standard rooms if user somehow lands here.
+      // However, the prompt requests "other" and "not_sure_yet" are not shown in step 4 view all.
+      // This function provides options *if* step 4 is reached.
+      return allStandardRoomOptions;
     }
-    return quizData.step3.options.filter(option => selectedRoomIds.includes(option.id));
+    
+    return allStandardRoomOptions.filter(option => selectedRoomIds.includes(option.id));
   }, [answers.roomImprovementSelections]);
 
 
@@ -91,9 +108,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         roomImprovementSelections: answers.roomImprovementSelections,
         roomFocusSelection: answers.roomFocusSelection,
         userName: answers.userName,
-        // Removed homeOwnershipStatus, homeTypeSelection, budgetRangeSelection
-        // Email is implicitly part of the user profile, but not directly passed if not needed by AI prompt here.
-        // The AI prompt already receives userName.
       };
       
       const result = await generateStyleGuide(aiInput);
@@ -111,7 +125,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   
   useEffect(() => {
     if (currentStep === 1 && JSON.stringify(answers) !== JSON.stringify(initialAnswers)) {
-      // Logic for when returning to step 1 if needed, or remove if not.
     }
   }, [currentStep, answers]);
 
