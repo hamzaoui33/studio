@@ -1,11 +1,10 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuiz } from "@/context/QuizContext";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
-// import { Sparkles } from 'lucide-react'; // If Sparkles was used for the badge center
 
 const GuaranteeBadge = () => (
   <div className="relative w-36 h-36 md:w-44 md:h-44 border-2 border-muted rounded-full flex items-center justify-center text-center p-2 bg-card shadow-md">
@@ -25,19 +24,37 @@ const GuaranteeBadge = () => (
         </text>
       </svg>
     </div>
-    {/* Optional: Add a small icon or logo in the center of the badge */}
-    {/* <Sparkles className="w-8 h-8 text-primary" /> */}
   </div>
 );
 
+const didYouKnowFacts = [
+  {
+    title: "Havenly Happiness Guarantee",
+    description: "Love it or it's free.",
+  },
+  {
+    title: "Curated by Experts",
+    description: "Our AI sifts through thousands of styles for you.",
+  },
+  {
+    title: "Your Vision, Realized",
+    description: "Unlock a home that perfectly reflects your personality.",
+  },
+];
 
 export function Step8Loading() {
-  const { handleQuizSubmit } = useQuiz(); // Removed nextStep, using handleQuizSubmit directly
+  const { handleQuizSubmit } = useQuiz();
   const router = useRouter();
   const { toast } = useToast();
+  const [currentFactIndex, setCurrentFactIndex] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(async () => {
+    const factInterval = setInterval(() => {
+      setCurrentFactIndex((prevIndex) => (prevIndex + 1) % didYouKnowFacts.length);
+    }, 4000); // Change fact every 4 seconds
+
+    const submissionTimer = setTimeout(async () => {
+      clearInterval(factInterval); // Clear fact interval once submission starts/finishes
       const styleGuide = await handleQuizSubmit();
       if (styleGuide) {
         toast({
@@ -51,14 +68,17 @@ export function Step8Loading() {
           description: "Could not generate your style guide. Please try again or contact support.",
           variant: "destructive",
         });
-        // Optionally, redirect to a previous step or quiz home
-        // router.push("/quiz"); // Example: redirect back to quiz start
       }
-    }, 3000); // 3 seconds
+    }, 3000); // Submit after 3 seconds
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearInterval(factInterval);
+      clearTimeout(submissionTimer);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleQuizSubmit, router, toast]); // Added dependencies
+  }, [handleQuizSubmit, router, toast]);
+
+  const currentFact = didYouKnowFacts[currentFactIndex];
 
   return (
     <div className="flex flex-col items-center justify-center text-center h-full animate-fadeIn space-y-12 md:space-y-20 py-10">
@@ -79,11 +99,11 @@ export function Step8Loading() {
           <p className="text-xs font-semibold uppercase text-muted-foreground mb-1.5 tracking-wider">
             DID YOU KNOW?
           </p>
-          <h3 className="text-2xl md:text-3xl font-semibold text-foreground mb-2 font-headline">
-            Havenly Happiness Guarantee
+          <h3 className="text-2xl md:text-3xl font-semibold text-foreground mb-2 font-headline transition-opacity duration-500 ease-in-out" key={currentFact.title}>
+            {currentFact.title}
           </h3>
-          <p className="text-sm text-muted-foreground">
-            Love it or it's free.
+          <p className="text-sm text-muted-foreground transition-opacity duration-500 ease-in-out" key={currentFact.description}>
+            {currentFact.description}
           </p>
         </div>
         <GuaranteeBadge />
