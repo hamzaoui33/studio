@@ -45,9 +45,6 @@ export default function QuizPage() {
            toast({ title: "Selection Required", description: "Please select a room to focus on.", variant: "default" });
           return false;
         }
-        // If focusOptions.length is 0, it means no rooms were selected in step 3.
-        // The Step4RoomFocus component will show an alert. We can let them proceed,
-        // or require them to go back. For now, let's allow proceeding if nothing to select.
         break;
       case 5:
         if (!answers.homeOwnershipStatus) {
@@ -118,7 +115,7 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12">
+    <div className="w-full max-w-7xl mx-auto px-4 py-8 md:py-12 pb-20 md:pb-24">
       <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
         <div className="md:col-span-5 lg:col-span-4 md:sticky md:top-10">
           {stepDetails && (
@@ -136,3 +133,4 @@ export default function QuizPage() {
     </div>
   );
 }
+

@@ -59,7 +59,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     : 0;
 
   return (
-    <div className="mt-10 md:mt-16 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-border pt-6 md:pt-8"> 
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border p-4 md:p-6 flex flex-col sm:flex-row justify-between items-center gap-4"> 
       <div className="w-full sm:w-auto sm:flex-grow text-center sm:text-left"> {/* Container for room counter */}
         {currentStep === 3 && totalSelectedRooms > 0 && (
           <span className="text-sm font-medium text-muted-foreground">
@@ -98,3 +98,4 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     </div>
   );
 }
+
