@@ -58,18 +58,20 @@ export interface Step6GreetingData extends StepData {
   // This step's content is primarily handled by its component
 }
 
-export interface Step7HomeOwnershipData extends StepData { // Was Step6
+export interface Step7EmailData extends StepData { // New Email Step
+  placeholder?: string; // For the email input
+}
+
+export interface Step8HomeOwnershipData extends StepData { // Was Step7
   options: IconTextOption[];
 }
 
-export interface Step8HomeTypeData extends StepData { // Was Step7
+export interface Step9HomeTypeData extends StepData { // Was Step8
   options: IconTextOption[];
 }
 
-export interface Step9BudgetEmailData extends StepData { // Was Step8
-  options: BudgetOption[]; // These are the budget options
-  emailPrompt: string;
-  emailPlaceholder: string;
+export interface Step10BudgetData extends StepData { // Was Step9, now only budget
+  options: BudgetOption[];
 }
 
 
@@ -81,10 +83,10 @@ export type QuizAnswers = {
   roomImprovementSelections: RoomImprovementSelection;
   roomFocusSelection: string;
   userName: string;
+  email: string; // Email field moved here in terms of collection step order
   homeOwnershipStatus: string;
   homeTypeSelection: string;
   budgetRangeSelection: string;
-  email: string;
 };
 
 export type AllQuizData = {
@@ -93,12 +95,9 @@ export type AllQuizData = {
   step3: Step3Data;
   step4: Step4Data;
   step5: Step5NameData;
-  step6: Step6GreetingData; // New Greeting Step
-  step7: Step7HomeOwnershipData; // Was Step6
-  step8: Step8HomeTypeData; // Was Step7
-  step9: Step9BudgetEmailData; // Was Step8
+  step6: Step6GreetingData;
+  step7: Step7EmailData; // New Email Step
+  step8: Step8HomeOwnershipData; // Was Step7
+  step9: Step9HomeTypeData; // Was Step8
+  step10: Step10BudgetData; // Was Step9
 };
-
-// TOTAL_QUIZ_STEPS is now exported from quiz-data.ts to avoid circular dependencies if QuizPage needs it.
-// If QuizContext needs it and quiz-data imports from types, it's better here or in a constants file.
-// For now, keeping it accessible via quizData object or direct export from quiz-data.ts

@@ -29,15 +29,25 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
   };
 
   const handleSubmitClick = async () => {
-    // For the last step (now step 9), check email
-    if (isLastStep && !answers.email) {
+    // Verify email from Step 7 before submitting
+    if (!answers.email) {
       toast({
         title: "Email Required",
-        description: "Please enter your email address to continue.",
+        description: "An email address is required to generate your style guide. Please go back if needed.",
         variant: "destructive",
       });
       return;
     }
+    // Verify budget from the last step (now Step 10)
+    if (isLastStep && !answers.budgetRangeSelection) {
+       toast({
+        title: "Budget Selection Required",
+        description: "Please select a budget range to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
 
     const styleGuide = await handleQuizSubmit();
     if (styleGuide) {
@@ -64,7 +74,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     ? Object.values(answers.roomImprovementSelections).reduce((sum, count) => sum + count, 0)
     : 0;
 
-  // Hide navigation for step 6 (Greeting step)
+  // Hide navigation for Greeting step (step 6)
   if (currentStep === 6) {
     return null;
   }
@@ -99,10 +109,10 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         )}
-        {isLastStep && (
+        {isLastStep && ( // This is now for Step 10 (Budget)
           <Button
             onClick={handleSubmitClick}
-            disabled={isLoading || !answers.email} // Ensure email is checked for the actual last step
+            disabled={isLoading || isNextDisabled} // isNextDisabled checks budget for last step
             className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-10 py-3 text-base font-semibold"
             aria-label="Submit Quiz"
           >

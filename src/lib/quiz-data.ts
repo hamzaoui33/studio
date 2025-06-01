@@ -5,7 +5,7 @@ import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 9; // Updated from 8 to 9
+export const TOTAL_QUIZ_STEPS = 10; // Updated from 9 to 10
 
 export const quizData: AllQuizData = {
   step1: {
@@ -74,14 +74,21 @@ export const quizData: AllQuizData = {
     instruction: "Type your name below. If you're an existing member, you can Log in (feature coming soon!).",
     placeholder: "Type your name here",
   },
-  step6: { // New Greeting Step
+  step6: { 
     id: 6,
     title: "Greeting",
-    question: "", // Content handled by Step6Greeting component
-    instruction: "", // Content handled by Step6Greeting component
+    question: "", 
+    instruction: "", 
   },
-  step7: { // Was Step 6
+  step7: { // New Email Collection Step
     id: 7,
+    title: "Unlock Your Results",
+    question: "You're almost there!",
+    instruction: "Enter your email to see your style results.\nAlready a member? Log in",
+    placeholder: "Type your email here",
+  },
+  step8: { // Was Step 7 (Home Ownership)
+    id: 8,
     title: "Home Ownership",
     question: "Do you rent or own your place?",
     instruction: "This helps us know what kind of changes you'd be able to make.",
@@ -90,8 +97,8 @@ export const quizData: AllQuizData = {
       { id: "own", name: "Own", icon: Home },
     ],
   },
-  step8: { // Was Step 7
-    id: 8,
+  step9: { // Was Step 8 (Home Type)
+    id: 9,
     title: "Home Type",
     question: "What kind of home do you live in?",
     instruction: "Understanding your home type helps tailor advice.",
@@ -101,19 +108,17 @@ export const quizData: AllQuizData = {
       { id: "apartment_condo", name: "Apartment/Condo", icon: Building2 },
     ],
   },
-  step9: { // Was Step 8
-    id: 9,
-    title: "Budget & Contact",
-    question: "You're almost there! What's your budget and email?",
-    instruction: "Select a budget for your focused room and provide your email for the style guide.",
+  step10: { // Was Step 9 (Budget & Email), now only Budget
+    id: 10,
+    title: "Final Touch: Budget",
+    question: "What's your budget for the focused room?",
+    instruction: "Select a budget range. This helps us tailor recommendations effectively.",
     options: [
       { id: "budget_flexible", name: "Flexible / Just Exploring", icon: HandHeart },
       { id: "budget_starter", name: "Starter Sparkle ($ - $$)", icon: Paintbrush },
       { id: "budget_makeover", name: "Makeover Magic ($$ - $$$)", icon: LayoutGrid },
       { id: "budget_deluxe", name: "Deluxe Dream ($$$ - $$$$)", icon: Lamp },
     ],
-    emailPrompt: "Finally, type your email here:",
-    emailPlaceholder: "your.email@example.com",
   },
 };
 
@@ -127,7 +132,8 @@ export const iconMap: { [key: string]: LucideIcon } = {
   outdoor_patio: Trees,
   entryway: Home,
   name: User,
-  greeting: Hand, // Added for new step
+  greeting: Hand,
+  email: Mail, // For new email step icon if needed, or use text input style
   rent: Key,
   own: Home,
   house: Home,
@@ -138,7 +144,6 @@ export const iconMap: { [key: string]: LucideIcon } = {
   budget_makeover: LayoutGrid,
   budget_deluxe: Lamp,
   default: Target,
-  email: Mail,
   submit: CheckCircle,
   budget: Wallet,
 };
