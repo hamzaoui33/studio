@@ -1,7 +1,6 @@
 
 "use client";
 
-// Removed useRef as it's no longer needed for useIframeResizer
 import { useQuiz } from "@/context/QuizContext";
 import { QuizNavigation } from "./components/QuizNavigation";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
@@ -22,10 +21,7 @@ import { useIframeResizer } from '@/hooks/useIframeResizer';
 export default function QuizPage() {
   const { currentStep, answers, getRoomOptionsForFocusStep } = useQuiz();
   const { toast } = useToast();
-  // quizPageWrapperRef is no longer needed as useIframeResizer measures the whole document
 
-  // Use the iframe resizer hook. It now infers height from the document.
-  // Pass `answers` and `currentStep` as dependencies because changes to these might affect content height.
   useIframeResizer([currentStep, answers]);
 
   const validateStep = (): boolean => {
@@ -119,19 +115,16 @@ export default function QuizPage() {
   }
   
   const stepDetails = getCurrentStepDetails();
-
-  // The main div no longer needs the ref for useIframeResizer
-  // ID can be kept if used for other styling/JS purposes, or removed if not.
   const mainWrapperId = "quiz-page-content-area"; 
 
-  // Full-screen steps (Greeting, Loading)
+  // Full-screen steps (Greeting, Loading) - Removed min-h for better iframe shrinking
   if ((currentStep === 6 || currentStep === 8) && stepDetails) { 
     return (
       <>
         <div 
           id={mainWrapperId} 
           className="w-full max-w-7xl mx-auto px-4 pt-28 md:pt-32 pb-8 md:pb-12">
-          <div className="min-h-[calc(100vh-200px)] animate-fadeIn flex flex-col justify-center items-center">
+          <div className="animate-fadeIn flex flex-col justify-center items-center"> {/* Removed min-h-[calc(100vh-200px)] */}
             {renderStepContent()}
           </div>
         </div>
@@ -187,7 +180,7 @@ export default function QuizPage() {
             <div className={cn(
               "md:col-span-6 animate-fadeIn",
               (currentStep === 5 || currentStep === 7) 
-                ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto flex flex-col items-center justify-center"
+                ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto flex flex-col items-center justify-center" // min-h might still be relevant here for consistent input panel size
                 : "flex flex-col justify-start items-center md:max-h-[calc(100vh-theme(spacing.32))] md:overflow-y-auto md:pr-4" 
             )}>
               <div className={cn(
@@ -204,4 +197,3 @@ export default function QuizPage() {
     </>
   );
 }
-
