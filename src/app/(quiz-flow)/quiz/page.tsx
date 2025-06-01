@@ -167,7 +167,7 @@ export default function QuizPage() {
           <div className={cn(
             "md:col-span-6 animate-fadeIn",
             (currentStep === 5 || currentStep === 7)
-              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto md:flex md:flex-col md:items-center md:justify-start" // Panel styles + desktop centering
+              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 min-h-[250px] md:min-h-[300px] w-full max-w-xl mx-auto md:flex md:flex-col md:items-center md:justify-center" // Panel styles + desktop centering
               : "flex flex-col justify-center items-center" // Default centering for other steps' content column
           )}>
             <div className={cn(
