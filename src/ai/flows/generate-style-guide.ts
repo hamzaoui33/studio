@@ -25,8 +25,7 @@ const GenerateStyleGuideInputSchema = z.object({
   roomFocusSelection: z
     .string()
     .describe('The selected room ID from the room focus selection step.'),
-  userName: z.string().describe('The name of the user.'),
-  // Removed homeOwnershipStatus, homeTypeSelection, budgetRangeSelection
+  // userName: z.string().describe('The name of the user.'), // Removed userName
 });
 export type GenerateStyleGuideInput = z.infer<typeof GenerateStyleGuideInputSchema>;
 
@@ -45,8 +44,6 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateStyleGuideOutputSchema},
   prompt: `You are an expert home decor stylist. Analyze the following quiz responses to generate a personalized home decor style guide for the user.
 
-User Name: {{userName}}
-
 Quiz Responses:
 Swoon-Worthy Rooms: {{swoonWorthyRooms}}
 Style Selections: {{styleSelections}}
@@ -54,7 +51,7 @@ Room Improvement Selections: {{#if roomImprovementSelections}}Rooms to improve (
 Room Focus Selection: {{roomFocusSelection}}
 
 Based on these responses, create a style guide that includes:
-- A summary of the user's style preferences, addressing them by their name ({{userName}}).
+- A summary of the user's style preferences.
 - Specific decor recommendations for the focused room.
 - General tips for incorporating the selected styles into their home.
 - How the user's other selections (like room improvement counts) influenced the output. Consider the quantities in 'Room Improvement Selections' as indicators of priority or number of spaces if applicable.

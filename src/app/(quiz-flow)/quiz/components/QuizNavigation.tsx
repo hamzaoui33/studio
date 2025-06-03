@@ -21,14 +21,11 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     }
   };
 
+  // This handleSubmitClick is for a submit button on an interactive last step.
+  // Since the new last step (Step 5) is the auto-submitting Loading screen,
+  // and QuizNavigation is hidden for that step, this button won't be shown/used.
   const handleSubmitClick = async () => {
-    // This function is unlikely to be called if Step 8 (Loading) is the last step,
-    // as QuizNavigation is hidden for Step 8. Submission logic is in QuizContext/Step8Loading.
-    if (!answers.email) { 
-      console.error("QuizNavigation: handleSubmitClick called without email - should be handled by context.");
-      return;
-    }
-    console.warn("QuizNavigation: handleSubmitClick in QuizNavigation called unexpectedly with Step 8 (Loading) as the last step.");
+    console.warn("QuizNavigation: handleSubmitClick in QuizNavigation called unexpectedly. Submission is handled by the Loading step.");
   };
 
   const handleSkipStep1 = () => {
@@ -44,7 +41,8 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
         .reduce((sum, [, count]) => sum + count, 0)
     : 0;
 
-  if (currentStep === 6 || currentStep === 8) { 
+  // Hide navigation for the new Step 5 (Loading screen)
+  if (currentStep === 5) { 
     return null;
   }
 
@@ -105,7 +103,9 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
           </Button>
         )}
 
-        {isLastStep && currentStep !== 8 && ( 
+        {/* This "Submit" button is effectively not shown because isLastStep will be true for Step 5 (Loading), 
+            and QuizNavigation is hidden for Step 5. */}
+        {isLastStep && currentStep !== 5 && ( 
           <Button
             onClick={handleSubmitClick}
             disabled={isLoading || isButtonDisabledByContext() || isNextDisabled} 

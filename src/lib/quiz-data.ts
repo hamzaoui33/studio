@@ -5,7 +5,7 @@ import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick, HelpCircle, Edit3
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 8;
+export const TOTAL_QUIZ_STEPS = 5; // Updated from 8
 
 export const quizData: AllQuizData = {
   step1: {
@@ -134,31 +134,13 @@ export const quizData: AllQuizData = {
     question: "Awesome! Which room should we tackle first?",
     instruction: "This will be the main space we’ll use to create your personalized style guide.",
   },
+  // Steps 5, 6, 7 (Name, Greeting, Email) are removed.
+  // Step 8 (Loading) becomes the new Step 5.
   step5: {
-    id: 5,
-    title: "Your Name",
-    question: "Let’s get to know you!",
-    instruction: "What’s your name? Just type it below.",
-    placeholder: "Type your name here",
-  },
-  step6: {
-    id: 6,
-    title: "Greeting",
-    question: "", 
-    instruction: "", 
-  },
-  step7: {
-    id: 7,
-    title: "Unlock Your Results",
-    question: "You're almost there!",
-    instruction: "Enter your email to see your style results.",
-    placeholder: "Type your email here",
-  },
-  step8: {
-    id: 8,
+    id: 5, // Was 8
     title: "Calculating Results",
-    question: "", 
-    instruction: "", 
+    question: "",
+    instruction: "",
   },
 };
 
@@ -176,9 +158,9 @@ export const iconMap: { [key: string]: LucideIcon } = {
   playroom: ToyBrick,
   other: Edit3,
   not_sure_yet: HelpCircle,
-  name: User,
-  greeting: Hand,
-  email: Mail,
+  // name: User, // Removed
+  // greeting: Hand, // Removed
+  // email: Mail, // Removed
   loading: Loader,
   rent: Key,
   own: Home,
@@ -197,4 +179,3 @@ export const iconMap: { [key: string]: LucideIcon } = {
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {
   return quizData[stepKey];
 }
-

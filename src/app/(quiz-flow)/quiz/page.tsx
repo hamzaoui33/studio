@@ -7,21 +7,18 @@ import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
 import { Step3RoomImprovement } from "./components/Step3RoomImprovement";
 import { Step4RoomFocus } from "./components/Step4RoomFocus";
-import { Step5Name } from "./components/Step5Name";
-import { Step6Greeting } from "./components/Step6Greeting";
-import { Step7Email } from "./components/Step7Email";
-import { Step8Loading } from "./components/Step8Loading";
+// Step5Name, Step6Greeting, Step7Email removed
+import { Step8Loading } from "./components/Step8Loading"; // This is now effectively Step 5
 import { quizData } from "@/lib/quiz-data";
 import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 import { useIframeResizer } from '@/hooks/useIframeResizer';
 
-// PARENT_SITE_EXPECTED_ORIGIN is removed as it's no longer used for login status checks here.
-// Message handling for other purposes (like navigateToParentUrl if re-added elsewhere) would need its own origin check.
+// PARENT_SITE_EXPECTED_ORIGIN is removed as login logic is removed
+// For other postMessage (navigateToParentUrl), origin check is in QuizNavigation/Context
 
 export default function QuizPage() {
   const { currentStep, answers } = useQuiz();
-  // Removed isUserLoggedInOnParent state and related useEffect for listening to 'userLoginStatus'
   useIframeResizer([currentStep, answers]);
 
   const renderStepContent = () => {
@@ -30,10 +27,7 @@ export default function QuizPage() {
       case 2: return <Step2StyleSelection />;
       case 3: return <Step3RoomImprovement />;
       case 4: return <Step4RoomFocus />;
-      case 5: return <Step5Name />;
-      case 6: return <Step6Greeting />;
-      case 7: return <Step7Email />;
-      case 8: return <Step8Loading />;
+      case 5: return <Step8Loading />; // Step 8 (Loading) is now the new Step 5
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
@@ -49,9 +43,8 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
   const mainWrapperId = "quiz-page-content-area";
 
-  // Removed handleLoginClick function and the conditional login section JSX
-
-  if ((currentStep === 6 || currentStep === 8) && stepDetails) {
+  // Loading screen (new Step 5) has a different layout (full width, centered)
+  if (currentStep === 5 && stepDetails) { // New Step 5 is loading
     return (
       <div
         id={mainWrapperId}
@@ -81,7 +74,6 @@ export default function QuizPage() {
     >
       {stepDetails && (
         <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-          {/* Text content area: centered on mobile, left-aligned on desktop */}
           <div className="md:col-span-6 md:sticky md:top-8 text-center md:text-left">
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
             {stepDetails.instruction && stepDetails.instruction.split('\\n').map((line, index, array) => (
@@ -89,18 +81,19 @@ export default function QuizPage() {
                 {line}
               </p>
             ))}
-             {/* "Already a member?" section removed */}
+            {/* "Already a member?" section removed as per previous revert */}
           </div>
 
           <div className={cn(
             "md:col-span-6 animate-fadeIn",
-            (currentStep === 5 || currentStep === 7)
-              ? "bg-input-panel-bg rounded-lg p-6 md:p-12 w-full max-w-xl mx-auto flex flex-col items-center justify-center"
-              : "flex flex-col justify-start items-center"
+            // Input panel styling was for Step 5 (Name) and 7 (Email), which are removed.
+            // If other steps need this specific background, it should be handled differently.
+            // For now, removing the condition that applied 'bg-input-panel-bg'.
+            "flex flex-col justify-start items-center" 
           )}>
             <div className={cn(
-              "w-full",
-               (currentStep === 5 || currentStep === 7) && "flex flex-col justify-center items-center"
+              "w-full"
+              // Same as above, removing conditional styling for removed input steps.
             )}>
               {renderStepContent()}
             </div>
