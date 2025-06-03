@@ -33,8 +33,8 @@ export function Step2StyleSelection() {
   };
 
   return (
-    // Removed overflow-y-auto, md:max-h-..., and pr-2 from this div
-    <div className="w-full"> 
+    // Restored overflow-y-auto and md:max-h for internal scrolling of the carousel
+    <div className="w-full overflow-y-auto md:max-h-[calc(100vh-8.5rem)] pr-2"> 
       <div className="flex flex-col gap-4 md:gap-6">
         {stepData.options.map((option: StyleOption) => (
           <div

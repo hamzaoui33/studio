@@ -21,8 +21,8 @@ export function Step1SwoonWorthy() {
 
   return (
     <div className="w-full">
-      {/* Removed overflow-y-auto, md:max-h-..., and pr-1 from this div */}
-      <div>
+      {/* Restored overflow-y-auto and md:max-h for internal scrolling of the carousel */}
+      <div className="overflow-y-auto md:max-h-[calc(100vh-8.5rem)] pr-1">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {quizData.step1.options.map((option: ImageOption, index: number) => (
             <div
