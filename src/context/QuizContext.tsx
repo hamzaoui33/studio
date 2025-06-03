@@ -35,7 +35,7 @@ interface QuizContextType {
   getRoomOptionsForFocusStep: () => Array<{ id: string; name: string; icon?: any }>;
   triggerNextStepFlow: () => Promise<boolean>; 
   isNextActionDisabled: () => boolean;
-  internalNextStep: () => void; // Added for direct advancement
+  internalNextStep: () => void; 
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -47,6 +47,13 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { toast } = useToast();
 
+  // Effect to scroll to top when currentStep changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+  }, [currentStep]);
+
   const updateAnswer = useCallback(<K extends keyof QuizAnswers>(field: K, value: QuizAnswers[K]) => {
     setAnswers((prev) => ({ ...prev, [field]: value }));
   }, []);
@@ -54,7 +61,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= TOTAL_QUIZ_STEPS) {
       setCurrentStep(step);
-      if (typeof window !== 'undefined') window.scrollTo(0, 0);
+      // Scroll to top is now handled by the useEffect hook watching currentStep
     }
   }, []);
   
@@ -72,7 +79,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
     if (currentStep < TOTAL_QUIZ_STEPS) {
       setCurrentStep((prev) => prev + 1);
-      if (typeof window !== 'undefined') window.scrollTo(0, 0);
+      // Scroll to top is now handled by the useEffect hook watching currentStep
     }
   }, [currentStep, answers.roomImprovementSelections, goToStep]);
 
@@ -223,11 +230,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   
   useEffect(() => {
     const handleMessageFromParent = (event: MessageEvent) => {
-      // IMPORTANT: For security, ensure PARENT_WORDPRESS_ORIGIN is set to your WordPress domain.
-      // if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
-      //   // console.warn('QuizContext: Message received from untrusted origin:', event.origin);
-      //   return;
-      // }
+      if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
+        // console.warn('QuizContext: Message received from untrusted origin:', event.origin);
+        return;
+      }
 
       if (event.data && event.data.type === 'triggerQuizNextStep') {
         triggerNextStepFlow();
@@ -242,15 +248,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     }
   }, [triggerNextStepFlow]); 
 
-  // Effect to send button state updates to parent
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {
       const isDisabled = isNextActionDisabled();
-      // IMPORTANT: For security, ensure PARENT_WORDPRESS_ORIGIN is set to your WordPress domain.
       window.parent.postMessage({ type: 'quizButtonStateUpdate', isDisabled: isDisabled }, PARENT_WORDPRESS_ORIGIN);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStep, answers, isLoading]); // Re-evaluate whenever isNextActionDisabled might change. Added answers and isLoading.
+  }, [currentStep, answers, isLoading, isNextActionDisabled]);
 
   return (
     <QuizContext.Provider
@@ -267,7 +270,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         getRoomOptionsForFocusStep,
         triggerNextStepFlow,
         isNextActionDisabled,
-        internalNextStep, // Expose internalNextStep
+        internalNextStep,
       }}
     >
       {children}
