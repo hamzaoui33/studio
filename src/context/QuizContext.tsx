@@ -44,10 +44,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [answers, setAnswers] = useState<QuizAnswers>(initialAnswers);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUserConsideredLoggedInForSkip, setIsUserConsideredLoggedInForSkip] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
-  // Effect to scroll to top when currentStep changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
@@ -61,27 +61,40 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= TOTAL_QUIZ_STEPS) {
       setCurrentStep(step);
-      // Scroll to top is now handled by the useEffect hook watching currentStep
     }
   }, []);
   
   const internalNextStep = useCallback(() => {
+    let nextStepNumber = currentStep + 1;
+
+    // Skip logic for "Other" or "Not Sure Yet" in Room Improvement (Step 3)
     if (currentStep === 3) {
       const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
       const isOnlyOtherSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'other';
       const isOnlyNotSureYetSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'not_sure_yet';
 
       if (isOnlyOtherSelected || isOnlyNotSureYetSelected) {
-        goToStep(5); 
+        nextStepNumber = 5; // Target step 5 if "Other" or "Not Sure Yet"
+      }
+    }
+
+    // Skip logic for logged-in users
+    if (isUserConsideredLoggedInForSkip) {
+      if (nextStepNumber === 5 || nextStepNumber === 6 || nextStepNumber === 7) {
+        goToStep(8); // Jump to Step 8 (Loading)
         return;
       }
     }
 
-    if (currentStep < TOTAL_QUIZ_STEPS) {
-      setCurrentStep((prev) => prev + 1);
-      // Scroll to top is now handled by the useEffect hook watching currentStep
+    if (nextStepNumber <= TOTAL_QUIZ_STEPS) {
+      goToStep(nextStepNumber);
+    } else {
+      // This case should ideally not be hit if isLastStep is handled correctly
+      // or if submission happens on the last interactive step.
+      // console.log("Attempting to go beyond last step, handling submission or final action.");
+      // Potentially trigger submission here if the flow implies it.
     }
-  }, [currentStep, answers.roomImprovementSelections, goToStep]);
+  }, [currentStep, answers.roomImprovementSelections, goToStep, isUserConsideredLoggedInForSkip]);
 
   const getRoomOptionsForFocusStep = useCallback(() => {
     const selectedRoomIds = Object.keys(answers.roomImprovementSelections)
@@ -126,6 +139,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         }
         break;
       case 5: 
+        if (isUserConsideredLoggedInForSkip) return true; // Skip validation if user is logged in
         if (!answers.userName.trim()) {
           toast({ title: "Name Required", description: "Please enter your name.", variant: "default" });
           return false;
@@ -134,6 +148,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       case 6: 
         return true;
       case 7: 
+        if (isUserConsideredLoggedInForSkip) return true; // Skip validation if user is logged in
         if (!answers.email.trim()) {
           toast({ title: "Email Required", description: "Please enter your email address.", variant: "default" });
           return false;
@@ -150,10 +165,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         break;
     }
     return true;
-  }, [currentStep, answers, toast, getRoomOptionsForFocusStep]);
+  }, [currentStep, answers, toast, getRoomOptionsForFocusStep, isUserConsideredLoggedInForSkip]);
 
   const isNextActionDisabled = useCallback((): boolean => {
     if (isLoading) return true;
+    // If user is logged in and on a skippable step, the "Next" action should effectively be for the *target* step or disabled.
+    // However, the skip happens in internalNextStep. Here, we validate based on the current view.
+    if (isUserConsideredLoggedInForSkip && (currentStep === 5 || currentStep === 7)) {
+        return false; // Allow "Next" to trigger the skip. Step 6 is auto-advance.
+    }
+
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
       case 2: return answers.styleSelections.length === 0;
@@ -169,7 +190,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       case 8: return true; 
       default: return false;
     }
-  }, [currentStep, answers, isLoading, getRoomOptionsForFocusStep]);
+  }, [currentStep, answers, isLoading, getRoomOptionsForFocusStep, isUserConsideredLoggedInForSkip]);
 
   const triggerNextStepFlow = useCallback(async (): Promise<boolean> => {
     const canProceed = validateCurrentStep();
@@ -182,6 +203,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
     setAnswers(initialAnswers);
+    setIsUserConsideredLoggedInForSkip(false); // Reset login skip status
     if (typeof window !== "undefined") {
       localStorage.removeItem('styleGuideResult');
     }
@@ -190,7 +212,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const handleQuizSubmit = async (): Promise<string | null> => {
     setIsLoading(true);
     try {
-      if (!answers.email) {
+      if (!isUserConsideredLoggedInForSkip && !answers.email) { // Only require email if not logged in and skipping
           toast({
               title: "Email Required",
               description: "An email address is crucial for submitting the quiz.",
@@ -207,7 +229,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         styleSelections: answers.styleSelections,
         roomImprovementSelections: answers.roomImprovementSelections,
         roomFocusSelection: answers.roomFocusSelection,
-        userName: answers.userName,
+        userName: answers.userName || "Valued Customer", // Provide a fallback if userName is empty
       };
       
       const result = await generateStyleGuide(aiInput);
@@ -228,15 +250,34 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     }
   };
   
+  // Listen for messages from parent (WordPress)
   useEffect(() => {
     const handleMessageFromParent = (event: MessageEvent) => {
       if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
         // console.warn('QuizContext: Message received from untrusted origin:', event.origin);
         return;
       }
+       // Fallback for development if '*' is used
+      if (PARENT_WORDPRESS_ORIGIN === '*' && event.origin === window.location.origin) {
+        // return; // Ignore messages from self if in development with '*'
+      }
 
       if (event.data && event.data.type === 'triggerQuizNextStep') {
         triggerNextStepFlow();
+      }
+
+      if (event.data && event.data.type === 'userLoginStatus') {
+        if (typeof event.data.isLoggedIn === 'boolean') {
+          setIsUserConsideredLoggedInForSkip(event.data.isLoggedIn);
+        }
+      }
+      if (event.data && event.data.type === 'userData') {
+        if (typeof event.data.userName === 'string') {
+          updateAnswer('userName', event.data.userName);
+        }
+        if (typeof event.data.email === 'string') {
+          updateAnswer('email', event.data.email);
+        }
       }
     };
 
@@ -246,14 +287,15 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         window.removeEventListener('message', handleMessageFromParent);
       };
     }
-  }, [triggerNextStepFlow]); 
+  }, [triggerNextStepFlow, updateAnswer]); 
 
+  // Inform parent about Next button state
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {
       const isDisabled = isNextActionDisabled();
       window.parent.postMessage({ type: 'quizButtonStateUpdate', isDisabled: isDisabled }, PARENT_WORDPRESS_ORIGIN);
     }
-  }, [currentStep, answers, isLoading, isNextActionDisabled]);
+  }, [currentStep, answers, isLoading, isNextActionDisabled, isUserConsideredLoggedInForSkip]); // Added isUserConsideredLoggedInForSkip
 
   return (
     <QuizContext.Provider
