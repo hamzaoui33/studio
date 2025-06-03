@@ -4,14 +4,14 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { type QuizAnswers, type RoomImprovementSelection } from '@/types/quiz';
-import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data'; 
+import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
 import { useToast } from "@/hooks/use-toast";
 
 // IMPORTANT: For production, replace '*' with your WordPress site's specific origin for security.
 // Example: const PARENT_WORDPRESS_ORIGIN = 'https://aveladecor.com';
-const PARENT_WORDPRESS_ORIGIN = '*'; // FIXME: Replace '*' with your actual WordPress domain
+const PARENT_WORDPRESS_ORIGIN = '*'; // This is for quizButtonStateUpdate and triggerQuizNextStep
 
 const initialAnswers: QuizAnswers = {
   swoonWorthyRooms: [],
@@ -33,9 +33,9 @@ interface QuizContextType {
   handleQuizSubmit: () => Promise<string | null>;
   resetQuiz: () => void;
   getRoomOptionsForFocusStep: () => Array<{ id: string; name: string; icon?: any }>;
-  triggerNextStepFlow: () => Promise<boolean>; 
+  triggerNextStepFlow: () => Promise<boolean>;
   isNextActionDisabled: () => boolean;
-  internalNextStep: () => void; 
+  internalNextStep: () => void;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -44,7 +44,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [answers, setAnswers] = useState<QuizAnswers>(initialAnswers);
   const [isLoading, setIsLoading] = useState(false);
-  const [isUserConsideredLoggedInForSkip, setIsUserConsideredLoggedInForSkip] = useState(false);
+  // Removed isUserConsideredLoggedInForSkip state
   const router = useRouter();
   const { toast } = useToast();
 
@@ -63,7 +63,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       setCurrentStep(step);
     }
   }, []);
-  
+
   const internalNextStep = useCallback(() => {
     let nextStepNumber = currentStep + 1;
 
@@ -73,28 +73,21 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       const isOnlyNotSureYetSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'not_sure_yet';
 
       if (isOnlyOtherSelected || isOnlyNotSureYetSelected) {
-        nextStepNumber = 5; 
+        nextStepNumber = 5;
       }
     }
 
-    // Apply skip logic if the user is logged in
-    if (isUserConsideredLoggedInForSkip) {
-      if (nextStepNumber === 5 || nextStepNumber === 6 || nextStepNumber === 7) {
-        // console.log(`User logged in, skipping from ${currentStep} (next would be ${nextStepNumber}) to step 8.`);
-        goToStep(8); // Jump to Step 8 (Loading)
-        return;
-      }
-    }
+    // Removed skip logic related to isUserConsideredLoggedInForSkip
 
     if (nextStepNumber <= TOTAL_QUIZ_STEPS) {
       goToStep(nextStepNumber);
     }
-  }, [currentStep, answers.roomImprovementSelections, goToStep, isUserConsideredLoggedInForSkip]);
+  }, [currentStep, answers.roomImprovementSelections, goToStep]);
 
   const getRoomOptionsForFocusStep = useCallback(() => {
     const selectedRoomIds = Object.keys(answers.roomImprovementSelections)
                               .filter(id => id !== 'other' && id !== 'not_sure_yet');
-    
+
     const allStandardRoomOptions = quizData.step3.options.filter(
       option => option.id !== 'other' && option.id !== 'not_sure_yet'
     );
@@ -102,19 +95,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     if (!selectedRoomIds || selectedRoomIds.length === 0) {
       return allStandardRoomOptions;
     }
-    
+
     return allStandardRoomOptions.filter(option => selectedRoomIds.includes(option.id));
   }, [answers.roomImprovementSelections]);
 
   const validateCurrentStep = useCallback((): boolean => {
-    // If user is logged in and on a step that would be skipped, validation is bypassed by the skip logic itself.
-    // This validation primarily applies to user interaction on non-skipped steps.
-    if (isUserConsideredLoggedInForSkip) {
-        if (currentStep === 5 || currentStep === 6 || currentStep === 7) {
-            return true; // Skip validation for these steps if user is logged in, as they'll be skipped.
-        }
-    }
-
+    // Removed validation bypass for logged-in users
     switch (currentStep) {
       case 1:
         if (answers.swoonWorthyRooms.length === 0) {
@@ -141,15 +127,15 @@ export function QuizProvider({ children }: { children: ReactNode }) {
           return false;
         }
         break;
-      case 5: 
+      case 5:
         if (!answers.userName.trim()) {
           toast({ title: "Name Required", description: "Please enter your name.", variant: "default" });
           return false;
         }
         break;
-      case 6: 
+      case 6:
         return true; // Auto-advancing step
-      case 7: 
+      case 7:
         if (!answers.email.trim()) {
           toast({ title: "Email Required", description: "Please enter your email address.", variant: "default" });
           return false;
@@ -160,23 +146,20 @@ export function QuizProvider({ children }: { children: ReactNode }) {
           return false;
         }
         break;
-      case 8: 
+      case 8:
         return true; // Loading step
       default:
         break;
     }
     return true;
-  }, [currentStep, answers, toast, getRoomOptionsForFocusStep, isUserConsideredLoggedInForSkip]);
+  }, [currentStep, answers, toast, getRoomOptionsForFocusStep]);
 
   const isNextActionDisabled = useCallback((): boolean => {
     if (isLoading) return true;
-    
-    if (isUserConsideredLoggedInForSkip && (currentStep === 5 || currentStep === 7)) {
-        return false; // "Next" should trigger the skip
-    }
+
+    // Removed checks related to isUserConsideredLoggedInForSkip
     if (currentStep === 6) return true; // Auto-advancing, disable manual next
     if (currentStep === 8) return true; // Loading, disable manual next
-
 
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
@@ -191,27 +174,21 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         return !answers.email.trim() || !emailRegex.test(answers.email);
       default: return false;
     }
-  }, [currentStep, answers, isLoading, getRoomOptionsForFocusStep, isUserConsideredLoggedInForSkip]);
+  }, [currentStep, answers, isLoading, getRoomOptionsForFocusStep]);
 
   const triggerNextStepFlow = useCallback(async (): Promise<boolean> => {
-    // For logged-in users, skip logic is handled in internalNextStep.
-    // Validation here is for steps that are *not* skipped.
-    if (isUserConsideredLoggedInForSkip && (currentStep === 5 || currentStep === 6 || currentStep === 7)) {
-        internalNextStep(); // Directly call internalNextStep to handle potential skip
-        return true;
-    }
-
+    // Removed skip logic based on isUserConsideredLoggedInForSkip
     const canProceed = validateCurrentStep();
     if (canProceed) {
       internalNextStep();
     }
     return canProceed;
-  }, [validateCurrentStep, internalNextStep, isUserConsideredLoggedInForSkip, currentStep]);
+  }, [validateCurrentStep, internalNextStep]);
 
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
     setAnswers(initialAnswers);
-    setIsUserConsideredLoggedInForSkip(false); 
+    // Removed setIsUserConsideredLoggedInForSkip(false);
     if (typeof window !== "undefined") {
       localStorage.removeItem('styleGuideResult');
     }
@@ -220,20 +197,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const handleQuizSubmit = async (): Promise<string | null> => {
     setIsLoading(true);
     try {
-      // Email validation is now primarily handled in Step 7 validation,
-      // or skipped if user is logged in.
-      // We rely on `answers.email` being populated (or skip logic bypassing its need).
-      
       const { generateStyleGuide } = await import('@/ai/flows/generate-style-guide');
-      
+
       const aiInput: GenerateStyleGuideInput = {
         swoonWorthyRooms: answers.swoonWorthyRooms,
         styleSelections: answers.styleSelections,
         roomImprovementSelections: answers.roomImprovementSelections,
         roomFocusSelection: answers.roomFocusSelection,
-        userName: answers.userName || "Valued Customer", 
+        userName: answers.userName || "Valued Customer",
       };
-      
+
       const result = await generateStyleGuide(aiInput);
       if (typeof window !== "undefined") {
         localStorage.setItem('styleGuideResult', result.styleGuide);
@@ -251,7 +224,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       return null;
     }
   };
-  
+
   useEffect(() => {
     const handleMessageFromParent = (event: MessageEvent) => {
       if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
@@ -263,26 +236,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         // return;
       }
 
-
       if (event.data && event.data.type === 'triggerQuizNextStep') {
         triggerNextStepFlow();
       }
-
-      if (event.data && event.data.type === 'userLoginStatus') {
-        if (typeof event.data.isLoggedIn === 'boolean') {
-          setIsUserConsideredLoggedInForSkip(event.data.isLoggedIn);
-          // console.log('QuizContext: userLoginStatus received, isLoggedIn:', event.data.isLoggedIn);
-        }
-      }
-      if (event.data && event.data.type === 'userData') {
-        if (typeof event.data.userName === 'string') {
-          updateAnswer('userName', event.data.userName);
-        }
-        if (typeof event.data.email === 'string') {
-          updateAnswer('email', event.data.email);
-        }
-        // console.log('QuizContext: userData received:', event.data);
-      }
+      // Removed listeners for 'userLoginStatus' and 'userData'
     };
 
     if (typeof window !== 'undefined') {
@@ -296,14 +253,14 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       };
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerNextStepFlow, updateAnswer, isNextActionDisabled]); 
+  }, [triggerNextStepFlow, updateAnswer, isNextActionDisabled]); // updateAnswer was in deps before, keeping it.
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {
       const isDisabled = isNextActionDisabled();
       window.parent.postMessage({ type: 'quizButtonStateUpdate', isDisabled: isDisabled }, PARENT_WORDPRESS_ORIGIN);
     }
-  }, [currentStep, answers, isLoading, isNextActionDisabled, isUserConsideredLoggedInForSkip]);
+  }, [currentStep, answers, isLoading, isNextActionDisabled]); // Removed isUserConsideredLoggedInForSkip from deps
 
   return (
     <QuizContext.Provider

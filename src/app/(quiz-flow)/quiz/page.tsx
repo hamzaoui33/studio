@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 import { useQuiz } from "@/context/QuizContext";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
@@ -16,40 +16,13 @@ import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 import { useIframeResizer } from '@/hooks/useIframeResizer';
 
-// IMPORTANT: For security, replace '*' with your WordPress site's specific origin.
-// This is the origin that is ALLOWED to send 'userLoginStatus' messages to this iframe.
-const PARENT_SITE_EXPECTED_ORIGIN = '*'; // FIXME: Replace '*' with your actual WordPress domain, e.g., 'https://aveladecor.com'
+// PARENT_SITE_EXPECTED_ORIGIN is removed as it's no longer used for login status checks here.
+// Message handling for other purposes (like navigateToParentUrl if re-added elsewhere) would need its own origin check.
 
 export default function QuizPage() {
   const { currentStep, answers } = useQuiz();
-  const [isUserLoggedInOnParent, setIsUserLoggedInOnParent] = useState(false); 
-
-  useIframeResizer([currentStep, answers, isUserLoggedInOnParent]);
-
-  useEffect(() => {
-    const handleMessageFromParent = (event: MessageEvent) => {
-      if (PARENT_SITE_EXPECTED_ORIGIN !== '*' && event.origin !== PARENT_SITE_EXPECTED_ORIGIN) {
-        // console.warn('QuizPage: Message received from untrusted origin:', event.origin, 'Expected:', PARENT_SITE_EXPECTED_ORIGIN);
-        return;
-      }
-      // Fallback for development if '*' is used.
-      if (PARENT_SITE_EXPECTED_ORIGIN === '*' && event.origin === window.location.origin) {
-        // console.warn('QuizPage: Ignoring message from same origin when PARENT_SITE_EXPECTED_ORIGIN is "*". This is likely a development setup or misconfiguration.');
-        // return; 
-      }
-
-      if (event.data && event.data.type === 'userLoginStatus') {
-        if (typeof event.data.isLoggedIn === 'boolean') {
-          setIsUserLoggedInOnParent(event.data.isLoggedIn);
-        }
-      }
-    };
-
-    window.addEventListener('message', handleMessageFromParent);
-    return () => {
-      window.removeEventListener('message', handleMessageFromParent);
-    };
-  }, []); 
+  // Removed isUserLoggedInOnParent state and related useEffect for listening to 'userLoginStatus'
+  useIframeResizer([currentStep, answers]);
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -76,24 +49,7 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
   const mainWrapperId = "quiz-page-content-area";
 
-  const handleLoginClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const targetUrl = 'https://aveladecor.com/login/'; 
-    if (window.top) {
-      // Try to navigate the top-level window (WordPress page)
-      try {
-        window.top.location.href = targetUrl;
-      } catch (error) {
-        // Fallback if cross-origin restrictions prevent top-level navigation
-        // (though less likely if origins are managed correctly)
-        console.warn("Could not navigate top window, attempting self navigation:", error);
-        window.location.href = targetUrl;
-      }
-    } else {
-      // Fallback if not in an iframe
-      window.location.href = targetUrl;
-    }
-  };
+  // Removed handleLoginClick function and the conditional login section JSX
 
   if ((currentStep === 6 || currentStep === 8) && stepDetails) {
     return (
@@ -118,9 +74,6 @@ export default function QuizPage() {
     );
   }
 
-  // Determine if the login prompt should be shown for the current step
-  const showLoginPrompt = !isUserLoggedInOnParent && (currentStep === 1 || currentStep === 5 || currentStep === 7);
-
   return (
     <div
       id={mainWrapperId}
@@ -136,19 +89,7 @@ export default function QuizPage() {
                 {line}
               </p>
             ))}
-             {/* Conditionally render login section if user is NOT logged in on parent and on specific steps */}
-             {showLoginPrompt && (
-              <div className="mt-6 text-center md:text-left">
-                <p className="text-sm text-muted-foreground">Already a member?</p>
-                <a
-                  href="https://aveladecor.com/login/" 
-                  onClick={handleLoginClick}
-                  className="text-sm font-semibold text-accent hover:underline"
-                >
-                  Log in
-                </a>
-              </div>
-            )}
+             {/* "Already a member?" section removed */}
           </div>
 
           <div className={cn(
