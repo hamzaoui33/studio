@@ -4,7 +4,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { type QuizAnswers, type RoomImprovementSelection } from '@/types/quiz';
-import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data'; // TOTAL_QUIZ_STEPS will be updated
+import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
 import { useToast } from "@/hooks/use-toast";
@@ -16,7 +16,6 @@ const initialAnswers: QuizAnswers = {
   styleSelections: [],
   roomImprovementSelections: {},
   roomFocusSelection: '',
-  // userName and email removed
 };
 
 interface QuizContextType {
@@ -33,6 +32,9 @@ interface QuizContextType {
   triggerNextStepFlow: () => Promise<boolean>;
   isNextActionDisabled: () => boolean;
   internalNextStep: () => void;
+  triggerQuizPrevStepFlow: () => void; // New
+  isPrevActionDisabled: () => boolean; // New
+  internalPrevStep: () => void; // New
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -69,9 +71,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       const isOnlyNotSureYetSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'not_sure_yet';
 
       if (isOnlyOtherSelected || isOnlyNotSureYetSelected) {
-        // If only "other" or "not_sure_yet" is selected in Step 3,
-        // skip Step 4 (Room Focus) and go directly to the new Step 5 (Loading).
-        nextStepNumber = 5;
+        nextStepNumber = 5; // Skip Step 4, go to new Step 5 (Loading)
       }
     }
 
@@ -79,6 +79,25 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       goToStep(nextStepNumber);
     }
   }, [currentStep, answers.roomImprovementSelections, goToStep]);
+
+  const internalPrevStep = useCallback(() => {
+    if (currentStep > 1) {
+      let prevStepNumber = currentStep - 1;
+      // If on new Step 5 (Loading) and going back from a skipped Step 4 scenario
+      if (currentStep === 5) {
+          const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
+          const wasOnlyOtherSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'other';
+          const wasOnlyNotSureYetSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'not_sure_yet';
+          if (wasOnlyOtherSelected || wasOnlyNotSureYetSelected) {
+              prevStepNumber = 3; // Go back to Step 3
+          } else {
+              prevStepNumber = 4; // Go back to Step 4
+          }
+      }
+      goToStep(prevStepNumber);
+    }
+  }, [currentStep, goToStep, answers.roomImprovementSelections]);
+
 
   const getRoomOptionsForFocusStep = useCallback(() => {
     const selectedRoomIds = Object.keys(answers.roomImprovementSelections)
@@ -117,14 +136,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         break;
       case 4:
         const focusOptions = getRoomOptionsForFocusStep();
-        // Only validate if there are focus options available (i.e., user didn't select only "other" or "not_sure_yet" in step 3)
         const shouldValidateStep4 = !(Object.keys(answers.roomImprovementSelections).length === 1 && (answers.roomImprovementSelections['other'] || answers.roomImprovementSelections['not_sure_yet']));
         if (shouldValidateStep4 && focusOptions.length > 0 && !answers.roomFocusSelection) {
            toast({ title: "Selection Required", description: "Please select a room to focus on.", variant: "default" });
           return false;
         }
         break;
-      // Steps 5, 6, 7 removed
       case 5: // New Step 5 is Loading
         return true;
       default:
@@ -135,7 +152,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const isNextActionDisabled = useCallback((): boolean => {
     if (isLoading) return true;
-    if (currentStep === 5) return true; // Loading step, disable manual next
+    if (currentStep === TOTAL_QUIZ_STEPS) return true; // Cannot go next from the last step (Loading screen)
 
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
@@ -143,13 +160,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
       case 4:
         const focusOptions = getRoomOptionsForFocusStep();
-        // Only disable if there are focus options and none is selected
-         const shouldDisableStep4 = !(Object.keys(answers.roomImprovementSelections).length === 1 && (answers.roomImprovementSelections['other'] || answers.roomImprovementSelections['not_sure_yet']));
+        const shouldDisableStep4 = !(Object.keys(answers.roomImprovementSelections).length === 1 && (answers.roomImprovementSelections['other'] || answers.roomImprovementSelections['not_sure_yet']));
         return shouldDisableStep4 && focusOptions.length > 0 && !answers.roomFocusSelection;
-      // Steps 5, 6, 7 removed
       default: return false;
     }
   }, [currentStep, answers, isLoading, getRoomOptionsForFocusStep]);
+
+  const isPrevActionDisabled = useCallback((): boolean => {
+    if (isLoading) return true;
+    return currentStep === 1; // Cannot go previous from the first step
+  }, [currentStep, isLoading]);
 
   const triggerNextStepFlow = useCallback(async (): Promise<boolean> => {
     const canProceed = validateCurrentStep();
@@ -158,6 +178,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     }
     return canProceed;
   }, [validateCurrentStep, internalNextStep]);
+
+  const triggerQuizPrevStepFlow = useCallback(() => {
+    if (!isPrevActionDisabled()) {
+      internalPrevStep();
+    }
+  }, [isPrevActionDisabled, internalPrevStep]);
 
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
@@ -177,7 +203,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         styleSelections: answers.styleSelections,
         roomImprovementSelections: answers.roomImprovementSelections,
         roomFocusSelection: answers.roomFocusSelection,
-        // userName removed
       };
 
       const result = await generateStyleGuide(aiInput);
@@ -204,32 +229,34 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         return;
       }
       if (PARENT_WORDPRESS_ORIGIN === '*' && event.origin === window.location.origin) {
-        return;
+        return; // Ignore messages from self if using wildcard for dev
       }
 
       if (event.data && event.data.type === 'triggerQuizNextStep') {
         triggerNextStepFlow();
+      } else if (event.data && event.data.type === 'triggerQuizPrevStep') { // New
+        triggerQuizPrevStepFlow();
       }
     };
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', handleMessageFromParent);
-      if (window.parent !== window) {
-        window.parent.postMessage({ type: 'quizButtonStateUpdate', isDisabled: isNextActionDisabled() }, PARENT_WORDPRESS_ORIGIN);
-      }
       return () => {
         window.removeEventListener('message', handleMessageFromParent);
       };
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerNextStepFlow, isNextActionDisabled]);
+  }, [triggerNextStepFlow, triggerQuizPrevStepFlow]); // Added triggerQuizPrevStepFlow
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {
-      const isDisabled = isNextActionDisabled();
-      window.parent.postMessage({ type: 'quizButtonStateUpdate', isDisabled: isDisabled }, PARENT_WORDPRESS_ORIGIN);
+      const isNextDisabled = isNextActionDisabled();
+      window.parent.postMessage({ type: 'quizButtonStateUpdate', isDisabled: isNextDisabled }, PARENT_WORDPRESS_ORIGIN);
+
+      const isPrevDisabled = isPrevActionDisabled(); // New
+      window.parent.postMessage({ type: 'quizPrevButtonStateUpdate', isDisabled: isPrevDisabled }, PARENT_WORDPRESS_ORIGIN); // New
     }
-  }, [currentStep, answers, isLoading, isNextActionDisabled]);
+  }, [currentStep, answers, isLoading, isNextActionDisabled, isPrevActionDisabled]); // Added isPrevActionDisabled
 
   return (
     <QuizContext.Provider
@@ -247,6 +274,9 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         triggerNextStepFlow,
         isNextActionDisabled,
         internalNextStep,
+        triggerQuizPrevStepFlow, // New
+        isPrevActionDisabled, // New
+        internalPrevStep, // New
       }}
     >
       {children}
@@ -261,3 +291,4 @@ export function useQuiz() {
   }
   return context;
 }
+
