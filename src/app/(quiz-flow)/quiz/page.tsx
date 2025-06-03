@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState, useEffect } from 'react'; // Added useState, useEffect
 import { useQuiz } from "@/context/QuizContext";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
@@ -15,11 +16,42 @@ import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 import { useIframeResizer } from '@/hooks/useIframeResizer';
 
+// IMPORTANT: For security, replace '*' with your WordPress site's specific origin.
+// This is the origin that is ALLOWED to send 'userLoginStatus' messages to this iframe.
+const PARENT_SITE_EXPECTED_ORIGIN = '*'; // FIXME: Replace '*' with your actual WordPress domain, e.g., 'https://aveladecor.com'
 
 export default function QuizPage() {
-  const { currentStep, answers } = useQuiz(); 
+  const { currentStep, answers } = useQuiz();
+  const [isUserLoggedInOnParent, setIsUserLoggedInOnParent] = useState(false); // Default to user NOT being logged in on parent
 
-  useIframeResizer([currentStep, answers]); 
+  useIframeResizer([currentStep, answers, isUserLoggedInOnParent]);
+
+  useEffect(() => {
+    const handleMessageFromParent = (event: MessageEvent) => {
+      if (PARENT_SITE_EXPECTED_ORIGIN !== '*' && event.origin !== PARENT_SITE_EXPECTED_ORIGIN) {
+        // console.warn('QuizPage: Message received from untrusted origin:', event.origin, 'Expected:', PARENT_SITE_EXPECTED_ORIGIN);
+        return;
+      }
+      // Fallback for development if '*' is used, but highly recommend setting the specific origin.
+      if (PARENT_SITE_EXPECTED_ORIGIN === '*' && event.origin === window.location.origin) {
+        // console.warn('QuizPage: Ignoring message from same origin when PARENT_SITE_EXPECTED_ORIGIN is "*". This is likely a development setup or misconfiguration.');
+        // This prevents the iframe from processing its own postMessages if any were to occur with this type.
+        // return;
+      }
+
+
+      if (event.data && event.data.type === 'userLoginStatus') {
+        if (typeof event.data.isLoggedIn === 'boolean') {
+          setIsUserLoggedInOnParent(event.data.isLoggedIn);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessageFromParent);
+    return () => {
+      window.removeEventListener('message', handleMessageFromParent);
+    };
+  }, []); // Empty dependency array to set up listener once when component mounts
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -40,27 +72,38 @@ export default function QuizPage() {
     if (quizData && quizData[stepKey]) {
         return quizData[stepKey];
     }
-    return null; 
+    return null;
   }
-  
-  const stepDetails = getCurrentStepDetails();
-  const mainWrapperId = "quiz-page-content-area"; 
 
-  if ((currentStep === 6 || currentStep === 8) && stepDetails) { 
+  const stepDetails = getCurrentStepDetails();
+  const mainWrapperId = "quiz-page-content-area";
+
+  const handleLoginClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const targetUrl = 'https://aveladecor.com/login/'; // Updated Login URL
+    if (window.top) {
+      window.top.location.href = targetUrl;
+    } else {
+      // Fallback if not in an iframe, though unlikely in this context
+      window.location.href = targetUrl;
+    }
+  };
+
+  if ((currentStep === 6 || currentStep === 8) && stepDetails) {
     return (
-      <div 
-        id={mainWrapperId} 
-        className="w-full max-w-7xl mx-auto px-[10px] pb-8 md:pb-12"> 
+      <div
+        id={mainWrapperId}
+        className="w-full max-w-7xl mx-auto px-[10px] pb-8 md:pb-12">
         <div className="animate-fadeIn flex flex-col justify-center items-center">
           {renderStepContent()}
         </div>
       </div>
     );
   }
-  
-  if (!stepDetails) { 
+
+  if (!stepDetails) {
     return (
-      <div 
+      <div
         id={mainWrapperId}
         className="w-full max-w-7xl mx-auto px-[10px] pb-8 md:pb-12 text-center">
           <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
@@ -70,25 +113,26 @@ export default function QuizPage() {
   }
 
   return (
-    <div 
+    <div
       id={mainWrapperId}
       className="w-full max-w-7xl mx-auto px-[10px] pb-8 md:pb-12"
     >
       {stepDetails && (
         <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-start">
-          <div className="md:col-span-6 md:sticky md:top-8 text-center md:text-left"> 
+          <div className="md:col-span-6 md:sticky md:top-8 text-center md:text-left">
             <h1 className="quiz-question-title">{stepDetails.question}</h1>
-            {stepDetails.instruction && stepDetails.instruction.split('\n').map((line, index, array) => (
+            {stepDetails.instruction && stepDetails.instruction.split('\\n').map((line, index, array) => (
               <p key={index} className={cn("quiz-instruction-text", index === 0 && "mt-2", index === array.length -1 && array.length > 1 && "mb-0" )}>
                 {line}
               </p>
             ))}
-             {(currentStep === 1 || currentStep === 5 || currentStep === 7) && (
+             {/* Conditionally render login section if user is NOT logged in on parent */}
+             {!isUserLoggedInOnParent && (currentStep === 1 || currentStep === 5 || currentStep === 7) && (
               <div className="mt-6 text-center md:text-left">
                 <p className="text-sm text-muted-foreground">Already a member?</p>
                 <a
-                  href="#"
-                  onClick={(e) => {e.preventDefault(); /* Implement login logic or navigation */}}
+                  href="https://aveladecor.com/login/" // Updated Login URL
+                  onClick={handleLoginClick}
                   className="text-sm font-semibold text-accent hover:underline"
                 >
                   Log in
@@ -96,12 +140,12 @@ export default function QuizPage() {
               </div>
             )}
           </div>
-          
+
           <div className={cn(
             "md:col-span-6 animate-fadeIn",
-            (currentStep === 5 || currentStep === 7) 
+            (currentStep === 5 || currentStep === 7)
               ? "bg-input-panel-bg rounded-lg p-6 md:p-12 w-full max-w-xl mx-auto flex flex-col items-center justify-center"
-              : "flex flex-col justify-start items-center" 
+              : "flex flex-col justify-start items-center"
           )}>
             <div className={cn(
               "w-full",
