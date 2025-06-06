@@ -5,17 +5,16 @@ import { useState, useEffect } from 'react';
 import { useQuiz } from "@/context/QuizContext";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
-import { Step3RoomImprovement } from "./components/Step3RoomImprovement";
-import { Step4RoomFocus } from "./components/Step4RoomFocus";
-// Step5Name, Step6Greeting, Step7Email removed
-import { Step8Loading } from "./components/Step8Loading"; // This is now effectively Step 5
+import { Step3ColorMood } from "./components/Step3ColorMood"; // New Step
+import { Step4MaterialDetail } from "./components/Step4MaterialDetail"; // New Step
+import { Step3RoomImprovement as Step5RoomImprovement } from "./components/Step3RoomImprovement"; // Renamed import
+import { Step4RoomFocus as Step6RoomFocus } from "./components/Step4RoomFocus"; // Renamed import
+import { Step8Loading as Step7Loading } from "./components/Step8Loading"; // Renamed import
 import { quizData } from "@/lib/quiz-data";
 import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 import { useIframeResizer } from '@/hooks/useIframeResizer';
 
-// PARENT_SITE_EXPECTED_ORIGIN is removed as login logic is removed
-// For other postMessage (navigateToParentUrl), origin check is in QuizNavigation/Context
 
 export default function QuizPage() {
   const { currentStep, answers } = useQuiz();
@@ -25,9 +24,11 @@ export default function QuizPage() {
     switch (currentStep) {
       case 1: return <Step1SwoonWorthy />;
       case 2: return <Step2StyleSelection />;
-      case 3: return <Step3RoomImprovement />;
-      case 4: return <Step4RoomFocus />;
-      case 5: return <Step8Loading />; // Step 8 (Loading) is now the new Step 5
+      case 3: return <Step3ColorMood />; // New
+      case 4: return <Step4MaterialDetail />; // New
+      case 5: return <Step5RoomImprovement />; // Old Step 3
+      case 6: return <Step6RoomFocus />; // Old Step 4
+      case 7: return <Step7Loading />; // Old Step 5 (Loading)
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
@@ -43,8 +44,8 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
   const mainWrapperId = "quiz-page-content-area";
 
-  // Loading screen (new Step 5) has a different layout (full width, centered)
-  if (currentStep === 5 && stepDetails) { // New Step 5 is loading
+  // Loading screen (new Step 7) has a different layout
+  if (currentStep === 7 && stepDetails) { // New Step 7 is loading
     return (
       <div
         id={mainWrapperId}
@@ -81,20 +82,13 @@ export default function QuizPage() {
                 {line}
               </p>
             ))}
-            {/* "Already a member?" section removed as per previous revert */}
           </div>
 
           <div className={cn(
             "md:col-span-6 animate-fadeIn",
-            // Input panel styling was for Step 5 (Name) and 7 (Email), which are removed.
-            // If other steps need this specific background, it should be handled differently.
-            // For now, removing the condition that applied 'bg-input-panel-bg'.
-            "flex flex-col justify-start items-center" 
+            "flex flex-col justify-start items-center"
           )}>
-            <div className={cn(
-              "w-full"
-              // Same as above, removing conditional styling for removed input steps.
-            )}>
+            <div className={cn("w-full")}>
               {renderStepContent()}
             </div>
           </div>

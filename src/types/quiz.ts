@@ -20,6 +20,7 @@ export interface IconTextOption {
   id:string;
   name: string;
   icon?: LucideIcon | string;
+  description?: string; // Added for new steps
 }
 
 export interface StepData {
@@ -27,28 +28,36 @@ export interface StepData {
   title: string; // General title for the step
   question: string; // Main question text
   instruction: string; // Instruction text
+  maxSelections?: number; // Generic max selections
 }
 
 export interface Step1Data extends StepData {
   options: ImageOption[];
-  maxSelections?: number;
 }
 
 export interface Step2Data extends StepData {
   options: StyleOption[];
-  maxSelections?: number;
 }
 
-export interface Step3Data extends StepData {
+// New Step Data Types
+export interface Step3ColorMoodData extends StepData {
+  options: IconTextOption[]; // Reusing IconTextOption, description can hold keywords
+}
+
+export interface Step4MaterialDetailData extends StepData {
   options: IconTextOption[];
-  maxSelections?: number;
+}
+// End New Step Data Types
+
+export interface Step5Data extends StepData { // Was Step3Data
+  options: IconTextOption[];
 }
 
-export interface Step4Data extends StepData {
-  // Options derived from Step 3.
+export interface Step6Data extends StepData { // Was Step4Data
+  // Options derived from new Step 5 (old Step 3).
 }
 
-export interface Step5LoadingData extends StepData {
+export interface Step7LoadingData extends StepData { // Was Step5LoadingData
   // This step's content is primarily handled by its component
 }
 
@@ -57,16 +66,18 @@ export type RoomImprovementSelection = Record<string, number>;
 export type QuizAnswers = {
   swoonWorthyRooms: string[];
   styleSelections: string[];
+  colorMoodSelection: string; // New answer field
+  materialDetailSelections: string[]; // New answer field (can be multiple)
   roomImprovementSelections: RoomImprovementSelection;
   roomFocusSelection: string;
-  // userName and email removed
 };
 
 export type AllQuizData = {
   step1: Step1Data;
   step2: Step2Data;
-  step3: Step3Data;
-  step4: Step4Data;
-  step5: Step5LoadingData; // Formerly Step8LoadingData
+  step3: Step3ColorMoodData; // New Step 3
+  step4: Step4MaterialDetailData; // New Step 4
+  step5: Step5Data; // Old Step 3, now Step 5
+  step6: Step6Data; // Old Step 4, now Step 6
+  step7: Step7LoadingData; // Old Step 5, now Step 7
 };
-

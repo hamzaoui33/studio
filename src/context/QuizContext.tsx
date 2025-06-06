@@ -4,7 +4,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { type QuizAnswers, type RoomImprovementSelection } from '@/types/quiz';
-import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data';
+import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data'; // TOTAL_QUIZ_STEPS will be updated by quiz-data.ts
 import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput } from '@/ai/flows/generate-style-guide';
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +14,8 @@ const PARENT_WORDPRESS_ORIGIN = '*'; // IMPORTANT: Update for production
 const initialAnswers: QuizAnswers = {
   swoonWorthyRooms: [],
   styleSelections: [],
+  colorMoodSelection: '', // New
+  materialDetailSelections: [], // New
   roomImprovementSelections: {},
   roomFocusSelection: '',
 };
@@ -62,14 +64,14 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const internalNextStep = useCallback(() => {
     let nextStepNumber = currentStep + 1;
 
-    // Skip logic: if on step 3 and only 'other' or 'not_sure_yet' is selected, skip step 4
-    if (currentStep === 3) {
+    // Skip logic: if on new step 5 (old step 3 - Room Improvement) and only 'other' or 'not_sure_yet' is selected, skip new step 6 (old step 4 - Room Focus)
+    if (currentStep === 5) { // New Step 5 is Room Improvement
       const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
       const isOnlyOtherSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'other';
       const isOnlyNotSureYetSelected = selectedRoomIds.length === 1 && selectedRoomIds[0] === 'not_sure_yet';
 
       if (isOnlyOtherSelected || isOnlyNotSureYetSelected) {
-        nextStepNumber = 5; // Skip Step 4 (Room Focus), go directly to new Step 5 (Loading)
+        nextStepNumber = 7; // Skip Step 6 (Room Focus), go directly to new Step 7 (Loading)
       }
     }
 
@@ -80,29 +82,27 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
 
   const getRoomOptionsForFocusStep = useCallback(() => {
+    // This now refers to options from new Step 5 (old Step 3)
     const selectedRoomIds = Object.keys(answers.roomImprovementSelections)
-                              .filter(id => id !== 'other' && id !== 'not_sure_yet'); // Exclude 'other' and 'not_sure_yet'
+                              .filter(id => id !== 'other' && id !== 'not_sure_yet');
 
-    const allStandardRoomOptions = quizData.step3.options.filter(
+    const allStandardRoomOptions = quizData.step5.options.filter(
       option => option.id !== 'other' && option.id !== 'not_sure_yet'
     );
 
-    // If no rooms were selected (or only "other"/"not_sure_yet" which are filtered out),
-    // show all standard room options for focus.
     if (!selectedRoomIds || selectedRoomIds.length === 0) {
       return allStandardRoomOptions;
     }
-
-    // Otherwise, show only the standard rooms that were selected in step 3.
     return allStandardRoomOptions.filter(option => selectedRoomIds.includes(option.id));
   }, [answers.roomImprovementSelections]);
 
 
   const validateCurrentStep = useCallback((): boolean => {
+    const stepData = quizData[`step${currentStep}` as keyof AllQuizData];
     switch (currentStep) {
       case 1:
         if (answers.swoonWorthyRooms.length === 0) {
-          toast({ title: "Selection Required", description: "Please select at least one image to continue.", variant: "default" });
+          toast({ title: "Selection Required", description: "Please select at least one image.", variant: "default" });
           return false;
         }
         break;
@@ -112,27 +112,41 @@ export function QuizProvider({ children }: { children: ReactNode }) {
           return false;
         }
         break;
-      case 3:
+      case 3: // New Step: Color & Mood
+        if (!answers.colorMoodSelection) {
+          toast({ title: "Selection Required", description: "Please select your color and mood preference.", variant: "default" });
+          return false;
+        }
+        break;
+      case 4: // New Step: Material & Detail
+        if (answers.materialDetailSelections.length === 0) {
+          toast({ title: "Selection Required", description: "Please select at least one material or detail preference.", variant: "default" });
+          return false;
+        }
+        if (stepData?.maxSelections && answers.materialDetailSelections.length > stepData.maxSelections) {
+            toast({ title: "Too Many Selections", description: `Please select up to ${stepData.maxSelections} material/detail preferences.`, variant: "default" });
+            return false;
+        }
+        break;
+      case 5: // Old Step 3: Room Improvement
         if (Object.keys(answers.roomImprovementSelections).length === 0) {
           toast({ title: "Selection Required", description: "Please select at least one room to improve.", variant: "default" });
           return false;
         }
         break;
-      case 4:
-        // Only validate Step 4 if it's not being skipped
-        const selectedRoomIdsStep3 = Object.keys(answers.roomImprovementSelections);
-        const isSkippingStep4 = selectedRoomIdsStep3.length === 1 && (selectedRoomIdsStep3[0] === 'other' || selectedRoomIdsStep3[0] === 'not_sure_yet');
+      case 6: // Old Step 4: Room Focus
+        const selectedRoomIdsStep5 = Object.keys(answers.roomImprovementSelections);
+        const isSkippingStep6 = selectedRoomIdsStep5.length === 1 && (selectedRoomIdsStep5[0] === 'other' || selectedRoomIdsStep5[0] === 'not_sure_yet');
 
-        if (!isSkippingStep4) {
+        if (!isSkippingStep6) {
             const focusOptions = getRoomOptionsForFocusStep();
-            // Ensure there are options to select from and one is selected
             if (focusOptions.length > 0 && !answers.roomFocusSelection) {
                  toast({ title: "Selection Required", description: "Please select a room to focus on.", variant: "default" });
                 return false;
             }
         }
         break;
-      case 5: // New Step 5 is Loading, always valid to proceed from here internally
+      case 7: // Loading screen, always valid
         return true;
       default:
         break;
@@ -142,17 +156,23 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const isNextActionDisabled = useCallback((): boolean => {
     if (isLoading) return true;
-    if (currentStep === TOTAL_QUIZ_STEPS) return true; // Cannot go next from the last step (Loading screen)
+    if (currentStep === TOTAL_QUIZ_STEPS) return true;
+
+    const stepData = quizData[`step${currentStep}` as keyof AllQuizData];
 
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
       case 2: return answers.styleSelections.length === 0;
-      case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
+      case 3: return !answers.colorMoodSelection;
       case 4:
-        // If Step 4 is going to be skipped, the next button shouldn't be "disabled" based on its own validation
-        const selectedRoomIdsStep3 = Object.keys(answers.roomImprovementSelections);
-        const isSkippingStep4 = selectedRoomIdsStep3.length === 1 && (selectedRoomIdsStep3[0] === 'other' || selectedRoomIdsStep3[0] === 'not_sure_yet');
-        if (isSkippingStep4) return false;
+        const minSelected = answers.materialDetailSelections.length > 0;
+        const withinMax = stepData?.maxSelections ? answers.materialDetailSelections.length <= stepData.maxSelections : true;
+        return !minSelected || !withinMax;
+      case 5: return Object.keys(answers.roomImprovementSelections).length === 0;
+      case 6:
+        const selectedRoomIdsStep5 = Object.keys(answers.roomImprovementSelections);
+        const isSkippingStep6 = selectedRoomIdsStep5.length === 1 && (selectedRoomIdsStep5[0] === 'other' || selectedRoomIdsStep5[0] === 'not_sure_yet');
+        if (isSkippingStep6) return false;
 
         const focusOptions = getRoomOptionsForFocusStep();
         return focusOptions.length > 0 && !answers.roomFocusSelection;
@@ -183,10 +203,11 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     try {
       const { generateStyleGuide } = await import('@/ai/flows/generate-style-guide');
 
-      // Prepare input for AI, ensure all properties are defined even if empty
       const aiInput: GenerateStyleGuideInput = {
         swoonWorthyRooms: answers.swoonWorthyRooms || [],
         styleSelections: answers.styleSelections || [],
+        colorMoodSelection: answers.colorMoodSelection || '', // New
+        materialDetailSelections: answers.materialDetailSelections || [], // New
         roomImprovementSelections: answers.roomImprovementSelections || {},
         roomFocusSelection: answers.roomFocusSelection || '',
       };
@@ -211,17 +232,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const handleMessageFromParent = (event: MessageEvent) => {
-      // Security: Check the origin of the message
       if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
-        // console.warn("QuizContext: Message received from untrusted origin:", event.origin);
         return;
       }
-       // Avoid processing messages from self if using wildcard for development
       if (PARENT_WORDPRESS_ORIGIN === '*' && event.origin === window.location.origin) {
         return;
       }
-
-
       if (event.data && event.data.type === 'triggerQuizNextStep') {
         triggerNextStepFlow();
       }
@@ -233,8 +249,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         window.removeEventListener('message', handleMessageFromParent);
       };
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerNextStepFlow]); // Removed dependencies that were related to prev step or login status
+  }, [triggerNextStepFlow]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {

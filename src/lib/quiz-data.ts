@@ -2,10 +2,10 @@
 import type { AllQuizData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick, HelpCircle, Edit3
+  Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick, HelpCircle, Edit3, Palette, Gem, Sparkles, Droplets, Layers, SunMedium, Moon, Puzzle
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 5; // Updated from 8
+export const TOTAL_QUIZ_STEPS = 7; // Updated from 5 to 7
 
 export const quizData: AllQuizData = {
   step1: {
@@ -56,7 +56,8 @@ export const quizData: AllQuizData = {
         imageUrl: "https://placehold.co/300x200.png",
         hint: "coastal home"
       },
-      {
+      // ... other style options from original quizData.step2.options
+       {
         id: "refined_modern",
         name: "Refined Modern",
         description: "Less is more in your design playbook. Your space is sleek, refined, and minimal without feeling cold. Clean architecture, neutral tones, and understated decor set the tone, while thoughtful statement pieces bring just enough edge. Function and aesthetics are perfectly in sync in your modern sanctuary.",
@@ -107,8 +108,39 @@ export const quizData: AllQuizData = {
       }
     ],
   },
+  // New Step 3: Color & Mood Preferences
   step3: {
     id: 3,
+    title: "Color & Mood",
+    question: "Which color atmosphere and mood do you envision?",
+    instruction: "Select the one that best reflects your desired feeling for your space.",
+    maxSelections: 1, // Typically a single choice for overall mood
+    options: [
+      { id: "light_airy_neutrals", name: "Light, Airy & Neutral", description: "Serene, Calm, Bright", icon: SunMedium },
+      { id: "earthy_warm_tones", name: "Earthy & Warm Tones", description: "Cozy, Natural, Grounded", icon: Palette },
+      { id: "bold_vibrant_accents", name: "Bold & Vibrant with Accents", description: "Energetic, Playful, Statement", icon: Sparkles },
+      { id: "cool_serene_hues", name: "Cool & Serene Hues", description: "Refreshing, Peaceful, Crisp", icon: Droplets },
+      { id: "dark_moody_elegance", name: "Dark, Moody & Elegant", description: "Sophisticated, Dramatic, Intimate", icon: Moon },
+    ],
+  },
+  // New Step 4: Material & Detail Preferences
+  step4: {
+    id: 4,
+    title: "Materials & Details",
+    question: "What materials and design details catch your eye?",
+    instruction: "Choose up to 2 that you're most drawn to.",
+    maxSelections: 2,
+    options: [
+      { id: "natural_woods_woven", name: "Natural Woods & Woven Textures", description: "Rattan, Jute, Linen", icon: Trees },
+      { id: "sleek_metals_lines", name: "Sleek Metals & Clean Lines", description: "Polished Chrome, Minimalist Forms", icon: Layers }, // Layers can represent clean lines
+      { id: "plush_textiles_luxe", name: "Plush Textiles & Luxe Finishes", description: "Velvet, Silk, Metallics", icon: Gem },
+      { id: "artistic_eclectic_patterns", name: "Artistic Patterns & Eclectic Decor", description: "Bold Prints, Unique Art", icon: Paintbrush },
+      { id: "raw_industrial_elements", name: "Raw & Industrial Elements", description: "Exposed Brick, Concrete", icon: Building }, // Building or Puzzle
+    ],
+  },
+  // Old Step 3, now Step 5
+  step5: {
+    id: 5,
     title: "Room Improvement",
     question: "Which rooms feel like they need a little something?",
     instruction: "Pick as many as you like, and let us know how many of each. We’ll help you sort out the priorities later.",
@@ -128,16 +160,16 @@ export const quizData: AllQuizData = {
       { id: "not_sure_yet", name: "Not Sure Yet", icon: HelpCircle },
     ],
   },
-  step4: {
-    id: 4,
+  // Old Step 4, now Step 6
+  step6: {
+    id: 6,
     title: "Room Focus",
     question: "Awesome! Which room should we tackle first?",
     instruction: "This will be the main space we’ll use to create your personalized style guide.",
   },
-  // Steps 5, 6, 7 (Name, Greeting, Email) are removed.
-  // Step 8 (Loading) becomes the new Step 5.
-  step5: {
-    id: 5, // Was 8
+  // Old Step 5 (Loading), now Step 7
+  step7: {
+    id: 7,
     title: "Calculating Results",
     question: "",
     instruction: "",
@@ -158,9 +190,6 @@ export const iconMap: { [key: string]: LucideIcon } = {
   playroom: ToyBrick,
   other: Edit3,
   not_sure_yet: HelpCircle,
-  // name: User, // Removed
-  // greeting: Hand, // Removed
-  // email: Mail, // Removed
   loading: Loader,
   rent: Key,
   own: Home,
@@ -174,6 +203,17 @@ export const iconMap: { [key: string]: LucideIcon } = {
   default: Target,
   submit: CheckCircle,
   wallet: Wallet,
+  // Icons for new steps
+  light_airy_neutrals: SunMedium,
+  earthy_warm_tones: Palette,
+  bold_vibrant_accents: Sparkles,
+  cool_serene_hues: Droplets,
+  dark_moody_elegance: Moon,
+  natural_woods_woven: Trees,
+  sleek_metals_lines: Layers,
+  plush_textiles_luxe: Gem,
+  artistic_eclectic_patterns: Paintbrush,
+  raw_industrial_elements: Puzzle, // Using Puzzle as a generic for industrial elements
 };
 
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {

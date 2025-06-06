@@ -13,7 +13,7 @@ interface QuizNavigationProps {
 }
 
 export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigationProps) {
-  const { currentStep, internalNextStep, isLastStep, isLoading, answers, triggerNextStepFlow, isNextActionDisabled: isButtonDisabledByContext } = useQuiz();
+  const { currentStep, internalNextStep, isLastStep, isLoading, answers, triggerNextStepFlow, isNextActionDisabled: isButtonDisabledByContext, TOTAL_QUIZ_STEPS } = useQuiz();
 
   const handleNextClick = async () => {
     if (onNext) {
@@ -21,9 +21,6 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     }
   };
 
-  // This handleSubmitClick is for a submit button on an interactive last step.
-  // Since the new last step (Step 5) is the auto-submitting Loading screen,
-  // and QuizNavigation is hidden for that step, this button won't be shown/used.
   const handleSubmitClick = async () => {
     console.warn("QuizNavigation: handleSubmitClick in QuizNavigation called unexpectedly. Submission is handled by the Loading step.");
   };
@@ -35,14 +32,15 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     }
   }
 
-  const totalSelectedRooms = currentStep === 3 && answers.roomImprovementSelections
+  // Room improvement is now step 5
+  const totalSelectedRooms = currentStep === 5 && answers.roomImprovementSelections
     ? Object.entries(answers.roomImprovementSelections)
         .filter(([key]) => key !== 'other' && key !== 'not_sure_yet')
         .reduce((sum, [, count]) => sum + count, 0)
     : 0;
 
-  // Hide navigation for the new Step 5 (Loading screen)
-  if (currentStep === 5) { 
+  // Hide navigation for the Loading screen (now Step 7)
+  if (currentStep === TOTAL_QUIZ_STEPS) { 
     return null;
   }
 
@@ -73,7 +71,7 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             height={28} 
             className="h-7 w-auto" />
         </a>
-        {currentStep === 3 && totalSelectedRooms > 0 && (
+        {currentStep === 5 && totalSelectedRooms > 0 && ( // Check against step 5 for room improvements
           <span className="hidden md:block text-sm font-medium text-muted-foreground">
             Total Rooms: {totalSelectedRooms}
           </span>
@@ -102,10 +100,8 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         )}
-
-        {/* This "Submit" button is effectively not shown because isLastStep will be true for Step 5 (Loading), 
-            and QuizNavigation is hidden for Step 5. */}
-        {isLastStep && currentStep !== 5 && ( 
+        
+        {isLastStep && currentStep !== TOTAL_QUIZ_STEPS && ( 
           <Button
             onClick={handleSubmitClick}
             disabled={isLoading || isButtonDisabledByContext() || isNextDisabled} 
