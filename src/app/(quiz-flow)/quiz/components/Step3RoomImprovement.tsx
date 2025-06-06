@@ -31,10 +31,15 @@ export function Step3RoomImprovement() {
 
   const noQuantitySelectorIds = ["other", "not_sure_yet"];
 
+  // Ensure quizData.step5 exists and has options
+  if (!quizData.step5 || !quizData.step5.options) {
+    return <p className="text-center text-destructive">Step 5 data not configured.</p>;
+  }
+
   return (
     <div className="flex flex-col items-center">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-5 gap-y-8 md:gap-y-10">
-        {quizData.step3.options.map((option: IconTextOption) => {
+        {quizData.step5.options.map((option: IconTextOption) => {
           const IconComponent = typeof option.icon === 'string' ? iconMap[option.icon] || iconMap.default : option.icon as LucideIcon | undefined;
           const isSelected = !!answers.roomImprovementSelections[option.id];
           const quantity = answers.roomImprovementSelections[option.id] || 0;
