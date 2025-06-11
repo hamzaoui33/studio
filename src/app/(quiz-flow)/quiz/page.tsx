@@ -1,15 +1,12 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
 import { useQuiz } from "@/context/QuizContext";
 import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
-import { Step3ColorMood } from "./components/Step3ColorMood"; // New Step
-import { Step4MaterialDetail } from "./components/Step4MaterialDetail"; // New Step
-import { Step3RoomImprovement as Step5RoomImprovement } from "./components/Step3RoomImprovement"; // Renamed import
-import { Step4RoomFocus as Step6RoomFocus } from "./components/Step4RoomFocus"; // Renamed import
-import { Step8Loading as Step7Loading } from "./components/Step8Loading"; // Renamed import
+import { Step3ColorMood } from "./components/Step3ColorMood";
+import { Step4MaterialDetail } from "./components/Step4MaterialDetail";
+import { Step8Loading as Step5Loading } from "./components/Step8Loading"; // Old Step8Loading is now Step5Loading
 import { quizData } from "@/lib/quiz-data";
 import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
@@ -24,11 +21,9 @@ export default function QuizPage() {
     switch (currentStep) {
       case 1: return <Step1SwoonWorthy />;
       case 2: return <Step2StyleSelection />;
-      case 3: return <Step3ColorMood />; // New
-      case 4: return <Step4MaterialDetail />; // New
-      case 5: return <Step5RoomImprovement />; // Old Step 3
-      case 6: return <Step6RoomFocus />; // Old Step 4
-      case 7: return <Step7Loading />; // Old Step 5 (Loading)
+      case 3: return <Step3ColorMood />;
+      case 4: return <Step4MaterialDetail />;
+      case 5: return <Step5Loading />; // New Step 5 is Loading
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
@@ -44,8 +39,8 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
   const mainWrapperId = "quiz-page-content-area";
 
-  // Loading screen (new Step 7) has a different layout
-  if (currentStep === 7 && stepDetails) { // New Step 7 is loading
+  // Loading screen (new Step 5) has a different layout
+  if (currentStep === 5 && stepDetails) {
     return (
       <div
         id={mainWrapperId}
@@ -62,7 +57,7 @@ export default function QuizPage() {
       <div
         id={mainWrapperId}
         className="w-full max-w-7xl mx-auto px-[10px] pb-8 md:pb-12 text-center">
-          <p className="text-xl text-destructive">Error: Quiz step data not found.</p>
+          <p className="text-xl text-destructive">Error: Quiz step data not found for step {currentStep}.</p>
           <p>Please try resetting the quiz or contact support.</p>
       </div>
     );

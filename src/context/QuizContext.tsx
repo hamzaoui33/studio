@@ -6,10 +6,9 @@ import { createContext, useContext, useState, useCallback, useEffect } from 'rea
 import { type QuizAnswers } from '@/types/quiz';
 import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
-import type { GenerateStyleGuideInput, GenerateStyleGuideOutput, StyleCategory } from '@/ai/flows/generate-style-guide';
+import type { GenerateStyleGuideInput, GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
 import { useToast } from "@/hooks/use-toast";
 
-// IMPORTANT: For production, replace '*' with your WordPress site's domain for security.
 const PARENT_WORDPRESS_ORIGIN = '*';
 
 const initialAnswers: QuizAnswers = {
@@ -31,11 +30,9 @@ interface QuizContextType {
   updateAnswer: <K extends keyof QuizAnswers>(field: K, value: QuizAnswers[K]) => void;
   handleQuizSubmit: () => Promise<GenerateStyleGuideOutput | null>;
   resetQuiz: () => void;
-  // getRoomOptionsForFocusStep: () => Array<{ id: string; name: string; icon?: any }>; // Removed as Step 5 & 6 were removed earlier
   triggerNextStepFlow: () => Promise<boolean>;
   isNextActionDisabled: () => boolean;
   internalNextStep: () => void;
-  // isUserConsideredLoggedInForSkip: boolean; // Removed, step skipping logic was simplified/removed
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -44,7 +41,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [answers, setAnswers] = useState<QuizAnswers>(initialAnswers);
   const [isLoading, setIsLoading] = useState(false);
-  // const [isUserConsideredLoggedInForSkip, setIsUserConsideredLoggedInForSkip] = useState(false); // Removed
   const router = useRouter();
   const { toast } = useToast();
 
@@ -66,8 +62,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const internalNextStep = useCallback(() => {
     let nextStepNumber = currentStep + 1;
-    // Skip logic for old Step 4 (Room Focus) was removed as Step 5,6,7 were removed.
-    // The quiz now goes from Step 4 (MaterialDetail) to Step 5 (Loading).
     if (nextStepNumber <= TOTAL_QUIZ_STEPS) {
       goToStep(nextStepNumber);
     }
@@ -76,7 +70,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const validateCurrentStep = useCallback((): boolean => {
     const stepKey = `step${currentStep}` as keyof AllQuizData;
-    // const stepData = quizData[stepKey]; // Not strictly needed for this validation logic
 
     switch (currentStep) {
       case 1: // Swoon-Worthy
@@ -92,7 +85,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         }
         break;
       case 3: // Color & Mood
-        if (answers.colorMoodSelection === '') { // Explicitly check for empty string
+        if (answers.colorMoodSelection === '') {
           toast({ title: "Selection Required", description: "Please select a color and mood preference.", variant: "default" });
           return false;
         }
@@ -112,14 +105,14 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const isNextActionDisabled = useCallback((): boolean => {
     if (isLoading) return true;
-    if (currentStep === TOTAL_QUIZ_STEPS) return true;
+    if (currentStep === TOTAL_QUIZ_STEPS) return true; // Disable if on the last step (loading screen)
 
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
       case 2: return answers.styleSelections.length === 0;
-      case 3: // Color & Mood
-        return answers.colorMoodSelection === ''; // Explicitly check for empty string
-      case 4: // Material & Detail
+      case 3:
+        return answers.colorMoodSelection === '';
+      case 4:
         return answers.materialDetailSelections.length === 0;
       default: return false;
     }
@@ -138,7 +131,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
     setAnswers(initialAnswers);
-    // setIsUserConsideredLoggedInForSkip(false); // Removed
+    setIsLoading(false);
     if (typeof window !== "undefined") {
       localStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
     }
@@ -154,20 +147,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         styleSelections: answers.styleSelections || [],
         colorMoodSelection: answers.colorMoodSelection || '',
         materialDetailSelections: answers.materialDetailSelections || [],
-        // userName was removed
       };
 
       const result = await generateStyleGuide(aiInput);
 
-      // Ensure result and result.styleCategory are valid before storing
       if (result && result.styleCategory && typeof result.styleGuide === 'string') {
         if (typeof window !== "undefined") {
           localStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(result));
         }
       } else {
         console.error("AI did not return a valid styleCategory or styleGuide. Fallback may be needed.");
-        // Potentially set a default/fallback result to localStorage or handle error
-        // For now, it might lead to issues on the /results page if data is incomplete
         toast({
           title: "AI Result Incomplete",
           description: "The AI response was missing some information. Please try again.",
@@ -196,7 +185,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
         return;
       }
-      // This check is to prevent self-messaging if '*' is used and iframe is on same origin as parent
       if (PARENT_WORDPRESS_ORIGIN === '*' && event.origin === window.location.origin && event.source === window) {
          return;
       }
@@ -204,8 +192,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       if (event.data && event.data.type === 'triggerQuizNextStep') {
         triggerNextStepFlow();
       }
-
-      // Logic for userLoginStatus and userData was removed previously
     };
 
     if (typeof window !== 'undefined') {
@@ -214,7 +200,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         window.removeEventListener('message', handleMessageFromParent);
       };
     }
-  }, [triggerNextStepFlow]); // Removed dependencies related to login state
+  }, [triggerNextStepFlow]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {
@@ -236,11 +222,9 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         updateAnswer,
         handleQuizSubmit,
         resetQuiz,
-        // getRoomOptionsForFocusStep was removed
         triggerNextStepFlow,
         isNextActionDisabled,
         internalNextStep,
-        // isUserConsideredLoggedInForSkip was removed
       }}
     >
       {children}

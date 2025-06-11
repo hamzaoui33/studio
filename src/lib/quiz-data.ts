@@ -1,11 +1,11 @@
 
-import type { AllQuizData } from '@/types/quiz';
+import type { AllQuizData, Step5LoadingData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick, HelpCircle, Edit3, Palette, Gem, Sparkles, Droplets, Layers, SunMedium, Moon, Puzzle
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 7; // Updated from 5 to 7
+export const TOTAL_QUIZ_STEPS = 5; // Was 7, now 5 steps (Swoon, Style, Color, Material, Loading)
 
 export const quizData: AllQuizData = {
   step1: {
@@ -56,7 +56,6 @@ export const quizData: AllQuizData = {
         imageUrl: "https://placehold.co/300x200.png",
         hint: "coastal home"
       },
-      // ... other style options from original quizData.step2.options
        {
         id: "refined_modern",
         name: "Refined Modern",
@@ -108,13 +107,12 @@ export const quizData: AllQuizData = {
       }
     ],
   },
-  // New Step 3: Color & Mood Preferences
   step3: {
     id: 3,
     title: "Color & Mood",
     question: "Which color atmosphere and mood do you envision?",
     instruction: "Select the one that best reflects your desired feeling for your space.",
-    maxSelections: 1, // Typically a single choice for overall mood
+    maxSelections: 1,
     options: [
       { id: "light_airy_neutrals", name: "Light, Airy & Neutral", description: "Serene, Calm, Bright", icon: SunMedium },
       { id: "earthy_warm_tones", name: "Earthy & Warm Tones", description: "Cozy, Natural, Grounded", icon: Palette },
@@ -123,7 +121,6 @@ export const quizData: AllQuizData = {
       { id: "dark_moody_elegance", name: "Dark, Moody & Elegant", description: "Sophisticated, Dramatic, Intimate", icon: Moon },
     ],
   },
-  // New Step 4: Material & Detail Preferences
   step4: {
     id: 4,
     title: "Materials & Details",
@@ -132,51 +129,22 @@ export const quizData: AllQuizData = {
     maxSelections: 2,
     options: [
       { id: "natural_woods_woven", name: "Natural Woods & Woven Textures", description: "Rattan, Jute, Linen", icon: Trees },
-      { id: "sleek_metals_lines", name: "Sleek Metals & Clean Lines", description: "Polished Chrome, Minimalist Forms", icon: Layers }, // Layers can represent clean lines
+      { id: "sleek_metals_lines", name: "Sleek Metals & Clean Lines", description: "Polished Chrome, Minimalist Forms", icon: Layers },
       { id: "plush_textiles_luxe", name: "Plush Textiles & Luxe Finishes", description: "Velvet, Silk, Metallics", icon: Gem },
       { id: "artistic_eclectic_patterns", name: "Artistic Patterns & Eclectic Decor", description: "Bold Prints, Unique Art", icon: Paintbrush },
-      { id: "raw_industrial_elements", name: "Raw & Industrial Elements", description: "Exposed Brick, Concrete", icon: Building }, // Building or Puzzle
+      { id: "raw_industrial_elements", name: "Raw & Industrial Elements", description: "Exposed Brick, Concrete", icon: Building },
     ],
   },
-  // Old Step 3, now Step 5
-  step5: {
+  step5: { // This is now the Loading step
     id: 5,
-    title: "Room Improvement",
-    question: "Which rooms feel like they need a little something?",
-    instruction: "Pick as many as you like, and let us know how many of each. We’ll help you sort out the priorities later.",
-    options: [
-      { id: "living_room", name: "Living Room", icon: Sofa },
-      { id: "dining_room", name: "Dining Room", icon: GlassWater },
-      { id: "bedroom", name: "Bedroom", icon: BedDouble },
-      { id: "nursery", name: "Nursery", icon: Baby },
-      { id: "home_office", name: "Office", icon: Briefcase },
-      { id: "kitchen", name: "Kitchen", icon: CookingPot },
-      { id: "bathroom", name: "Bathroom", icon: Bath },
-      { id: "reading_room", name: "Reading Room", icon: BookOpen },
-      { id: "outdoor_space", name: "Outdoor Space", icon: Trees },
-      { id: "entryway", name: "Entryway", icon: Home },
-      { id: "playroom", name: "Playroom", icon: ToyBrick },
-      { id: "other", name: "Other", icon: Edit3 },
-      { id: "not_sure_yet", name: "Not Sure Yet", icon: HelpCircle },
-    ],
-  },
-  // Old Step 4, now Step 6
-  step6: {
-    id: 6,
-    title: "Room Focus",
-    question: "Awesome! Which room should we tackle first?",
-    instruction: "This will be the main space we’ll use to create your personalized style guide.",
-  },
-  // Old Step 5 (Loading), now Step 7
-  step7: {
-    id: 7,
-    title: "Calculating Results",
-    question: "",
-    instruction: "",
-  },
+    title: "Generating Your Style",
+    question: "", // No question for loading screen
+    instruction: "", // No instruction for loading screen
+  } as Step5LoadingData, // Cast to ensure type compatibility, options are not needed
 };
 
 export const iconMap: { [key: string]: LucideIcon } = {
+  // Original icons for (now removed) room improvement steps
   living_room: Sofa,
   bedroom: BedDouble,
   kitchen: CookingPot,
@@ -190,20 +158,11 @@ export const iconMap: { [key: string]: LucideIcon } = {
   playroom: ToyBrick,
   other: Edit3,
   not_sure_yet: HelpCircle,
+  // General icons
   loading: Loader,
-  rent: Key,
-  own: Home,
-  house: Home,
-  townhouse: Building,
-  apartment_condo: Building2,
-  budget_flexible: HandHeart,
-  budget_starter: Paintbrush,
-  budget_makeover: LayoutGrid,
-  budget_deluxe: Lamp,
   default: Target,
   submit: CheckCircle,
-  wallet: Wallet,
-  // Icons for new steps
+  // Icons for new steps (Color & Mood, Material & Detail)
   light_airy_neutrals: SunMedium,
   earthy_warm_tones: Palette,
   bold_vibrant_accents: Sparkles,
@@ -213,7 +172,7 @@ export const iconMap: { [key: string]: LucideIcon } = {
   sleek_metals_lines: Layers,
   plush_textiles_luxe: Gem,
   artistic_eclectic_patterns: Paintbrush,
-  raw_industrial_elements: Puzzle, // Using Puzzle as a generic for industrial elements
+  raw_industrial_elements: Building, // Changed from Puzzle to Building for consistency
 };
 
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {

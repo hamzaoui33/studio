@@ -46,12 +46,6 @@ const GenerateStyleGuideInputSchema = z.object({
   materialDetailSelections: z
     .array(z.string())
     .describe('List of selected material and detail preferences (e.g., ["natural_woods_woven", "sleek_metals_lines"]).'),
-  roomImprovementSelections: z
-    .record(z.string(), z.number())
-    .describe('An object mapping selected room IDs to a desired quantity or focus level (e.g., {"living_room": 2, "bedroom": 1}). Helps prioritize improvements.'),
-  roomFocusSelection: z
-    .string()
-    .describe('The selected room ID from the room focus selection step.'),
 });
 export type GenerateStyleGuideInput = z.infer<typeof GenerateStyleGuideInputSchema>;
 
@@ -81,8 +75,6 @@ Swoon-Worthy Rooms: {{swoonWorthyRooms}}
 Style Selections: {{styleSelections}}
 Color & Mood Preference: {{colorMoodSelection}}
 Material & Detail Preferences: {{#if materialDetailSelections}}{{#each materialDetailSelections}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}{{else}}No specific material/detail preferences listed.{{/if}}
-Room Improvement Selections: {{#if roomImprovementSelections}}Rooms to improve (room: count/focus level): {{#each roomImprovementSelections}}{{@key}}: {{this}}{{#unless @last}}, {{/unless}}{{/each}}.{{else}}No specific rooms listed for improvement focus.{{/if}}
-Room Focus Selection: {{roomFocusSelection}}
 
 Based on these responses:
 
@@ -94,9 +86,8 @@ Based on these responses:
 
 2.  **Create a style guide** (the \`styleGuide\` output field) that includes:
     - A summary of the user's style preferences (considering all inputs), aligning with the chosen \`styleCategory\`.
-    - Specific decor recommendations for the focused room.
     - General tips for incorporating the selected styles and preferences into their home.
-    - How the user's other selections (like room improvement counts, color/mood, material/details) influenced the output. Consider the quantities in 'Room Improvement Selections' as indicators of priority or number of spaces if applicable.
+    - How the user's other selections (like color/mood, material/details) influenced the output.
 
 Make the style guide engaging, friendly, and easy to understand. Ensure the \`styleCategory\` is one of the provided valid options.
 `,
@@ -116,7 +107,7 @@ const generateStyleGuideFlow = ai.defineFlow(
     });
     if (!output) {
       // Fallback if AI fails to generate output or a valid category
-      console.error("AI did not produce an output or a valid category. Falling back.");
+      console.error("AI did not produce an output. Falling back.");
       return {
         styleGuide: "We encountered an issue generating your detailed style guide. Please try again!",
         styleCategory: "modern" as StyleCategory, // Default fallback category
