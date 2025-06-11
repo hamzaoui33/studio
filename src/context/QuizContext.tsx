@@ -3,24 +3,22 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { type QuizAnswers, type RoomImprovementSelection } from '@/types/quiz';
+import { type QuizAnswers } from '@/types/quiz';
 import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
-import type { GenerateStyleGuideInput, GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
+import type { GenerateStyleGuideInput, GenerateStyleGuideOutput, StyleCategory } from '@/ai/flows/generate-style-guide';
 import { useToast } from "@/hooks/use-toast";
 
-const PARENT_WORDPRESS_ORIGIN = '*'; // IMPORTANT: Replace '*' with your WordPress site's domain
+// IMPORTANT: For production, replace '*' with your WordPress site's domain for security.
+const PARENT_WORDPRESS_ORIGIN = '*';
 
 const initialAnswers: QuizAnswers = {
   swoonWorthyRooms: [],
   styleSelections: [],
   colorMoodSelection: '',
   materialDetailSelections: [],
-  roomImprovementSelections: {},
-  roomFocusSelection: '',
 };
 
-// Define the localStorage key for the quiz result
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
 
 interface QuizContextType {
@@ -31,12 +29,13 @@ interface QuizContextType {
   isLoading: boolean;
   goToStep: (step: number) => void;
   updateAnswer: <K extends keyof QuizAnswers>(field: K, value: QuizAnswers[K]) => void;
-  handleQuizSubmit: () => Promise<GenerateStyleGuideOutput | null>; // Now returns the full output object
+  handleQuizSubmit: () => Promise<GenerateStyleGuideOutput | null>;
   resetQuiz: () => void;
-  getRoomOptionsForFocusStep: () => Array<{ id: string; name: string; icon?: any }>;
+  // getRoomOptionsForFocusStep: () => Array<{ id: string; name: string; icon?: any }>; // Removed as Step 5 & 6 were removed earlier
   triggerNextStepFlow: () => Promise<boolean>;
   isNextActionDisabled: () => boolean;
   internalNextStep: () => void;
+  // isUserConsideredLoggedInForSkip: boolean; // Removed, step skipping logic was simplified/removed
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -45,6 +44,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [answers, setAnswers] = useState<QuizAnswers>(initialAnswers);
   const [isLoading, setIsLoading] = useState(false);
+  // const [isUserConsideredLoggedInForSkip, setIsUserConsideredLoggedInForSkip] = useState(false); // Removed
   const router = useRouter();
   const { toast } = useToast();
 
@@ -66,41 +66,18 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const internalNextStep = useCallback(() => {
     let nextStepNumber = currentStep + 1;
-
-    // Skip logic for Step 4 (Room Focus) if no specific rooms were selected in Step 3 (Room Improvement)
-    if (currentStep === 3) { // Step 3 is Room Improvement (new numbering)
-      const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
-      const noSpecificRoomsSelected = selectedRoomIds.filter(id => id !== 'other' && id !== 'not_sure_yet').length === 0;
-
-      if (noSpecificRoomsSelected && (selectedRoomIds.includes('other') || selectedRoomIds.includes('not_sure_yet') || selectedRoomIds.length === 0)) {
-         nextStepNumber = 5; // Skip Step 4 (Room Focus) and go to Step 5 (Loading)
-      }
-    }
-
+    // Skip logic for old Step 4 (Room Focus) was removed as Step 5,6,7 were removed.
+    // The quiz now goes from Step 4 (MaterialDetail) to Step 5 (Loading).
     if (nextStepNumber <= TOTAL_QUIZ_STEPS) {
       goToStep(nextStepNumber);
     }
-  }, [currentStep, answers.roomImprovementSelections, goToStep]);
-
-
-  const getRoomOptionsForFocusStep = useCallback(() => {
-    const selectedRoomIds = Object.keys(answers.roomImprovementSelections)
-                              .filter(id => id !== 'other' && id !== 'not_sure_yet');
-
-    if (!selectedRoomIds || selectedRoomIds.length === 0) {
-      return [];
-    }
-
-    const allStandardRoomOptions = quizData.step3.options.filter( // Step 3 is now Room Improvement
-      option => option.id !== 'other' && option.id !== 'not_sure_yet'
-    );
-    return allStandardRoomOptions.filter(option => selectedRoomIds.includes(option.id));
-  }, [answers.roomImprovementSelections]);
+  }, [currentStep, goToStep]);
 
 
   const validateCurrentStep = useCallback((): boolean => {
     const stepKey = `step${currentStep}` as keyof AllQuizData;
-    const stepData = quizData[stepKey];
+    // const stepData = quizData[stepKey]; // Not strictly needed for this validation logic
+
     switch (currentStep) {
       case 1: // Swoon-Worthy
         if (answers.swoonWorthyRooms.length === 0) {
@@ -114,23 +91,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
           return false;
         }
         break;
-      case 3: // Room Improvement (old step 5, new step 3)
-        if (Object.keys(answers.roomImprovementSelections).length === 0) {
-          toast({ title: "Selection Required", description: "Please select at least one room to improve.", variant: "default" });
+      case 3: // Color & Mood
+        if (answers.colorMoodSelection === '') { // Explicitly check for empty string
+          toast({ title: "Selection Required", description: "Please select a color and mood preference.", variant: "default" });
           return false;
         }
         break;
-      case 4: // Room Focus (old step 6, new step 4)
-        const selectedRoomIdsStep3 = Object.keys(answers.roomImprovementSelections);
-        const noSpecificRoomsFocus = selectedRoomIdsStep3.filter(id => id !== 'other' && id !== 'not_sure_yet').length === 0;
-        const isOnlyOtherOrNotSureForFocus = noSpecificRoomsFocus && (selectedRoomIdsStep3.includes('other') || selectedRoomIdsStep3.includes('not_sure_yet') || selectedRoomIdsStep3.length === 0);
-
-        if (!isOnlyOtherOrNotSureForFocus) {
-            const focusOptions = getRoomOptionsForFocusStep();
-            if (focusOptions.length > 0 && !answers.roomFocusSelection) {
-                 toast({ title: "Selection Required", description: "Please select a room to focus on.", variant: "default" });
-                return false;
-            }
+      case 4: // Material & Detail
+        if (answers.materialDetailSelections.length === 0) {
+          toast({ title: "Selection Required", description: "Please select at least one material/detail.", variant: "default" });
+          return false;
         }
         break;
       // Step 5 is Loading, no validation needed here before submission
@@ -138,31 +108,22 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         break;
     }
     return true;
-  }, [currentStep, answers, toast, getRoomOptionsForFocusStep]);
+  }, [currentStep, answers, toast]);
 
   const isNextActionDisabled = useCallback((): boolean => {
     if (isLoading) return true;
-    if (currentStep === TOTAL_QUIZ_STEPS) return true; // Disable on last step (Loading screen)
-
-    const stepKey = `step${currentStep}` as keyof AllQuizData;
-    const stepData = quizData[stepKey];
+    if (currentStep === TOTAL_QUIZ_STEPS) return true;
 
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
       case 2: return answers.styleSelections.length === 0;
-      case 3: return Object.keys(answers.roomImprovementSelections).length === 0;
-      case 4:
-        const selectedRoomIdsStep3 = Object.keys(answers.roomImprovementSelections);
-        const noSpecificRoomsFocus = selectedRoomIdsStep3.filter(id => id !== 'other' && id !== 'not_sure_yet').length === 0;
-        const isSkippingStep4 = noSpecificRoomsFocus && (selectedRoomIdsStep3.includes('other') || selectedRoomIdsStep3.includes('not_sure_yet') || selectedRoomIdsStep3.length === 0);
-
-        if (isSkippingStep4) return false; // If skipping, button should be enabled to proceed
-
-        const focusOptions = getRoomOptionsForFocusStep();
-        return focusOptions.length > 0 && !answers.roomFocusSelection;
+      case 3: // Color & Mood
+        return answers.colorMoodSelection === ''; // Explicitly check for empty string
+      case 4: // Material & Detail
+        return answers.materialDetailSelections.length === 0;
       default: return false;
     }
-  }, [currentStep, answers, isLoading, getRoomOptionsForFocusStep]);
+  }, [currentStep, answers, isLoading]);
 
 
   const triggerNextStepFlow = useCallback(async (): Promise<boolean> => {
@@ -177,6 +138,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const resetQuiz = useCallback(() => {
     setCurrentStep(1);
     setAnswers(initialAnswers);
+    // setIsUserConsideredLoggedInForSkip(false); // Removed
     if (typeof window !== "undefined") {
       localStorage.removeItem(QUIZ_RESULT_STORAGE_KEY);
     }
@@ -192,16 +154,31 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         styleSelections: answers.styleSelections || [],
         colorMoodSelection: answers.colorMoodSelection || '',
         materialDetailSelections: answers.materialDetailSelections || [],
-        roomImprovementSelections: answers.roomImprovementSelections || {},
-        roomFocusSelection: answers.roomFocusSelection || '',
+        // userName was removed
       };
 
       const result = await generateStyleGuide(aiInput);
-      if (typeof window !== "undefined") {
-        localStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(result));
+
+      // Ensure result and result.styleCategory are valid before storing
+      if (result && result.styleCategory && typeof result.styleGuide === 'string') {
+        if (typeof window !== "undefined") {
+          localStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(result));
+        }
+      } else {
+        console.error("AI did not return a valid styleCategory or styleGuide. Fallback may be needed.");
+        // Potentially set a default/fallback result to localStorage or handle error
+        // For now, it might lead to issues on the /results page if data is incomplete
+        toast({
+          title: "AI Result Incomplete",
+          description: "The AI response was missing some information. Please try again.",
+          variant: "destructive"
+        });
+        setIsLoading(false);
+        return null;
       }
+
       setIsLoading(false);
-      return result; // Return the full result object
+      return result;
     } catch (error) {
       console.error("Error generating style guide:", error);
       setIsLoading(false);
@@ -219,12 +196,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       if (PARENT_WORDPRESS_ORIGIN !== '*' && event.origin !== PARENT_WORDPRESS_ORIGIN) {
         return;
       }
-      if (PARENT_WORDPRESS_ORIGIN === '*' && event.origin === window.location.origin) {
+      // This check is to prevent self-messaging if '*' is used and iframe is on same origin as parent
+      if (PARENT_WORDPRESS_ORIGIN === '*' && event.origin === window.location.origin && event.source === window) {
          return;
       }
+
       if (event.data && event.data.type === 'triggerQuizNextStep') {
         triggerNextStepFlow();
       }
+
+      // Logic for userLoginStatus and userData was removed previously
     };
 
     if (typeof window !== 'undefined') {
@@ -233,7 +214,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         window.removeEventListener('message', handleMessageFromParent);
       };
     }
-  }, [triggerNextStepFlow]);
+  }, [triggerNextStepFlow]); // Removed dependencies related to login state
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.parent !== window) {
@@ -255,10 +236,11 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         updateAnswer,
         handleQuizSubmit,
         resetQuiz,
-        getRoomOptionsForFocusStep,
+        // getRoomOptionsForFocusStep was removed
         triggerNextStepFlow,
         isNextActionDisabled,
         internalNextStep,
+        // isUserConsideredLoggedInForSkip was removed
       }}
     >
       {children}
