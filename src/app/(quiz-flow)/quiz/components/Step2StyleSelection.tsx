@@ -33,8 +33,9 @@ export function Step2StyleSelection() {
   };
 
   return (
-    // Restored overflow-y-auto and md:max-h for internal scrolling of the carousel
-    <div className="w-full overflow-y-auto md:max-h-[calc(100vh-8.5rem)] pr-2"> 
+    // Mobile (default): overflow-y-auto pr-2 (internal scroll, padding for scrollbar)
+    // Desktop (md and up): overflow-y-visible (no internal scroll, content flows), max-h-none (no height limit), pr-0 (no padding for scrollbar)
+    <div className="w-full overflow-y-auto md:overflow-y-visible md:max-h-none pr-2 md:pr-0"> 
       <div className="flex flex-col gap-4 md:gap-6">
         {stepData.options.map((option: StyleOption) => (
           <div
