@@ -3,118 +3,87 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Sparkles, Home } from "lucide-react";
-import { useQuiz } from '@/context/QuizContext'; // Import useQuiz to reset
+import { Loader2 } from "lucide-react";
+import type { GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
 
-export default function ResultsPage() {
-  const [styleGuide, setStyleGuide] = useState<string | null>(null);
+const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
+
+const styleCategoryToUrlMap: Record<string, string> = {
+  "midcentury-modern": "https://aveladecor.com/styles-result/midcentury-modern/",
+  "bohemian": "https://aveladecor.com/styles-result/bohemian/",
+  "coastal": "https://aveladecor.com/styles-result/coastal/",
+  "modern": "https://aveladecor.com/styles-result/modern/",
+  "rustic": "https://aveladecor.com/styles-result/rustic/",
+  "traditional": "https://aveladecor.com/styles-result/traditional/",
+  "scandinavian": "https://aveladecor.com/styles-result/scandinavian/",
+  "glam": "https://aveladecor.com/styles-result/glam/",
+  "industrial": "https://aveladecor.com/styles-result/industrial/",
+  "eclectic": "https://aveladecor.com/styles-result/eclectic/",
+  "farmhouse": "https://aveladecor.com/styles-result/farmhouse/",
+  "japandi": "https://aveladecor.com/styles-result/japandi/",
+  "transitional": "https://aveladecor.com/styles-result/transitional/",
+  "minimalist": "https://aveladecor.com/styles-result/minimalist/",
+};
+
+// Fallback URL if category not found or other issues
+const FALLBACK_REDIRECT_URL = "https://aveladecor.com/quiz-error/"; // Or your main quiz page
+
+export default function ResultsPageRedirector() {
   const [isLoading, setIsLoading] = useState(true);
-  const [currentYear, setCurrentYear] = useState<number | null>(null); // State for current year
+  const [message, setMessage] = useState("Processing your results and redirecting...");
   const router = useRouter();
-  const { resetQuiz } = useQuiz(); // Get resetQuiz from context
 
   useEffect(() => {
-    const storedGuide = localStorage.getItem('styleGuideResult');
-    if (storedGuide) {
-      setStyleGuide(storedGuide);
+    if (typeof window === 'undefined') return;
+
+    const storedResultString = localStorage.getItem(QUIZ_RESULT_STORAGE_KEY);
+
+    if (!storedResultString) {
+      setMessage("No quiz result found. Redirecting to start the quiz...");
+      console.warn("ResultsPage: No data found in localStorage. Redirecting to /quiz.");
+      // Redirect to quiz start or a generic error page on WordPress
+      window.top.location.href = "/quiz"; // Or a WordPress error page
+      return;
     }
-    setCurrentYear(new Date().getFullYear()); // Set year on client-side
-    setIsLoading(false);
-  }, []);
 
-  const handleStartOver = () => {
-    resetQuiz(); // Reset quiz state
-    router.push('/quiz');
-  };
-  
-  const handleGoHome = () => {
-    resetQuiz();
-    router.push('/');
-  }
+    try {
+      const result: GenerateStyleGuideOutput = JSON.parse(storedResultString);
+      const { styleGuide, styleCategory } = result;
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-        <p className="text-xl text-muted-foreground">Loading your style guide...</p>
-      </div>
-    );
-  }
+      if (!styleCategory || !styleGuide) {
+        throw new Error("Incomplete data in localStorage.");
+      }
 
-  if (!styleGuide) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
-        <Card className="max-w-md w-full shadow-lg">
-          <CardHeader>
-            <CardTitle className="font-headline text-2xl text-destructive">No Style Guide Found</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-6">
-              We couldn't find your personalized style guide. This might happen if you navigated here directly or if there was an issue.
-            </p>
-          </CardContent>
-          <CardFooter className="flex flex-col sm:flex-row gap-2">
-            <Button onClick={handleStartOver} variant="outline" className="w-full">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Start Quiz Again
-            </Button>
-             <Button onClick={handleGoHome} className="w-full">
-              <Home className="mr-2 h-4 w-4" /> Go to Homepage
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
-    );
-  }
+      let targetUrl = styleCategoryToUrlMap[styleCategory.toLowerCase()];
+
+      if (!targetUrl) {
+        console.warn(`ResultsPage: Style category "${styleCategory}" not found in map. Using fallback URL.`);
+        targetUrl = FALLBACK_REDIRECT_URL;
+      }
+
+      // Append styleGuide as a query parameter
+      const finalUrl = new URL(targetUrl);
+      finalUrl.searchParams.append('guide', styleGuide);
+
+      setMessage(`Redirecting to your ${styleCategory} style page...`);
+      
+      // Redirect the top-level window
+      window.top.location.href = finalUrl.toString();
+      // No need to setIsLoading(false) as the page will navigate away
+
+    } catch (error) {
+      console.error("ResultsPage: Error processing quiz result from localStorage:", error);
+      setMessage("There was an error processing your results. Redirecting...");
+      // Redirect to an error page or quiz start
+      window.top.location.href = FALLBACK_REDIRECT_URL;
+    }
+
+  }, [router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/30 py-8 md:py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        <Card className="shadow-2xl rounded-xl overflow-hidden">
-          <CardHeader className="bg-primary text-primary-foreground p-6 md:p-8 text-center">
-            <div className="flex justify-center mb-3">
-              <Sparkles className="h-12 w-12" />
-            </div>
-            <CardTitle className="font-headline text-3xl md:text-4xl">Your Personalized Style Guide</CardTitle>
-            <CardDescription className="text-primary-foreground/80 text-lg mt-1">
-              Here's what we've curated just for you!
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-6 md:p-8 prose prose-lg max-w-none prose-headings:font-headline prose-headings:text-primary prose-p:text-foreground prose-strong:text-foreground">
-            {/* Render markdown-like text. For actual markdown, a library would be needed. */}
-            {styleGuide.split('\n').map((paragraph, index) => {
-              if (paragraph.startsWith('- ')) {
-                return <li key={index} className="ml-4 my-1">{paragraph.substring(2)}</li>;
-              }
-              if (paragraph.startsWith('### ')) {
-                 return <h3 key={index} className="text-xl font-semibold mt-4 mb-2 font-headline text-primary">{paragraph.substring(4)}</h3>;
-              }
-              if (paragraph.startsWith('## ')) {
-                 return <h2 key={index} className="text-2xl font-bold mt-6 mb-3 font-headline text-primary">{paragraph.substring(3)}</h2>;
-              }
-               if (paragraph.startsWith('# ')) {
-                 return <h1 key={index} className="text-3xl font-extrabold mt-8 mb-4 font-headline text-primary">{paragraph.substring(2)}</h1>;
-              }
-              return <p key={index} className="my-3 leading-relaxed">{paragraph}</p>;
-            })}
-          </CardContent>
-          <CardFooter className="p-6 md:p-8 bg-muted/50 border-t flex flex-col sm:flex-row gap-3 justify-center">
-            <Button onClick={handleStartOver} variant="outline" size="lg">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Start Over
-            </Button>
-            <Button onClick={handleGoHome} size="lg">
-              <Home className="mr-2 h-4 w-4" /> Back to Home
-            </Button>
-          </CardFooter>
-        </Card>
-         <footer className="mt-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            {currentYear && <>© {currentYear} DecorStyle Discovery.</>}
-            {!currentYear && <>© DecorStyle Discovery.</>} {/* Fallback or placeholder if year not yet loaded */}
-          </p>
-      </footer>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-background">
+      <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+      <p className="text-xl text-muted-foreground">{message}</p>
     </div>
   );
 }
