@@ -20,7 +20,9 @@ export interface IconTextOption {
   id:string;
   name: string;
   icon?: LucideIcon | string;
-  description?: string;
+  description?: string; // Will now store keywords like "Serene, Calm, Bright" for Step 3
+  longDescription?: string; // For the detailed paragraph in Step 3
+  colorPalette?: string[]; // For the color hex codes in Step 3
 }
 
 export interface StepData {
@@ -40,33 +42,27 @@ export interface Step2Data extends StepData {
 }
 
 export interface Step3ColorMoodData extends StepData {
-  options: IconTextOption[];
+  options: IconTextOption[]; // Will use the extended IconTextOption
 }
 
 export interface Step4MaterialDetailData extends StepData {
   options: IconTextOption[];
 }
 
-// Data for Step 5: Room Improvement
 export interface Step5RoomImprovementData extends StepData {
   options: IconTextOption[];
-  // noQuantitySelectorIds: string[]; // This might be part of component logic rather than quizData itself
 }
 
-// Data for Step 6: Room Focus
 export interface Step6RoomFocusData extends StepData {
-  // Options for this step are often dynamic based on Step 5,
-  // but we might have a base set or just rely on context to provide them.
-  // For simplicity, we'll assume the component fetches available rooms from context/quizData.step5.options
+  // Options are dynamic
 }
-
 
 export interface Step7LoadingData extends StepData {
-  // No options array needed for the loading screen itself
+  // No options array needed
 }
 
 export interface RoomImprovementSelection {
-  [roomId: string]: number; // room_id: quantity
+  [roomId: string]: number;
 }
 
 export type QuizAnswers = {
@@ -74,8 +70,8 @@ export type QuizAnswers = {
   styleSelections: string[];
   colorMoodSelection: string;
   materialDetailSelections: string[];
-  roomImprovementSelections: RoomImprovementSelection; // Added back
-  roomFocusSelection: string; // Added back
+  roomImprovementSelections: RoomImprovementSelection;
+  roomFocusSelection: string;
 };
 
 export type AllQuizData = {
@@ -83,8 +79,7 @@ export type AllQuizData = {
   step2: Step2Data;
   step3: Step3ColorMoodData;
   step4: Step4MaterialDetailData;
-  step5: Step5RoomImprovementData; // New Step 5
-  step6: Step6RoomFocusData; // New Step 6
-  step7: Step7LoadingData; // New Step 7 (Loading)
+  step5: Step5RoomImprovementData;
+  step6: Step6RoomFocusData;
+  step7: Step7LoadingData;
 };
-

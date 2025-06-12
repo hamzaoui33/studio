@@ -39,98 +39,98 @@ export const quizData: AllQuizData = {
         id: "midcentury-modern",
         name: "Timeless Midcentury Modern",
         description: "You love clean lines, tapered legs, and a healthy dose of nostalgia. Midcentury Modern is your style sweet spot where form meets function with a retro twist. Your space is filled with warm woods, bold shapes, and iconic furniture that makes you feel like you’ve stepped into a scene from Mad Men (cocktails optional, but encouraged).",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Timeless-Midcentury-Modern.webp",
         hint: "midcentury modern"
       },
       {
         id: "bohemian",
         name: "Free-Spirited Bohemian",
         description: "You’re drawn to rich textures, eclectic treasures, and layered patterns that tell a story. Bohemian style is all about self-expression, creative freedom, and a touch of wanderlust. Your space is filled with global finds, lush plants, and cozy corners that invite you to relax, dream, and stay a while.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Free-Spirited-Bohemian.webp",
         hint: "bohemian decor"
       },
       {
         id: "coastal",
         name: "Relaxed Coastal",
         description: "You love that breezy, beachy feel—even if you live far from the shore. Coastal style brings in soft blues, sun-washed neutrals, and natural textures that make your space feel like a serene seaside retreat. It’s all about light, air, and effortless ease.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Relaxed-Coastal.webp",
         hint: "coastal home"
       },
        {
         id: "modern",
         name: "Sleek Modern",
         description: "Clean lines, open spaces, and a bold approach to simplicity define your vibe. Sleek Modern style is all about minimal ornamentation and high-impact design choices. Think polished finishes, smart storage, and a space that feels both current and quietly confident.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Sleek-Modern.webp",
         hint: "sleek modern"
       },
       {
         id: "rustic",
         name: "Warm Rustic",
         description: "You love the feeling of a cozy cabin or countryside retreat. Warm Rustic style brings in weathered woods, stone textures, and a lived-in look that’s full of charm. It’s all about authenticity, comfort, and embracing the beauty of imperfections.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Warm-Rustic.webp",
         hint: "rustic decor"
       },
       {
         id: "traditional",
         name: "Elegant Traditional",
         description: "Classic, refined, and timeless—your space tells a story of heritage and harmony. Elegant Traditional style is rooted in symmetry, rich furnishings, and sophisticated details. It’s where timeless design meets a graceful sense of order.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Elegant-Traditional.webp",
         hint: "traditional interior"
       },
       {
         id: "scandinavian",
         name: "Clean Scandinavian",
         description: "You gravitate toward simplicity, function, and calm. Clean Scandinavian style is all about bright whites, soft woods, and minimal clutter. Every piece has a purpose, and the whole space breathes with light, clarity, and coziness (or as the Danes say—hygge).",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Clean-Scandinavian.webp",
         hint: "scandinavian design"
       },
       {
         id: "glam",
         name: "Luxurious Glam",
         description: "You’re all about drama, sparkle, and sophistication. Luxurious Glam style turns your home into a statement with mirrored finishes, metallic accents, and plush textures. It's Hollywood regency meets modern elegance—bold, beautiful, and unapologetically chic.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Luxurious-Glam.webp",
         hint: "glam decor"
       },
       {
         id: "industrial",
         name: "Edgy Industrial",
         description: "Raw, urban, and effortlessly cool—your style is inspired by loft living and city grit. Edgy Industrial design blends exposed brick, metal elements, and reclaimed wood with utilitarian charm. It’s minimal, masculine, and full of character.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Edgy-Industrial.webp",
         hint: "industrial style"
       },
       {
         id: "eclectic",
         name: "Vibrant Eclectic",
         description: "You thrive on mixing it up. Vibrant Eclectic style means no rules—just layers of personality, color, and pattern. From vintage finds to modern art, your home is a curated collection of everything you love, tied together by confidence and creativity.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Vibrant-Eclectic.webp",
         hint: "eclectic interior"
       },
       {
         id: "farmhouse",
         name: "Charming Farmhouse",
         description: "Think fresh, cozy, and welcoming. Charming Farmhouse style blends old and new with soft neutrals, shiplap walls, and vintage accents. It’s about creating a space that feels lived-in and loved, like a warm hug after a long day.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Charming-Farmhouse.webp",
         hint: "farmhouse decor"
       },
       {
         id: "japandi",
         name: "Serene Japandi",
         description: "A harmonious blend of Japanese minimalism and Scandinavian warmth, Serene Japandi style is calm, intentional, and elegant. You love low-profile furniture, organic shapes, and natural materials that bring peace and purpose to every corner.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Serene-Japandi.webp",
         hint: "japandi style"
       },
       {
         id: "transitional",
         name: "Balanced Transitional",
         description: "You love a little tradition and a little trend. Balanced Transitional style bridges the gap between classic and contemporary, mixing timeless silhouettes with fresh finishes. It’s versatile, polished, and never too much of one thing.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Balanced-Transitional.webp",
         hint: "transitional interior"
       },
       {
         id: "minimalist",
         name: "Refined Minimalist",
         description: "Less is more, and every item in your space has meaning. Refined Minimalist style is all about clarity, calm, and quality over quantity. With clean lines, neutral palettes, and intentional choices, your home feels like a breath of fresh air.",
-        imageUrl: "https://placehold.co/300x200.png",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Refined-Minimalist.webp",
         hint: "minimalist design"
       }
     ],
@@ -142,11 +142,46 @@ export const quizData: AllQuizData = {
     instruction: "Select the one that best reflects your desired feeling for your space.",
     maxSelections: 1,
     options: [
-      { id: "light_airy_neutrals", name: "Light, Airy & Neutral", description: "Serene, Calm, Bright", icon: SunMedium },
-      { id: "earthy_warm_tones", name: "Earthy & Warm Tones", description: "Cozy, Natural, Grounded", icon: Palette },
-      { id: "bold_vibrant_accents", name: "Bold & Vibrant with Accents", description: "Energetic, Playful, Statement", icon: Sparkles },
-      { id: "cool_serene_hues", name: "Cool & Serene Hues", description: "Refreshing, Peaceful, Crisp", icon: Droplets },
-      { id: "dark_moody_elegance", name: "Dark, Moody & Elegant", description: "Sophisticated, Dramatic, Intimate", icon: Moon },
+      {
+        id: "light_airy_neutrals",
+        name: "Light, Airy & Neutral",
+        description: "Serene, Calm, Bright", // Keywords
+        longDescription: "A monochromatic neutral scheme with gradually deepening values ensures cohesion and visual breathing room.",
+        icon: SunMedium,
+        colorPalette: ["#F5F3EE", "#E1DDD8", "#C9C5C0", "#A8A49F", "#8E8A86"],
+      },
+      {
+        id: "earthy_warm_tones",
+        name: "Earthy & Warm Tones",
+        description: "Cozy, Natural, Grounded", // Keywords
+        longDescription: "An analogous palette (yellow-orange to reddish-brown) evokes warmth and comfort.",
+        icon: Palette,
+        colorPalette: ["#DCC2A6", "#C49A6C", "#A66A3A", "#7F4A28", "#5C3925"],
+      },
+      {
+        id: "bold_vibrant_accents",
+        name: "Bold & Vibrant with Accents",
+        description: "Energetic, Playful, Statement", // Keywords
+        longDescription: "A split-complementary scheme (golden yellow ↔ red-violet, plus teal) creates dynamic contrast without clashing.",
+        icon: Sparkles,
+        colorPalette: ["#F29E4C", "#E63946", "#2A9D8F", "#D62828", "#264653"],
+      },
+      {
+        id: "cool_serene_hues",
+        name: "Cool & Serene Hues",
+        description: "Refreshing, Peaceful, Crisp", // Keywords
+        longDescription: "Analogous cool-tone progression (green-blue spectrum) fosters calm and harmony.",
+        icon: Droplets,
+        colorPalette: ["#E0F2F1", "#A8DADC", "#6BB7B7", "#409394", "#225E60"],
+      },
+      {
+        id: "dark_moody_elegance",
+        name: "Dark, Moody & Elegant",
+        description: "Sophisticated, Dramatic, Intimate", // Keywords
+        longDescription: "A near-monochrome, low-value scheme with slight hue shifts adds intrigue while maintaining elegance.",
+        icon: Moon,
+        colorPalette: ["#2B2D42", "#3B3E5B", "#5D6071", "#8D99AE", "#12131A"],
+      },
     ],
   },
   step4: {
@@ -228,5 +263,3 @@ export const iconMap: { [key: string]: LucideIcon } = {
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {
   return quizData[stepKey];
 }
-
-    
