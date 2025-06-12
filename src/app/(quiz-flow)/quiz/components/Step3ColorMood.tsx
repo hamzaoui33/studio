@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useQuiz } from "@/context/QuizContext";
@@ -30,7 +31,7 @@ export function Step3ColorMood() {
               key={option.id}
               onClick={() => handleSelect(option.id)}
               className={cn(
-                "selectable-card p-4 md:p-5 flex flex-col md:flex-row items-stretch gap-3 md:gap-4", // items-stretch for equal height columns on md+
+                "selectable-card p-4 md:p-5 flex flex-row items-stretch gap-3 md:gap-4", // Always flex-row, items-stretch for equal height columns
                 isSelected && "selected"
               )}
               role="radio"
@@ -39,20 +40,25 @@ export function Step3ColorMood() {
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelect(option.id); }}
             >
               {/* Left Column: Icon, Name, Keywords, Palette */}
-              <div className="w-full md:w-2/5 lg:w-1/3 flex flex-col items-center md:items-start justify-between pr-0 md:pr-3 text-center md:text-left">
-                <div className="flex flex-col items-center md:items-start w-full">
-                  {IconComponent && (
-                    <div className="mb-2.5">
-                      <IconComponent className={cn("h-8 w-8 md:h-10 md:w-10", isSelected ? "text-accent" : "text-foreground/60 group-hover:text-accent")} />
-                    </div>
-                  )}
-                  <div className="mb-3">
-                    <h4 className={cn("font-medium text-base md:text-lg", isSelected ? "text-accent font-semibold" : "text-foreground/80")}>{option.name}</h4>
-                    {option.description && ( // Keywords
-                      <p className={cn("text-xs text-muted-foreground", isSelected && "text-accent/70")}>{option.description}</p>
+              <div className="w-2/5 lg:w-1/3 flex flex-col justify-between py-1"> {/* py-1 for a bit of vertical padding */}
+                {/* Top part of left column: Icon, Name, Keywords */}
+                <div className="flex flex-col items-center text-center md:items-start md:text-left">
+                  <div className="flex flex-col items-center md:flex-row md:items-center md:gap-3 w-full mb-3">
+                    {IconComponent && (
+                      <div className="mb-2 md:mb-0"> {/* Wrapper for icon */}
+                        <IconComponent className={cn("h-8 w-8 md:h-10 md:w-10", isSelected ? "text-accent" : "text-foreground/60 group-hover:text-accent")} />
+                      </div>
                     )}
+                    <div> {/* Name and Keywords */}
+                      <h4 className={cn("font-medium text-base md:text-lg", isSelected ? "text-accent font-semibold" : "text-foreground/80")}>{option.name}</h4>
+                      {option.description && ( // Keywords
+                        <p className={cn("text-xs text-muted-foreground", isSelected && "text-accent/70")}>{option.description}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
+
+                {/* Bottom part of left column (Palette) */}
                 {option.colorPalette && (
                   <div className="flex space-x-1.5 mt-auto pt-3 md:pt-2 justify-center md:justify-start w-full">
                     {option.colorPalette.map((color, index) => (
@@ -67,13 +73,12 @@ export function Step3ColorMood() {
                 )}
               </div>
 
-              {/* Separator */}
-              <hr className="md:hidden w-full border-border my-3" /> {/* Mobile Separator */}
-              <div className="hidden md:block w-px bg-border mx-2 md:mx-3 self-stretch"></div> {/* Desktop Separator */}
+              {/* Separator - Always visible */}
+              <div className="w-px bg-border mx-1 self-stretch"></div>
 
               {/* Right Column: Long Description */}
               {option.longDescription && (
-                <div className="w-full md:w-3/5 lg:w-2/3 flex-grow pl-0 md:pl-3 flex flex-col justify-center">
+                <div className="w-3/5 lg:w-2/3 flex-grow flex flex-col justify-center text-center md:text-left pl-1 md:pl-2">
                   <p className={cn("text-sm text-muted-foreground", isSelected && "text-accent/80")}>{option.longDescription}</p>
                 </div>
               )}
