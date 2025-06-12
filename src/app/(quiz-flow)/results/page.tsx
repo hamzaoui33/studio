@@ -66,7 +66,8 @@ export default function ResultsPageRedirector() {
 
       // Append styleGuide as a query parameter
       const finalUrl = new URL(targetUrl);
-      finalUrl.searchParams.append('guide', encodeURIComponent(styleGuide)); // Ensure guide is URL encoded
+      // REMOVED encodeURIComponent: URLSearchParams.append will handle encoding
+      finalUrl.searchParams.append('guide', styleGuide); 
 
       setMessage(`Redirecting to your ${styleCategory} style page...`);
       
@@ -100,4 +101,3 @@ export default function ResultsPageRedirector() {
     </div>
   );
 }
-
