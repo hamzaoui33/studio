@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from "lucide-react";
 import type { GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
-// quizData is not directly used here for slugs, direct string mapping is used based on example.
 
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
 
@@ -61,11 +60,12 @@ export default function ResultsPageRedirector() {
         throw new Error("Incomplete data structure in localStorage.");
       }
 
-      const { styleGuide, styleCategory } = storedData.aiOutput;
+      // We still get styleCategory from aiOutput, but not styleGuide for the URL
+      const { styleCategory } = storedData.aiOutput; 
       const { colorMoodSelection, materialDetailSelections, roomFocusSelection } = storedData.userSelections;
 
-      if (!styleCategory || typeof styleGuide !== 'string') {
-        throw new Error("Missing styleCategory or styleGuide from AI output in localStorage.");
+      if (!styleCategory) {
+        throw new Error("Missing styleCategory from AI output in localStorage.");
       }
 
       let targetUrl = styleCategoryToUrlMap[styleCategory.toLowerCase()];
@@ -77,14 +77,11 @@ export default function ResultsPageRedirector() {
 
       const finalQueryParams: string[] = [];
 
-      // 1. Guide parameter - always encode using encodeURIComponent for %20 spaces etc.
-      finalQueryParams.push(`guide=${encodeURIComponent(styleGuide)}`);
-
-      // 2. Color parameter
+      // 1. Color parameter
       if (colorMoodSelection) {
         let colorValue = '';
-        if (colorMoodSelection === 'light_airy_neutrals') { // This is the ID from quizData
-          colorValue = 'light-airy-&-neutral'; // This is the exact string for the URL
+        if (colorMoodSelection === 'light_airy_neutrals') {
+          colorValue = 'light-airy-&-neutral'; // Exact string for the URL
         } else {
           // For any other color selection, encode its ID to be safe
           colorValue = encodeURIComponent(colorMoodSelection);
@@ -92,9 +89,9 @@ export default function ResultsPageRedirector() {
         finalQueryParams.push(`color=${colorValue}`);
       }
 
-      // 3. Materials parameter
+      // 2. Materials parameter
       if (materialDetailSelections && materialDetailSelections.length > 0) {
-        const firstMaterial = materialDetailSelections[0]; // ID from quizData
+        const firstMaterial = materialDetailSelections[0]; 
         let materialValue = '';
         if (firstMaterial === 'natural_woods_woven') {
           materialValue = 'natural-woods-&-woven-textures'; // Exact string for the URL
@@ -105,13 +102,13 @@ export default function ResultsPageRedirector() {
         finalQueryParams.push(`_materials=${materialValue}`);
       }
 
-      // 4. Focus Room parameter - encode its ID
+      // 3. Focus Room parameter - encode its ID
       if (roomFocusSelection) {
         finalQueryParams.push(`_focusroom=${encodeURIComponent(roomFocusSelection)}`);
       }
       
       const queryString = finalQueryParams.join('&');
-      const finalUrlString = `${targetUrl}?${queryString}`;
+      const finalUrlString = queryString ? `${targetUrl}?${queryString}` : targetUrl; // Add '?' only if there are params
 
       setMessage(`Redirecting to your ${styleCategory} style page...`);
       
@@ -127,12 +124,11 @@ export default function ResultsPageRedirector() {
       if (window.top) {
          window.top.location.href = "https://aveladecor.com/quiz-error/"; 
       } else {
-        // Fallback within the iframe/current window if not embedded or error before top redirect
         router.push(FALLBACK_REDIRECT_URL); 
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]); // router is the main dependency for this effect's re-run logic if it were to change
+  }, [router]); 
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-background">
