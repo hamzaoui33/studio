@@ -1,11 +1,11 @@
 
-import type { AllQuizData, Step5LoadingData } from '@/types/quiz';
+import type { AllQuizData, Step5RoomImprovementData, Step6RoomFocusData, Step7LoadingData } from '@/types/quiz';
 import type { LucideIcon } from 'lucide-react';
 import {
   Sofa, BedDouble, Home, Trees, Building, Paintbrush, LayoutGrid, Lamp, Target, CheckCircle, Wallet, Mail, HandHeart, Briefcase, Key, CookingPot, GlassWater, Bath, Building2, User, Hand, Loader, Baby, BookOpen, ToyBrick, HelpCircle, Edit3, Palette, Gem, Sparkles, Droplets, Layers, SunMedium, Moon, Puzzle
 } from 'lucide-react';
 
-export const TOTAL_QUIZ_STEPS = 5; // Was 7, now 5 steps (Swoon, Style, Color, Material, Loading)
+export const TOTAL_QUIZ_STEPS = 7; // Updated to 7 steps
 
 export const quizData: AllQuizData = {
   step1: {
@@ -135,16 +135,41 @@ export const quizData: AllQuizData = {
       { id: "raw_industrial_elements", name: "Raw & Industrial Elements", description: "Exposed Brick, Concrete", icon: Building },
     ],
   },
-  step5: { // This is now the Loading step
+  step5: { // New Step 5: Room Improvement
     id: 5,
+    title: "Room for Improvement",
+    question: "Which rooms are you looking to improve?",
+    instruction: "Select the rooms you want to focus on. You can adjust the quantity for each.",
+    options: [
+      { id: "living_room", name: "Living Room", icon: Sofa },
+      { id: "bedroom", name: "Bedroom", icon: BedDouble },
+      { id: "kitchen", name: "Kitchen", icon: CookingPot },
+      { id: "dining_room", name: "Dining Room", icon: GlassWater },
+      { id: "bathroom", name: "Bathroom", icon: Bath },
+      { id: "home_office", name: "Home Office", icon: Briefcase },
+      { id: "outdoor_space", name: "Outdoor Space", icon: Trees },
+      { id: "entryway", name: "Entryway / Hallway", icon: Home },
+      { id: "nursery", name: "Nursery / Kid's Room", icon: Baby },
+      { id: "other", name: "Other", icon: Edit3 },
+      { id: "not_sure_yet", name: "Not Sure Yet", icon: HelpCircle },
+    ],
+  } as Step5RoomImprovementData,
+  step6: { // New Step 6: Room Focus
+    id: 6,
+    title: "Primary Room Focus",
+    question: "Which one room is your top priority for a makeover?",
+    instruction: "Select one room you'd like to concentrate on first. We'll show options based on your previous selections.",
+    // Options for this step are dynamically generated in the component/context
+  } as Step6RoomFocusData,
+  step7: { // New Step 7: Loading Screen
+    id: 7,
     title: "Generating Your Style",
-    question: "", // No question for loading screen
-    instruction: "", // No instruction for loading screen
-  } as Step5LoadingData, // Cast to ensure type compatibility, options are not needed
+    question: "",
+    instruction: "",
+  } as Step7LoadingData,
 };
 
 export const iconMap: { [key: string]: LucideIcon } = {
-  // Original icons for (now removed) room improvement steps
   living_room: Sofa,
   bedroom: BedDouble,
   kitchen: CookingPot,
@@ -158,11 +183,9 @@ export const iconMap: { [key: string]: LucideIcon } = {
   playroom: ToyBrick,
   other: Edit3,
   not_sure_yet: HelpCircle,
-  // General icons
   loading: Loader,
   default: Target,
   submit: CheckCircle,
-  // Icons for new steps (Color & Mood, Material & Detail)
   light_airy_neutrals: SunMedium,
   earthy_warm_tones: Palette,
   bold_vibrant_accents: Sparkles,
@@ -172,7 +195,7 @@ export const iconMap: { [key: string]: LucideIcon } = {
   sleek_metals_lines: Layers,
   plush_textiles_luxe: Gem,
   artistic_eclectic_patterns: Paintbrush,
-  raw_industrial_elements: Building, // Changed from Puzzle to Building for consistency
+  raw_industrial_elements: Building,
 };
 
 export function getStepData<T extends keyof AllQuizData>(stepKey: T): AllQuizData[T] {

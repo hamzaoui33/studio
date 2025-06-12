@@ -8,21 +8,21 @@ import { cn } from "@/lib/utils";
 import type { LucideIcon } from 'lucide-react';
 import { Minus, Plus, Check } from "lucide-react";
 
-export function Step3RoomImprovement() {
+export function Step3RoomImprovement() { // File name remains, but it's used as Step 5
   const { answers, updateAnswer } = useQuiz();
 
   const handleSelectRoom = (optionId: string) => {
     const currentSelections: RoomImprovementSelection = { ...answers.roomImprovementSelections };
     if (currentSelections[optionId]) {
-      delete currentSelections[optionId]; // Deselect if already selected
+      delete currentSelections[optionId]; 
     } else {
-      currentSelections[optionId] = 1; // Select with default quantity 1
+      currentSelections[optionId] = 1; 
     }
     updateAnswer("roomImprovementSelections", currentSelections);
   };
 
   const handleQuantityChange = (optionId: string, newQuantity: number) => {
-    if (newQuantity >= 1) { // Minimum quantity is 1
+    if (newQuantity >= 1) { 
       const currentSelections: RoomImprovementSelection = { ...answers.roomImprovementSelections };
       currentSelections[optionId] = newQuantity;
       updateAnswer("roomImprovementSelections", currentSelections);
@@ -31,9 +31,8 @@ export function Step3RoomImprovement() {
 
   const noQuantitySelectorIds = ["other", "not_sure_yet"];
 
-  // Ensure quizData.step5 exists and has options
   if (!quizData.step5 || !quizData.step5.options) {
-    return <p className="text-center text-destructive">Step 5 data not configured.</p>;
+    return <p className="text-center text-destructive">Step 5 data (Room Improvement) not configured.</p>;
   }
 
   return (

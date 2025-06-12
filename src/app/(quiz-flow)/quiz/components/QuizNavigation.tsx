@@ -32,10 +32,11 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
     }
   }
 
-  // The logic for totalSelectedRooms has been removed as 'roomImprovementSelections' is no longer part of answers
-  // and Step 5 is now the loading screen where this navigation is hidden.
+  const totalSelectedRooms = currentStep === 5 && answers.roomImprovementSelections
+    ? Object.values(answers.roomImprovementSelections).reduce((sum, count) => sum + (count || 0), 0)
+    : 0;
 
-  // Hide navigation for the Loading screen (now Step 5)
+  // Hide navigation for the Loading screen (now Step 7)
   if (currentStep === TOTAL_QUIZ_STEPS) { 
     return null;
   }
@@ -67,7 +68,11 @@ export function QuizNavigation({ onNext, isNextDisabled = false }: QuizNavigatio
             height={28} 
             className="h-7 w-auto" />
         </a>
-        {/* Display for totalSelectedRooms removed */}
+        {currentStep === 5 && totalSelectedRooms > 0 && (
+          <span className="text-xs sm:text-sm font-medium text-muted-foreground ml-2 sm:ml-4">
+            Total Rooms: {totalSelectedRooms}
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-2">

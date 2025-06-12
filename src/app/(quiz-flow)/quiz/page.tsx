@@ -6,7 +6,9 @@ import { Step1SwoonWorthy } from "./components/Step1SwoonWorthy";
 import { Step2StyleSelection } from "./components/Step2StyleSelection";
 import { Step3ColorMood } from "./components/Step3ColorMood";
 import { Step4MaterialDetail } from "./components/Step4MaterialDetail";
-import { Step8Loading as Step5Loading } from "./components/Step8Loading"; // Old Step8Loading is now Step5Loading
+import { Step3RoomImprovement as Step5RoomImprovement } from "./components/Step3RoomImprovement"; // Renamed import for clarity
+import { Step4RoomFocus as Step6RoomFocus } from "./components/Step4RoomFocus"; // Renamed import for clarity
+import { Step8Loading as Step7Loading } from "./components/Step8Loading"; // Old Step8Loading is now Step7Loading
 import { quizData } from "@/lib/quiz-data";
 import type { AllQuizData } from "@/types/quiz";
 import { cn } from "@/lib/utils";
@@ -23,7 +25,9 @@ export default function QuizPage() {
       case 2: return <Step2StyleSelection />;
       case 3: return <Step3ColorMood />;
       case 4: return <Step4MaterialDetail />;
-      case 5: return <Step5Loading />; // New Step 5 is Loading
+      case 5: return <Step5RoomImprovement />; // New Step 5
+      case 6: return <Step6RoomFocus />;       // New Step 6
+      case 7: return <Step7Loading />;       // New Step 7 is Loading
       default: return <p>Unknown step. Please reset the quiz.</p>;
     }
   };
@@ -39,8 +43,8 @@ export default function QuizPage() {
   const stepDetails = getCurrentStepDetails();
   const mainWrapperId = "quiz-page-content-area";
 
-  // Loading screen (new Step 5) has a different layout
-  if (currentStep === 5 && stepDetails) {
+  // Loading screen (new Step 7) has a different layout
+  if (currentStep === 7 && stepDetails) {
     return (
       <div
         id={mainWrapperId}

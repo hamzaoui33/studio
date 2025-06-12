@@ -9,49 +9,62 @@ import { cn } from "@/lib/utils";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { LucideIcon } from 'lucide-react';
 
-export function Step4RoomFocus() {
+export function Step4RoomFocus() { // File name remains, but it's used as Step 6
   const { answers, updateAnswer, getRoomOptionsForFocusStep } = useQuiz();
   
   // Get all *standard* room options from Step 5 (Room Improvement)
-  const allStep5StandardOptions = quizData.step5.options.filter(
+  const allStep5StandardOptions = (quizData.step5?.options || []).filter(
     option => option.id !== 'other' && option.id !== 'not_sure_yet'
   );
 
   // Get the rooms *actually selected* by the user in Step 5 (excluding 'other', 'not_sure_yet')
   const roomsSelectedInStep5 = getRoomOptionsForFocusStep();
 
-  // Default to showing only the rooms selected in Step 5.
-  // If no specific rooms were selected in Step 5 (meaning this step should ideally be skipped,
-  // or an edge case occurred), roomsSelectedInStep5 will be empty.
   const [showAllRooms, setShowAllRooms] = useState(false); 
+
+  useEffect(() => {
+    // If no specific rooms were selected in Step 5, default to showing all options.
+    // Otherwise, default to showing only the specifically selected rooms.
+    setShowAllRooms(roomsSelectedInStep5.length === 0);
+  }, [roomsSelectedInStep5.length]);
+
 
   const handleSelectFocusRoom = (optionId: string) => {
     updateAnswer("roomFocusSelection", optionId);
   };
 
-  // Determine which options to display:
-  // If "showAllRooms" is true, display all standard rooms from Step 5.
-  // Otherwise, display only the rooms specifically selected by the user in Step 5.
   const optionsToDisplay = showAllRooms ? allStep5StandardOptions : roomsSelectedInStep5;
 
-  // Show the toggle button ("View all options" / "Show less") if:
-  // 1. The user has selected specific rooms in Step 5 (roomsSelectedInStep5.length > 0).
-  // 2. There are more standard rooms available than what they initially selected.
   const showToggleButton = roomsSelectedInStep5.length > 0 && roomsSelectedInStep5.length < allStep5StandardOptions.length;
 
-  // Fallback message if no options are available to display.
-  // This covers cases where Step 6 is reached but:
-  // - No specific rooms were selected in Step 5 (getRoomOptionsForFocusStep() returns empty).
-  // - And "showAllRooms" is false (so we are trying to display an empty list).
-  // The skip logic in QuizContext should prevent reaching this state if only "other" or "not_sure_yet" was selected.
-  if (optionsToDisplay.length === 0) {
+  if (!quizData.step5 || !quizData.step5.options) {
+      return <p className="text-center text-destructive">Step 5 data not configured for focus options.</p>;
+  }
+  
+  if (optionsToDisplay.length === 0 && !showAllRooms) {
+     // This state can happen if only "other" or "not_sure_yet" was selected in Step 5,
+     // and the skip logic in QuizContext should handle this by not showing this step.
+     // However, as a fallback UI if this step is somehow reached:
      return (
         <div className="text-center text-muted-foreground py-8">
-            <p>Please select one or more specific rooms in the previous step to choose a focus.</p>
-            <p className="text-sm mt-2">(If you only selected "Other" or "Not Sure Yet" in the previous step, you might be automatically advanced.)</p>
+            <p>Please select specific rooms in the previous step to choose a focus, or view all options.</p>
+             {allStep5StandardOptions.length > 0 && (
+                 <button
+                    onClick={() => setShowAllRooms(true)}
+                    className="mt-4 flex items-center justify-center gap-1 px-4 py-2 text-sm font-medium rounded-md text-accent hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+                    aria-expanded={showAllRooms}
+                >
+                    Show all {allStep5StandardOptions.length} room options
+                    <ChevronDown className="w-4 h-4" />
+                </button>
+             )}
         </div>
      );
   }
+   if (optionsToDisplay.length === 0 && showAllRooms) {
+    return <p className="text-center text-muted-foreground py-8">No standard room options available from the previous step.</p>;
+   }
+
 
   return (
     <div className="flex flex-col items-center w-full">

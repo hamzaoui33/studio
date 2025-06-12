@@ -47,10 +47,26 @@ export interface Step4MaterialDetailData extends StepData {
   options: IconTextOption[];
 }
 
-// This type is for step 5 (loading screen).
-// It doesn't have 'options' in the same way other steps do.
-export interface Step5LoadingData extends StepData {
+// Data for Step 5: Room Improvement
+export interface Step5RoomImprovementData extends StepData {
+  options: IconTextOption[];
+  // noQuantitySelectorIds: string[]; // This might be part of component logic rather than quizData itself
+}
+
+// Data for Step 6: Room Focus
+export interface Step6RoomFocusData extends StepData {
+  // Options for this step are often dynamic based on Step 5,
+  // but we might have a base set or just rely on context to provide them.
+  // For simplicity, we'll assume the component fetches available rooms from context/quizData.step5.options
+}
+
+
+export interface Step7LoadingData extends StepData {
   // No options array needed for the loading screen itself
+}
+
+export interface RoomImprovementSelection {
+  [roomId: string]: number; // room_id: quantity
 }
 
 export type QuizAnswers = {
@@ -58,7 +74,8 @@ export type QuizAnswers = {
   styleSelections: string[];
   colorMoodSelection: string;
   materialDetailSelections: string[];
-  // roomImprovementSelections and roomFocusSelection were removed
+  roomImprovementSelections: RoomImprovementSelection; // Added back
+  roomFocusSelection: string; // Added back
 };
 
 export type AllQuizData = {
@@ -66,6 +83,8 @@ export type AllQuizData = {
   step2: Step2Data;
   step3: Step3ColorMoodData;
   step4: Step4MaterialDetailData;
-  step5: Step5LoadingData; // The loading screen
-  // step6 and step7 (old RoomFocus and old Loading) are removed
+  step5: Step5RoomImprovementData; // New Step 5
+  step6: Step6RoomFocusData; // New Step 6
+  step7: Step7LoadingData; // New Step 7 (Loading)
 };
+

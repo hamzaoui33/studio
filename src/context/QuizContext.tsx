@@ -3,7 +3,7 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { type QuizAnswers } from '@/types/quiz';
+import { type QuizAnswers, type RoomImprovementSelection, type IconTextOption } from '@/types/quiz';
 import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
 import type { GenerateStyleGuideInput, GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
@@ -16,6 +16,8 @@ const initialAnswers: QuizAnswers = {
   styleSelections: [],
   colorMoodSelection: '',
   materialDetailSelections: [],
+  roomImprovementSelections: {}, // Added back
+  roomFocusSelection: '', // Added back
 };
 
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
@@ -33,6 +35,7 @@ interface QuizContextType {
   triggerNextStepFlow: () => Promise<boolean>;
   isNextActionDisabled: () => boolean;
   internalNextStep: () => void;
+  getRoomOptionsForFocusStep: () => IconTextOption[];
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -54,6 +57,17 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     setAnswers((prev) => ({ ...prev, [field]: value }));
   }, []);
 
+  const getRoomOptionsForFocusStep = useCallback((): IconTextOption[] => {
+    const selectedRoomIds = Object.keys(answers.roomImprovementSelections);
+    if (!quizData.step5 || !quizData.step5.options) return [];
+
+    return quizData.step5.options.filter(option =>
+      selectedRoomIds.includes(option.id) &&
+      option.id !== 'other' &&
+      option.id !== 'not_sure_yet'
+    );
+  }, [answers.roomImprovementSelections]);
+
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= TOTAL_QUIZ_STEPS) {
       setCurrentStep(step);
@@ -62,41 +76,63 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const internalNextStep = useCallback(() => {
     let nextStepNumber = currentStep + 1;
+
+    // Skip Step 6 (Room Focus) if no specific rooms were selected in Step 5
+    if (currentStep === 5 && nextStepNumber === 6) {
+      const focusOptions = getRoomOptionsForFocusStep();
+      if (focusOptions.length === 0) {
+        // console.log("Skipping Step 6 as no specific rooms were chosen in Step 5.");
+        nextStepNumber = 7; // Skip to Loading screen
+      }
+    }
+
     if (nextStepNumber <= TOTAL_QUIZ_STEPS) {
       goToStep(nextStepNumber);
     }
-  }, [currentStep, goToStep]);
+  }, [currentStep, goToStep, getRoomOptionsForFocusStep]);
 
 
   const validateCurrentStep = useCallback((): boolean => {
     const stepKey = `step${currentStep}` as keyof AllQuizData;
 
     switch (currentStep) {
-      case 1: // Swoon-Worthy
+      case 1:
         if (answers.swoonWorthyRooms.length === 0) {
           toast({ title: "Selection Required", description: "Please select at least one image.", variant: "default" });
           return false;
         }
         break;
-      case 2: // Style Selection
+      case 2:
         if (answers.styleSelections.length === 0) {
           toast({ title: "Selection Required", description: "Please select at least one style.", variant: "default" });
           return false;
         }
         break;
-      case 3: // Color & Mood
+      case 3:
         if (answers.colorMoodSelection === '') {
           toast({ title: "Selection Required", description: "Please select a color and mood preference.", variant: "default" });
           return false;
         }
         break;
-      case 4: // Material & Detail
+      case 4:
         if (answers.materialDetailSelections.length === 0) {
           toast({ title: "Selection Required", description: "Please select at least one material/detail.", variant: "default" });
           return false;
         }
         break;
-      // Step 5 is Loading, no validation needed here before submission
+      case 5: // Room Improvement
+        if (Object.keys(answers.roomImprovementSelections).length === 0) {
+          toast({ title: "Selection Required", description: "Please select at least one room you'd like to improve.", variant: "default" });
+          return false;
+        }
+        break;
+      case 6: // Room Focus
+        if (answers.roomFocusSelection === '') {
+          toast({ title: "Selection Required", description: "Please select one room to focus on.", variant: "default" });
+          return false;
+        }
+        break;
+      // Step 7 is Loading, no validation needed here before submission
       default:
         break;
     }
@@ -110,10 +146,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
       case 2: return answers.styleSelections.length === 0;
-      case 3:
-        return answers.colorMoodSelection === '';
-      case 4:
-        return answers.materialDetailSelections.length === 0;
+      case 3: return answers.colorMoodSelection === '';
+      case 4: return answers.materialDetailSelections.length === 0;
+      case 5: return Object.keys(answers.roomImprovementSelections).length === 0;
+      case 6: return answers.roomFocusSelection === '';
       default: return false;
     }
   }, [currentStep, answers, isLoading]);
@@ -142,11 +178,13 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     try {
       const { generateStyleGuide } = await import('@/ai/flows/generate-style-guide');
 
+      // IMPORTANT: Only send data from the first 4 steps to the AI
       const aiInput: GenerateStyleGuideInput = {
         swoonWorthyRooms: answers.swoonWorthyRooms || [],
         styleSelections: answers.styleSelections || [],
         colorMoodSelection: answers.colorMoodSelection || '',
         materialDetailSelections: answers.materialDetailSelections || [],
+        // DO NOT include roomImprovementSelections or roomFocusSelection
       };
 
       const result = await generateStyleGuide(aiInput);
@@ -225,6 +263,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         triggerNextStepFlow,
         isNextActionDisabled,
         internalNextStep,
+        getRoomOptionsForFocusStep,
       }}
     >
       {children}
@@ -239,4 +278,3 @@ export function useQuiz() {
   }
   return context;
 }
-
