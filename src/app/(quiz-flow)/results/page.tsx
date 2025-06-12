@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from "lucide-react";
 import type { GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
+// quizData is not directly used here for slugs, direct string mapping is used based on example.
 
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
 
-// Define the structure for what's expected from localStorage
 interface StoredQuizData {
   aiOutput: GenerateStyleGuideOutput;
   userSelections: {
@@ -75,23 +75,43 @@ export default function ResultsPageRedirector() {
         targetUrl = "https://aveladecor.com/quiz-error/"; 
       }
 
-      // Manually construct query parameters using encodeURIComponent
-      const queryParams = [];
-      queryParams.push(`guide=${encodeURIComponent(styleGuide)}`);
+      const finalQueryParams: string[] = [];
 
+      // 1. Guide parameter - always encode using encodeURIComponent for %20 spaces etc.
+      finalQueryParams.push(`guide=${encodeURIComponent(styleGuide)}`);
+
+      // 2. Color parameter
       if (colorMoodSelection) {
-        queryParams.push(`color=${encodeURIComponent(colorMoodSelection)}`);
+        let colorValue = '';
+        if (colorMoodSelection === 'light_airy_neutrals') { // This is the ID from quizData
+          colorValue = 'light-airy-&-neutral'; // This is the exact string for the URL
+        } else {
+          // For any other color selection, encode its ID to be safe
+          colorValue = encodeURIComponent(colorMoodSelection);
+        }
+        finalQueryParams.push(`color=${colorValue}`);
       }
+
+      // 3. Materials parameter
       if (materialDetailSelections && materialDetailSelections.length > 0) {
-        queryParams.push(`_materials=${encodeURIComponent(materialDetailSelections[0])}`);
+        const firstMaterial = materialDetailSelections[0]; // ID from quizData
+        let materialValue = '';
+        if (firstMaterial === 'natural_woods_woven') {
+          materialValue = 'natural-woods-&-woven-textures'; // Exact string for the URL
+        } else {
+          // For any other material selection, encode its ID
+          materialValue = encodeURIComponent(firstMaterial);
+        }
+        finalQueryParams.push(`_materials=${materialValue}`);
       }
+
+      // 4. Focus Room parameter - encode its ID
       if (roomFocusSelection) {
-        queryParams.push(`_focusroom=${encodeURIComponent(roomFocusSelection)}`);
+        finalQueryParams.push(`_focusroom=${encodeURIComponent(roomFocusSelection)}`);
       }
-
-      const queryString = queryParams.join('&');
+      
+      const queryString = finalQueryParams.join('&');
       const finalUrlString = `${targetUrl}?${queryString}`;
-
 
       setMessage(`Redirecting to your ${styleCategory} style page...`);
       
@@ -107,10 +127,12 @@ export default function ResultsPageRedirector() {
       if (window.top) {
          window.top.location.href = "https://aveladecor.com/quiz-error/"; 
       } else {
-        router.push(FALLBACK_REDIRECT_URL);
+        // Fallback within the iframe/current window if not embedded or error before top redirect
+        router.push(FALLBACK_REDIRECT_URL); 
       }
     }
-  }, [router]); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]); // router is the main dependency for this effect's re-run logic if it were to change
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-background">
