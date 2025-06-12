@@ -75,26 +75,30 @@ export default function ResultsPageRedirector() {
         targetUrl = "https://aveladecor.com/quiz-error/"; 
       }
 
-      const finalUrl = new URL(targetUrl);
-      finalUrl.searchParams.append('guide', styleGuide);
+      // Manually construct query parameters using encodeURIComponent
+      const queryParams = [];
+      queryParams.push(`guide=${encodeURIComponent(styleGuide)}`);
 
       if (colorMoodSelection) {
-        finalUrl.searchParams.append('color', colorMoodSelection);
+        queryParams.push(`color=${encodeURIComponent(colorMoodSelection)}`);
       }
       if (materialDetailSelections && materialDetailSelections.length > 0) {
-        // Using the ID of the first selected material, as per example
-        finalUrl.searchParams.append('_materials', materialDetailSelections[0]);
+        queryParams.push(`_materials=${encodeURIComponent(materialDetailSelections[0])}`);
       }
       if (roomFocusSelection) {
-        finalUrl.searchParams.append('_focusroom', roomFocusSelection);
+        queryParams.push(`_focusroom=${encodeURIComponent(roomFocusSelection)}`);
       }
+
+      const queryString = queryParams.join('&');
+      const finalUrlString = `${targetUrl}?${queryString}`;
+
 
       setMessage(`Redirecting to your ${styleCategory} style page...`);
       
       if (window.top) {
-        window.top.location.href = finalUrl.toString();
+        window.top.location.href = finalUrlString;
       } else {
-        window.location.href = finalUrl.toString();
+        window.location.href = finalUrlString;
       }
 
     } catch (error) {
@@ -115,5 +119,3 @@ export default function ResultsPageRedirector() {
     </div>
   );
 }
-
-    
