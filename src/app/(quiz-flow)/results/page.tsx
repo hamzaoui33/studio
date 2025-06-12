@@ -8,6 +8,16 @@ import type { GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
 
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
 
+// Define the structure for what's expected from localStorage
+interface StoredQuizData {
+  aiOutput: GenerateStyleGuideOutput;
+  userSelections: {
+    colorMoodSelection?: string;
+    materialDetailSelections?: string[];
+    roomFocusSelection?: string;
+  };
+}
+
 const styleCategoryToUrlMap: Record<string, string> = {
   "midcentury-modern": "https://aveladecor.com/styles-result/midcentury-modern/",
   "bohemian": "https://aveladecor.com/styles-result/bohemian/",
@@ -25,8 +35,7 @@ const styleCategoryToUrlMap: Record<string, string> = {
   "minimalist": "https://aveladecor.com/styles-result/minimalist/",
 };
 
-// Fallback URL if category not found or other issues
-const FALLBACK_REDIRECT_URL = "/quiz"; // Redirect to quiz start within the app if something goes wrong
+const FALLBACK_REDIRECT_URL = "/quiz"; 
 
 export default function ResultsPageRedirector() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,58 +50,63 @@ export default function ResultsPageRedirector() {
     if (!storedResultString) {
       setMessage("No quiz result found. Redirecting to start the quiz...");
       console.warn("ResultsPage: No data found in localStorage. Redirecting to /quiz.");
-      // Redirect to quiz start or a generic error page
-      // For internal fallback, router.push is okay. For WordPress, use window.top.location.href
       router.push(FALLBACK_REDIRECT_URL);
       return;
     }
 
     try {
-      const result: GenerateStyleGuideOutput = JSON.parse(storedResultString);
-      const { styleGuide, styleCategory } = result;
+      const storedData: StoredQuizData = JSON.parse(storedResultString);
+      
+      if (!storedData.aiOutput || !storedData.userSelections) {
+        throw new Error("Incomplete data structure in localStorage.");
+      }
 
-      if (!styleCategory || !styleGuide) {
-        throw new Error("Incomplete data in localStorage (missing styleCategory or styleGuide).");
+      const { styleGuide, styleCategory } = storedData.aiOutput;
+      const { colorMoodSelection, materialDetailSelections, roomFocusSelection } = storedData.userSelections;
+
+      if (!styleCategory || typeof styleGuide !== 'string') {
+        throw new Error("Missing styleCategory or styleGuide from AI output in localStorage.");
       }
 
       let targetUrl = styleCategoryToUrlMap[styleCategory.toLowerCase()];
 
       if (!targetUrl) {
         console.warn(`ResultsPage: Style category "${styleCategory}" not found in map. Using fallback URL.`);
-        // Fallback to a generic results page on WordPress or quiz start
-        // For this example, let's make the fallback a specific WordPress page if available, or app's quiz start
-        targetUrl = "https://aveladecor.com/quiz-error/"; // Example generic error/fallback on WordPress
+        targetUrl = "https://aveladecor.com/quiz-error/"; 
       }
 
-      // Append styleGuide as a query parameter
       const finalUrl = new URL(targetUrl);
-      // REMOVED encodeURIComponent: URLSearchParams.append will handle encoding
-      finalUrl.searchParams.append('guide', styleGuide); 
+      finalUrl.searchParams.append('guide', styleGuide);
+
+      if (colorMoodSelection) {
+        finalUrl.searchParams.append('color', colorMoodSelection);
+      }
+      if (materialDetailSelections && materialDetailSelections.length > 0) {
+        // Using the ID of the first selected material, as per example
+        finalUrl.searchParams.append('_materials', materialDetailSelections[0]);
+      }
+      if (roomFocusSelection) {
+        finalUrl.searchParams.append('_focusroom', roomFocusSelection);
+      }
 
       setMessage(`Redirecting to your ${styleCategory} style page...`);
       
-      // Redirect the top-level window to the WordPress page
       if (window.top) {
         window.top.location.href = finalUrl.toString();
       } else {
-        // Fallback if not in an iframe (should not happen in your setup)
         window.location.href = finalUrl.toString();
       }
-      // No need to setIsLoading(false) as the page will navigate away
 
     } catch (error) {
       console.error("ResultsPage: Error processing quiz result from localStorage:", error);
       setMessage("There was an error processing your results. Redirecting...");
-      // Redirect to an error page or quiz start
       if (window.top) {
-         window.top.location.href = "https://aveladecor.com/quiz-error/"; // Example WordPress error page
+         window.top.location.href = "https://aveladecor.com/quiz-error/"; 
       } else {
         router.push(FALLBACK_REDIRECT_URL);
       }
     }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]); // router is a dependency of useEffect
+  }, [router]); 
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-background">
@@ -101,3 +115,5 @@ export default function ResultsPageRedirector() {
     </div>
   );
 }
+
+    

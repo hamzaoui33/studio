@@ -16,11 +16,22 @@ const initialAnswers: QuizAnswers = {
   styleSelections: [],
   colorMoodSelection: '',
   materialDetailSelections: [],
-  roomImprovementSelections: {}, // Added back
-  roomFocusSelection: '', // Added back
+  roomImprovementSelections: {},
+  roomFocusSelection: '',
 };
 
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
+
+// Define the structure for what's stored in localStorage
+interface StoredQuizData {
+  aiOutput: GenerateStyleGuideOutput;
+  userSelections: {
+    colorMoodSelection?: string;
+    materialDetailSelections?: string[];
+    roomFocusSelection?: string;
+  };
+}
+
 
 interface QuizContextType {
   currentStep: number;
@@ -77,12 +88,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const internalNextStep = useCallback(() => {
     let nextStepNumber = currentStep + 1;
 
-    // Skip Step 6 (Room Focus) if no specific rooms were selected in Step 5
     if (currentStep === 5 && nextStepNumber === 6) {
       const focusOptions = getRoomOptionsForFocusStep();
       if (focusOptions.length === 0) {
-        // console.log("Skipping Step 6 as no specific rooms were chosen in Step 5.");
-        nextStepNumber = 7; // Skip to Loading screen
+        nextStepNumber = 7; 
       }
     }
 
@@ -93,8 +102,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
 
   const validateCurrentStep = useCallback((): boolean => {
-    const stepKey = `step${currentStep}` as keyof AllQuizData;
-
     switch (currentStep) {
       case 1:
         if (answers.swoonWorthyRooms.length === 0) {
@@ -120,19 +127,18 @@ export function QuizProvider({ children }: { children: ReactNode }) {
           return false;
         }
         break;
-      case 5: // Room Improvement
+      case 5: 
         if (Object.keys(answers.roomImprovementSelections).length === 0) {
           toast({ title: "Selection Required", description: "Please select at least one room you'd like to improve.", variant: "default" });
           return false;
         }
         break;
-      case 6: // Room Focus
+      case 6: 
         if (answers.roomFocusSelection === '') {
           toast({ title: "Selection Required", description: "Please select one room to focus on.", variant: "default" });
           return false;
         }
         break;
-      // Step 7 is Loading, no validation needed here before submission
       default:
         break;
     }
@@ -141,7 +147,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
   const isNextActionDisabled = useCallback((): boolean => {
     if (isLoading) return true;
-    if (currentStep === TOTAL_QUIZ_STEPS) return true; // Disable if on the last step (loading screen)
+    if (currentStep === TOTAL_QUIZ_STEPS) return true; 
 
     switch (currentStep) {
       case 1: return answers.swoonWorthyRooms.length === 0;
@@ -178,23 +184,29 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     try {
       const { generateStyleGuide } = await import('@/ai/flows/generate-style-guide');
 
-      // IMPORTANT: Only send data from the first 4 steps to the AI
       const aiInput: GenerateStyleGuideInput = {
         swoonWorthyRooms: answers.swoonWorthyRooms || [],
         styleSelections: answers.styleSelections || [],
         colorMoodSelection: answers.colorMoodSelection || '',
         materialDetailSelections: answers.materialDetailSelections || [],
-        // DO NOT include roomImprovementSelections or roomFocusSelection
       };
 
       const result = await generateStyleGuide(aiInput);
 
       if (result && result.styleCategory && typeof result.styleGuide === 'string') {
+        const fullDataToStore: StoredQuizData = {
+          aiOutput: result,
+          userSelections: {
+            colorMoodSelection: answers.colorMoodSelection,
+            materialDetailSelections: answers.materialDetailSelections,
+            roomFocusSelection: answers.roomFocusSelection,
+          }
+        };
         if (typeof window !== "undefined") {
-          localStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(result));
+          localStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(fullDataToStore));
         }
       } else {
-        console.error("AI did not return a valid styleCategory or styleGuide. Fallback may be needed.");
+        console.error("AI did not return a valid styleCategory or styleGuide.");
         toast({
           title: "AI Result Incomplete",
           description: "The AI response was missing some information. Please try again.",
@@ -205,7 +217,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       }
 
       setIsLoading(false);
-      return result;
+      return result; // Still return only the AI output for the loading step's direct use if needed
     } catch (error) {
       console.error("Error generating style guide:", error);
       setIsLoading(false);
@@ -278,3 +290,5 @@ export function useQuiz() {
   }
   return context;
 }
+
+    
