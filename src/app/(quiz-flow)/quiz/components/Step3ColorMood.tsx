@@ -31,7 +31,7 @@ export function Step3ColorMood() {
               key={option.id}
               onClick={() => handleSelect(option.id)}
               className={cn(
-                "selectable-card p-4 md:p-5 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6",
+                "selectable-card p-4 md:p-5 flex flex-col md:flex-row items-stretch gap-4 md:gap-5", // items-stretch for equal height columns on md+
                 isSelected && "selected"
               )}
               role="radio"
@@ -39,19 +39,25 @@ export function Step3ColorMood() {
               tabIndex={0}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelect(option.id); }}
             >
-              {/* Left Section */}
-              <div className="flex-shrink-0 w-full md:w-auto flex flex-col items-center md:items-start text-center md:text-left">
-                {IconComponent && (
-                  <div className="mb-2">
-                    <IconComponent className={cn("h-8 w-8 md:h-10 md:w-10", isSelected ? "text-accent" : "text-foreground/60 group-hover:text-accent")} />
+              {/* Left Column: Icon, Name, Keywords, Palette */}
+              <div className="w-full md:w-2/5 lg:w-1/3 flex flex-col justify-between pr-0 md:pr-4">
+                <div>
+                  <div className="flex items-start gap-3 mb-3">
+                    {IconComponent && (
+                      <div className="flex-shrink-0 mt-1">
+                        <IconComponent className={cn("h-7 w-7 md:h-8 md:w-8", isSelected ? "text-accent" : "text-foreground/60 group-hover:text-accent")} />
+                      </div>
+                    )}
+                    <div className="flex-grow">
+                      <h4 className={cn("font-medium text-base md:text-lg", isSelected ? "text-accent font-semibold" : "text-foreground/80")}>{option.name}</h4>
+                      {option.description && ( // Keywords
+                        <p className={cn("text-xs text-muted-foreground", isSelected && "text-accent/70")}>{option.description}</p>
+                      )}
+                    </div>
                   </div>
-                )}
-                <h4 className={cn("font-medium text-base md:text-lg mb-1", isSelected ? "text-accent font-semibold" : "text-foreground/80")}>{option.name}</h4>
-                {option.description && ( // Keywords
-                  <p className={cn("text-xs text-muted-foreground mb-3", isSelected && "text-accent/70")}>{option.description}</p>
-                )}
+                </div>
                 {option.colorPalette && (
-                  <div className="flex space-x-1.5 mb-3 md:mb-0">
+                  <div className="flex space-x-1.5 mt-auto pt-3 md:pt-2"> {/* mt-auto pushes palette to bottom of this column if space allows */}
                     {option.colorPalette.map((color, index) => (
                       <div
                         key={index}
@@ -64,14 +70,13 @@ export function Step3ColorMood() {
                 )}
               </div>
 
-              {/* Optional: Vertical Divider for medium screens and up */}
-              <div className="hidden md:block h-auto w-px bg-border self-stretch mx-2"></div>
-              <hr className="md:hidden w-full border-border my-2" />
+              {/* Separator */}
+              <hr className="md:hidden w-full border-border my-3" />
+              <div className="hidden md:block w-px bg-border mx-2 self-stretch"></div>
 
-
-              {/* Right Section */}
+              {/* Right Column: Long Description */}
               {option.longDescription && (
-                <div className="flex-grow">
+                <div className="w-full md:w-3/5 lg:w-2/3 flex-grow pl-0 md:pl-4">
                   <p className={cn("text-sm text-muted-foreground", isSelected && "text-accent/80")}>{option.longDescription}</p>
                 </div>
               )}
