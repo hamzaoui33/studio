@@ -36,8 +36,8 @@ export function Step8Loading() {
 
     const submissionTimer = setTimeout(async () => {
       clearInterval(factInterval); // Clear fact interval once submission starts/finishes
-      const styleGuide = await handleQuizSubmit();
-      if (styleGuide) {
+      const styleGuideResult = await handleQuizSubmit(); // Renamed for clarity
+      if (styleGuideResult) { // Check if result is not null
         toast({
           title: "Style Guide Generated!",
           description: "Redirecting to your personalized results...",
@@ -49,6 +49,8 @@ export function Step8Loading() {
           description: "Could not generate your style guide. Please try again or contact support.",
           variant: "destructive",
         });
+        // Optionally, redirect to a previous step or quiz home
+        // router.push("/quiz"); // Example: redirect back to quiz start
       }
     }, 3000); // Submit after 3 seconds
 
@@ -57,7 +59,7 @@ export function Step8Loading() {
       clearTimeout(submissionTimer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleQuizSubmit, router, toast]);
+  }, [handleQuizSubmit, router, toast]); // Dependencies are correct
 
   const currentFact = didYouKnowFacts[currentFactIndex];
 
@@ -92,5 +94,3 @@ export function Step8Loading() {
     </div>
   );
 }
-
-    

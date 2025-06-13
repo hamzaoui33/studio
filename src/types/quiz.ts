@@ -20,7 +20,7 @@ export interface IconTextOption {
   id:string;
   name: string;
   icon?: LucideIcon | string;
-  description?: string; // Will now store keywords like "Serene, Calm, Bright" for Step 3
+  description?: string; // For keywords in Step 3, or general description
   longDescription?: string; // For the detailed paragraph in Step 3
   colorPalette?: string[]; // For the color hex codes in Step 3
 }
@@ -42,7 +42,7 @@ export interface Step2Data extends StepData {
 }
 
 export interface Step3ColorMoodData extends StepData {
-  options: IconTextOption[]; // Will use the extended IconTextOption
+  options: IconTextOption[];
 }
 
 export interface Step4MaterialDetailData extends StepData {
@@ -54,17 +54,18 @@ export interface Step5RoomImprovementData extends StepData {
 }
 
 export interface Step6RoomFocusData extends StepData {
-  // Options are dynamic
+  // Options are dynamic based on Step 5 selections
 }
 
 export interface Step7LoadingData extends StepData {
-  // No options array needed
+  // No options array needed, it's a loading screen
 }
 
 export interface RoomImprovementSelection {
   [roomId: string]: number;
 }
 
+// QuizAnswers now only contains fields relevant to the current 7-step flow
 export type QuizAnswers = {
   swoonWorthyRooms: string[];
   styleSelections: string[];
