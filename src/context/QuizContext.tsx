@@ -4,9 +4,8 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { type QuizAnswers, type RoomImprovementSelection, type IconTextOption } from '@/types/quiz';
-import { quizData, TOTAL_QUIZ_STEPS, type AllQuizData } from '@/lib/quiz-data';
+import { quizData, TOTAL_QUIZ_STEPS } from '@/lib/quiz-data';
 import { useRouter } from 'next/navigation';
-import type { GenerateStyleGuideInput, GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
 import { useToast } from "@/hooks/use-toast";
 
 const PARENT_WORDPRESS_ORIGIN = '*';
@@ -22,9 +21,9 @@ const initialAnswers: QuizAnswers = {
 
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
 
-// Define the structure for what's stored in localStorage
+// This interface is now simplified as we no longer get complex output from an AI
 interface StoredQuizData {
-  aiOutput: GenerateStyleGuideOutput;
+  styleCategory: string; // Just the category name, e.g., "modern"
   userSelections: {
     colorMoodSelection?: string;
     materialDetailSelections?: string[];
@@ -41,7 +40,7 @@ interface QuizContextType {
   isLoading: boolean;
   goToStep: (step: number) => void;
   updateAnswer: <K extends keyof QuizAnswers>(field: K, value: QuizAnswers[K]) => void;
-  handleQuizSubmit: () => Promise<GenerateStyleGuideOutput | null>;
+  handleQuizSubmit: () => void; // No longer returns a promise
   resetQuiz: () => void;
   triggerNextStepFlow: () => Promise<boolean>;
   isNextActionDisabled: () => boolean;
@@ -179,55 +178,27 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const handleQuizSubmit = async (): Promise<GenerateStyleGuideOutput | null> => {
+  const handleQuizSubmit = () => {
     setIsLoading(true);
-    try {
-      const { generateStyleGuide } = await import('@/ai/flows/generate-style-guide');
 
-      const aiInput: GenerateStyleGuideInput = {
-        swoonWorthyRooms: answers.swoonWorthyRooms || [],
-        styleSelections: answers.styleSelections || [],
-        colorMoodSelection: answers.colorMoodSelection || '',
-        materialDetailSelections: answers.materialDetailSelections || [],
-      };
+    // The primary style is the first one selected in Step 2.
+    const primaryStyle = answers.styleSelections[0] || 'modern'; // Fallback to 'modern'
 
-      const result = await generateStyleGuide(aiInput);
-
-      if (result && result.styleCategory && typeof result.styleGuide === 'string') {
-        const fullDataToStore: StoredQuizData = {
-          aiOutput: result,
-          userSelections: {
-            colorMoodSelection: answers.colorMoodSelection,
-            materialDetailSelections: answers.materialDetailSelections,
-            roomFocusSelection: answers.roomFocusSelection,
-          }
-        };
-        if (typeof window !== "undefined") {
-          localStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(fullDataToStore));
-        }
-      } else {
-        console.error("AI did not return a valid styleCategory or styleGuide.");
-        toast({
-          title: "AI Result Incomplete",
-          description: "The AI response was missing some information. Please try again.",
-          variant: "destructive"
-        });
-        setIsLoading(false);
-        return null;
+    const dataToStore: StoredQuizData = {
+      styleCategory: primaryStyle,
+      userSelections: {
+        colorMoodSelection: answers.colorMoodSelection,
+        materialDetailSelections: answers.materialDetailSelections,
+        roomFocusSelection: answers.roomFocusSelection,
       }
-
-      setIsLoading(false);
-      return result; // Still return only the AI output for the loading step's direct use if needed
-    } catch (error) {
-      console.error("Error generating style guide:", error);
-      setIsLoading(false);
-      toast({
-        title: "Submission Error",
-        description: "There was an issue generating your style guide. Please try again.",
-        variant: "destructive"
-      });
-      return null;
+    };
+    
+    if (typeof window !== "undefined") {
+      localStorage.setItem(QUIZ_RESULT_STORAGE_KEY, JSON.stringify(dataToStore));
     }
+    
+    // We don't need to wait for anything, but we can keep isLoading for the transition screen
+    // The loading screen will handle the redirect.
   };
 
   useEffect(() => {
@@ -290,5 +261,3 @@ export function useQuiz() {
   }
   return context;
 }
-
-    

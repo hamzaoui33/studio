@@ -6,8 +6,6 @@ import { useQuiz } from "@/context/QuizContext";
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 
-// GuaranteeBadge component is removed as per request
-
 const didYouKnowFacts = [
   {
     title: "Small Changes, Big Impact",
@@ -34,29 +32,24 @@ export function Step8Loading() {
       setCurrentFactIndex((prevIndex) => (prevIndex + 1) % didYouKnowFacts.length);
     }, 1500); // Change fact every 1.5 seconds
 
-    const submissionTimer = setTimeout(async () => {
-      clearInterval(factInterval); // Clear fact interval once submission starts/finishes
-      const styleGuideResult = await handleQuizSubmit(); // Renamed for clarity
-      if (styleGuideResult) { // Check if result is not null
-        toast({
-          title: "Style Guide Generated!",
-          description: "Redirecting to your personalized results...",
-        });
-        router.push("/results");
-      } else {
-         toast({
-          title: "Submission Failed",
-          description: "Could not generate your style guide. Please try again or contact support.",
-          variant: "destructive",
-        });
-        // Optionally, redirect to a previous step or quiz home
-        // router.push("/quiz"); // Example: redirect back to quiz start
-      }
-    }, 3000); // Submit after 3 seconds
+    // Immediately call the submission logic, which is now synchronous
+    handleQuizSubmit();
+
+    // Set a short timer just for the UI transition before redirecting
+    const redirectTimer = setTimeout(() => {
+      clearInterval(factInterval); // Clear fact interval
+      
+      toast({
+        title: "Style Determined!",
+        description: "Redirecting to your personalized results...",
+      });
+      router.push("/results");
+
+    }, 750); // A quick 0.75-second delay for a smooth transition
 
     return () => {
       clearInterval(factInterval);
-      clearTimeout(submissionTimer);
+      clearTimeout(redirectTimer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleQuizSubmit, router, toast]); // Dependencies are correct
@@ -64,10 +57,10 @@ export function Step8Loading() {
   const currentFact = didYouKnowFacts[currentFactIndex];
 
   return (
-    <div className="flex flex-col items-center justify-center text-center animate-fadeIn space-y-12 md:space-y-20 py-10"> {/* Removed h-full */}
+    <div className="flex flex-col items-center justify-center text-center animate-fadeIn space-y-12 md:space-y-20 py-10">
       <div className="flex flex-col items-center space-y-3.5">
         <p className="text-base text-muted-foreground tracking-wide">
-          Calculating your results...
+          Finalizing your results...
         </p>
         <div className="flex space-x-2.5">
           <span className="pulsating-dot animation-delay-0"></span>
@@ -77,8 +70,8 @@ export function Step8Loading() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-6 md:gap-12"> {/* Removed md:flex-row to stack items */}
-        <div className="text-center max-w-md"> {/* Changed md:text-left to text-center and increased max-w */}
+      <div className="flex flex-col items-center justify-center gap-6 md:gap-12">
+        <div className="text-center max-w-md">
           <p className="text-xs font-semibold uppercase text-muted-foreground mb-1.5 tracking-wider">
             DID YOU KNOW?
           </p>
@@ -89,7 +82,6 @@ export function Step8Loading() {
             {currentFact.description}
           </p>
         </div>
-        {/* GuaranteeBadge component removed here */}
       </div>
     </div>
   );

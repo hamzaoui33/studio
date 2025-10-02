@@ -4,12 +4,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from "lucide-react";
-import type { GenerateStyleGuideOutput } from '@/ai/flows/generate-style-guide';
 
 const QUIZ_RESULT_STORAGE_KEY = 'decorStyleQuizResult';
 
+// Simplified data structure, as we no longer have a complex AI output
 interface StoredQuizData {
-  aiOutput: GenerateStyleGuideOutput;
+  styleCategory: string; // The primary style category, e.g., "modern"
   userSelections: {
     colorMoodSelection?: string;
     materialDetailSelections?: string[];
@@ -56,17 +56,12 @@ export default function ResultsPageRedirector() {
     try {
       const storedData: StoredQuizData = JSON.parse(storedResultString);
       
-      if (!storedData.aiOutput || !storedData.userSelections) {
+      if (!storedData.styleCategory || !storedData.userSelections) {
         throw new Error("Incomplete data structure in localStorage.");
       }
 
-      // We still get styleCategory from aiOutput, but not styleGuide for the URL
-      const { styleCategory } = storedData.aiOutput; 
+      const { styleCategory } = storedData;
       const { colorMoodSelection, materialDetailSelections, roomFocusSelection } = storedData.userSelections;
-
-      if (!styleCategory) {
-        throw new Error("Missing styleCategory from AI output in localStorage.");
-      }
 
       let targetUrl = styleCategoryToUrlMap[styleCategory.toLowerCase()];
 
@@ -83,7 +78,6 @@ export default function ResultsPageRedirector() {
         if (colorMoodSelection === 'light_airy_neutrals') {
           colorValue = 'light-airy-&-neutral'; // Exact string for the URL
         } else {
-          // For any other color selection, encode its ID to be safe
           colorValue = encodeURIComponent(colorMoodSelection);
         }
         finalQueryParams.push(`color=${colorValue}`);
@@ -96,19 +90,18 @@ export default function ResultsPageRedirector() {
         if (firstMaterial === 'natural_woods_woven') {
           materialValue = 'natural-woods-&-woven-textures'; // Exact string for the URL
         } else {
-          // For any other material selection, encode its ID
           materialValue = encodeURIComponent(firstMaterial);
         }
         finalQueryParams.push(`_materials=${materialValue}`);
       }
 
-      // 3. Focus Room parameter - encode its ID
+      // 3. Focus Room parameter
       if (roomFocusSelection) {
         finalQueryParams.push(`_focusroom=${encodeURIComponent(roomFocusSelection)}`);
       }
       
       const queryString = finalQueryParams.join('&');
-      const finalUrlString = queryString ? `${targetUrl}?${queryString}` : targetUrl; // Add '?' only if there are params
+      const finalUrlString = queryString ? `${targetUrl}?${queryString}` : targetUrl;
 
       setMessage(`Redirecting to your ${styleCategory} style page...`);
       
