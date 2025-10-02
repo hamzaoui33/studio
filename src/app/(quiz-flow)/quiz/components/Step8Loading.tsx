@@ -39,10 +39,6 @@ export function Step8Loading() {
     const redirectTimer = setTimeout(() => {
       clearInterval(factInterval); // Clear fact interval
       
-      toast({
-        title: "Style Determined!",
-        description: "Redirecting to your personalized results...",
-      });
       router.push("/results");
 
     }, 750); // A quick 0.75-second delay for a smooth transition
