@@ -11,7 +11,7 @@ body {
   :root {
     /* New color scheme based on the image */
     --background: 0 0% 100%; /* White */
-    --foreground: 210 10% 23%; /* Dark Gray for text (slightly blueish cool gray) */
+    --foreground: 0 0% 0%; /* Dark Gray for text (slightly blueish cool gray) */
 
     --muted: 40 30% 90%; /* Lighter beige for muted backgrounds */
     --muted-foreground: 210 10% 45%; /* Slightly lighter gray for muted text */
