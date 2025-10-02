@@ -121,7 +121,7 @@ export default function ResultsPageRedirector() {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]); 
+  }, []); 
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-background">

@@ -52,7 +52,7 @@ export function Step8Loading() {
       clearTimeout(redirectTimer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleQuizSubmit, router, toast]); // Dependencies are correct
+  }, []); // Intentionally empty to run only once on mount
 
   const currentFact = didYouKnowFacts[currentFactIndex];
 
