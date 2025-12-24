@@ -47,7 +47,7 @@ export const quizData: AllQuizData = {
         id: "midcentury-modern",
         name: "Timeless Midcentury Modern",
         description: "You love clean lines, tapered legs, and a healthy dose of nostalgia. Midcentury Modern is your style sweet spot where form meets function with a retro twist. Your space is filled with warm woods, bold shapes, and iconic furniture that makes you feel like you’ve stepped into a scene from Mad Men (cocktails optional, but encouraged).",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Timeless-Midcentury-Modern.webp",
+        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/10/f0c21f_7bbc5d2b7bc647a9af54cb23807a4c2cmv2.avif",
         hint: "midcentury modern"
       },
       {
