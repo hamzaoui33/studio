@@ -47,98 +47,98 @@ export const quizData: AllQuizData = {
         id: "midcentury-modern",
         name: "Timeless Midcentury Modern",
         description: "You love clean lines, tapered legs, and a healthy dose of nostalgia. Midcentury Modern is your style sweet spot where form meets function with a retro twist. Your space is filled with warm woods, bold shapes, and iconic furniture that makes you feel like you’ve stepped into a scene from Mad Men (cocktails optional, but encouraged).",
-        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Sustainable-Choices-for-Your-Babys-Room.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Choose-the-Perfect-Color-Palette-for-Modern-Living-600x857.webp",
         hint: "midcentury modern"
       },
       {
         id: "bohemian",
         name: "Free-Spirited Bohemian",
         description: "You’re drawn to rich textures, eclectic treasures, and layered patterns that tell a story. Bohemian style is all about self-expression, creative freedom, and a touch of wanderlust. Your space is filled with global finds, lush plants, and cozy corners that invite you to relax, dream, and stay a while.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Free-Spirited-Bohemian.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Furniture-Choices-for-a-Perfect-Boho-Living-Room-600x857.webp",
         hint: "bohemian decor"
       },
       {
         id: "coastal",
         name: "Relaxed Coastal",
         description: "You love that breezy, beachy feel—even if you live far from the shore. Coastal style brings in soft blues, sun-washed neutrals, and natural textures that make your space feel like a serene seaside retreat. It’s all about light, air, and effortless ease.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Relaxed-Coastal.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Brighten-Your-Coastal-Living-Room-with-Natural-Light.webp",
         hint: "coastal home"
       },
        {
         id: "modern",
         name: "Sleek Modern",
         description: "Clean lines, open spaces, and a bold approach to simplicity define your vibe. Sleek Modern style is all about minimal ornamentation and high-impact design choices. Think polished finishes, smart storage, and a space that feels both current and quietly confident.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Sleek-Modern.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Statement-Art-Pieces-in-Your-Urban-Modern-Home-Office.webp",
         hint: "sleek modern"
       },
       {
         id: "rustic",
         name: "Warm Rustic",
         description: "You love the feeling of a cozy cabin or countryside retreat. Warm Rustic style brings in weathered woods, stone textures, and a lived-in look that’s full of charm. It’s all about authenticity, comfort, and embracing the beauty of imperfections.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Warm-Rustic.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/05/Incorporate-Natural-Wood-Beams-in-Your-Rustic-Living-Room.webp",
         hint: "rustic decor"
       },
       {
         id: "traditional",
         name: "Elegant Traditional",
         description: "Classic, refined, and timeless—your space tells a story of heritage and harmony. Elegant Traditional style is rooted in symmetry, rich furnishings, and sophisticated details. It’s where timeless design meets a graceful sense of order.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Elegant-Traditional.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/07/Maximize-Productivity-in-Your-Traditional-Home-Office-Layout.webp",
         hint: "traditional interior"
       },
       {
         id: "scandinavian",
         name: "Clean Scandinavian",
         description: "You gravitate toward simplicity, function, and calm. Clean Scandinavian style is all about bright whites, soft woods, and minimal clutter. Every piece has a purpose, and the whole space breathes with light, clarity, and coziness (or as the Danes say—hygge).",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Clean-Scandinavian.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Wood-Accents-for-a-Cozy-Scandinavian-Bathroom.webp",
         hint: "scandinavian design"
       },
       {
         id: "glam",
         name: "Luxurious Glam",
         description: "You’re all about drama, sparkle, and sophistication. Luxurious Glam style turns your home into a statement with mirrored finishes, metallic accents, and plush textures. It's Hollywood regency meets modern elegance—bold, beautiful, and unapologetically chic.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Luxurious-Glam.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Safe-and-Stylish-Art-Deco-Nursery-Layouts-600x857.webp",
         hint: "glam decor"
       },
       {
         id: "industrial",
         name: "Edgy Industrial",
         description: "Raw, urban, and effortlessly cool—your style is inspired by loft living and city grit. Edgy Industrial design blends exposed brick, metal elements, and reclaimed wood with utilitarian charm. It’s minimal, masculine, and full of character.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Edgy-Industrial.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Bring-in-Darker-Color-Palette.webp",
         hint: "industrial style"
       },
       {
         id: "eclectic",
         name: "Vibrant Eclectic",
         description: "You thrive on mixing it up. Vibrant Eclectic style means no rules—just layers of personality, color, and pattern. From vintage finds to modern art, your home is a curated collection of everything you love, tied together by confidence and creativity.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Vibrant-Eclectic.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Mix-Furniture-Styles-in-Your-Eclectic-Bedroom.webp",
         hint: "eclectic interior"
       },
       {
         id: "farmhouse",
         name: "Charming Farmhouse",
         description: "Think fresh, cozy, and welcoming. Charming Farmhouse style blends old and new with soft neutrals, shiplap walls, and vintage accents. It’s about creating a space that feels lived-in and loved, like a warm hug after a long day.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Charming-Farmhouse.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Create-a-Focal-Point-in-Your-Farmhouse-Living-Room-600x857.webp",
         hint: "farmhouse decor"
       },
       {
         id: "japandi",
         name: "Serene Japandi",
         description: "A harmonious blend of Japanese minimalism and Scandinavian warmth, Serene Japandi style is calm, intentional, and elegant. You love low-profile furniture, organic shapes, and natural materials that bring peace and purpose to every corner.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Serene-Japandi.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Plant-Authentic-Flora-for-Garden-Appeal-600x857.webp",
         hint: "japandi style"
       },
       {
         id: "transitional",
         name: "Balanced Transitional",
         description: "You love a little tradition and a little trend. Balanced Transitional style bridges the gap between classic and contemporary, mixing timeless silhouettes with fresh finishes. It’s versatile, polished, and never too much of one thing.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Balanced-Transitional.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/07/Minimalist-Decor-Essentials-for-Your-Urban-Modern-Living-Room-717x1024.webp",
         hint: "transitional interior"
       },
       {
         id: "minimalist",
         name: "Refined Minimalist",
         description: "Less is more, and every item in your space has meaning. Refined Minimalist style is all about clarity, calm, and quality over quantity. With clean lines, neutral palettes, and intentional choices, your home feels like a breath of fresh air.",
-        imageUrl: "https://aveladecor.com/wp-content/uploads/2025/06/Refined-Minimalist.webp",
+        imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Textile-Choices-for-a-Soft-Minimal-Bedroom-600x857.webp",
         hint: "minimalist design"
       }
     ],
