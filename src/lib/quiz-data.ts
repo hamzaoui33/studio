@@ -18,7 +18,7 @@ export const quizData: AllQuizData = {
       { id: "room2", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Functional-Layouts-for-a-Mid-Century-Dining-Room.webp", alt: "Mid-Century Dining Room", hint: "mid-century dining" },
       { id: "room3", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Embrace-handleless-cabinets-in-your-Minimalist-Kitchen.webp", alt: "Minimalist Kitchen", hint: "minimalist kitchen" },
       { id: "room4", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Open-Concept-Mid-Century-Living-Room-Layouts-600x857.webp", alt: "Mid-Century Living Room", hint: "mid-century living" },
-      { id: "room5", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Maximize-Productivity-in-Your-Traditional-Home-Office-Layout.webp", alt: "Traditional Home Office", hint: "traditional office" },
+      { id: "room5", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/07/Craft-an-Elegant-Traditional-Home-Office-with-Dark-Wood.webp", alt: "Traditional Home Office", hint: "traditional office" },
       { id: "room6", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Seaside-Colors-for-Your-Bathroom.webp", alt: "Coastal Bathroom", hint: "coastal bathroom" },
       { id: "room7", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/07/Boho-bedroom-natural-wood-accents-717x1024.webp", alt: "Boho Bedroom", hint: "boho bedroom" },
       { id: "room8", imageUrl: "https://decorwhisper.com/wp-content/uploads/2025/06/Color-Palettes-for-a-Mid-Century-Hallway.webp", alt: "Mid-Century Hallway", hint: "mid-century hallway" },
