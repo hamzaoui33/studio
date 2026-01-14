@@ -18,20 +18,20 @@ interface StoredQuizData {
 }
 
 const styleCategoryToUrlMap: Record<string, string> = {
-  "midcentury-modern": "https://aveladecor.com/styles-result/midcentury-modern/",
-  "bohemian": "https://aveladecor.com/styles-result/bohemian/",
-  "coastal": "https://aveladecor.com/styles-result/coastal/",
-  "modern": "https://aveladecor.com/styles-result/modern/",
-  "rustic": "https://aveladecor.com/styles-result/rustic/",
-  "traditional": "https://aveladecor.com/styles-result/traditional/",
-  "scandinavian": "https://aveladecor.com/styles-result/scandinavian/",
-  "glam": "https://aveladecor.com/styles-result/glam/",
-  "industrial": "https://aveladecor.com/styles-result/industrial/",
-  "eclectic": "https://aveladecor.com/styles-result/eclectic/",
-  "farmhouse": "https://aveladecor.com/styles-result/farmhouse/",
-  "japandi": "https://aveladecor.com/styles-result/japandi/",
-  "transitional": "https://aveladecor.com/styles-result/transitional/",
-  "minimalist": "https://aveladecor.com/styles-result/minimalist/",
+  "midcentury-modern": "https://decorwhisper.com/styles-result/midcentury-modern/",
+  "bohemian": "https://decorwhisper.com/styles-result/bohemian/",
+  "coastal": "https://decorwhisper.com/styles-result/coastal/",
+  "modern": "https://decorwhisper.com/styles-result/modern/",
+  "rustic": "https://decorwhisper.com/styles-result/rustic/",
+  "traditional": "https://decorwhisper.com/styles-result/traditional/",
+  "scandinavian": "https://decorwhisper.com/styles-result/scandinavian/",
+  "glam": "https://decorwhisper.com/styles-result/glam/",
+  "industrial": "https://decorwhisper.com/styles-result/industrial/",
+  "eclectic": "https://decorwhisper.com/styles-result/eclectic/",
+  "farmhouse": "https://decorwhisper.com/styles-result/farmhouse/",
+  "japandi": "https://decorwhisper.com/styles-result/japandi/",
+  "transitional": "https://decorwhisper.com/styles-result/transitional/",
+  "minimalist": "https://decorwhisper.com/styles-result/minimalist/",
 };
 
 const FALLBACK_REDIRECT_URL = "/quiz"; 
@@ -67,7 +67,7 @@ export default function ResultsPageRedirector() {
 
       if (!targetUrl) {
         console.warn(`ResultsPage: Style category "${styleCategory}" not found in map. Using fallback URL.`);
-        targetUrl = "https://aveladecor.com/quiz-error/"; 
+        targetUrl = "https://decorwhisper.com/quiz-error/"; 
       }
 
       const finalQueryParams: string[] = [];
@@ -115,7 +115,7 @@ export default function ResultsPageRedirector() {
       console.error("ResultsPage: Error processing quiz result from localStorage:", error);
       setMessage("There was an error processing your results. Redirecting...");
       if (window.top) {
-         window.top.location.href = "https://aveladecor.com/quiz-error/"; 
+         window.top.location.href = "https://decorwhisper.com/quiz-error/"; 
       } else {
         router.push(FALLBACK_REDIRECT_URL); 
       }
